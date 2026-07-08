@@ -1,6 +1,5 @@
 /**
- * Ninja Stones - V0.0.9
- * (Aucune modification logique, le personnage est géré par le HTML/CSS)
+ * Ninja Stones - V0.0.9 (Structure Header Fixe)
  */
 
 // --- ÉTAT GLOBAL DU JEU ---
@@ -17,7 +16,8 @@ const state = {
 const screenMenu = document.getElementById('screen-menu');
 const screenGame = document.getElementById('screen-game');
 
-const menuLevel = document.getElementById('menu-level');
+// L'élément texte du niveau est maintenant dans le header fixe
+const levelDisplay = document.getElementById('level-display'); 
 const menuBoard = document.getElementById('menu-board');
 const playBtn = document.getElementById('play-btn');
 
@@ -65,12 +65,12 @@ function updateGardenVisual(boardEl) {
 
 // --- RENDU DU MENU ---
 function renderMenu() {
-    menuLevel.textContent = `Niveau ${state.level}`;
+    levelDisplay.textContent = `Niveau ${state.level}`;
     updateGardenVisual(menuBoard);
     
     menuBoard.innerHTML = '';
     let boardWidth = menuBoard.clientWidth;
-    if (boardWidth === 0) boardWidth = Math.min(window.innerWidth, window.innerHeight) * 0.85;
+    if (boardWidth === 0) boardWidth = Math.min(window.innerWidth, window.innerHeight * 0.8) * 0.85;
     const gap = 4; 
     const stoneSize = (boardWidth - (gap * (state.gridSize + 1))) / state.gridSize;
 
@@ -100,6 +100,9 @@ function initGame() {
     state.totalTiles = state.gridSize * state.gridSize;
     state.moves = 0;
     state.isPlaying = true;
+    
+    // On met à jour le texte du niveau dans le header fixe
+    levelDisplay.textContent = `Niveau ${state.level}`;
     
     updateGardenVisual(boardElement);
     continueBtn.classList.add('hidden');
@@ -146,7 +149,7 @@ function renderBoard() {
     boardElement.innerHTML = '';
     tilesElements = {};
     let boardWidth = boardElement.clientWidth;
-    if (boardWidth === 0) boardWidth = Math.min(window.innerWidth, window.innerHeight) * 0.85;
+    if (boardWidth === 0) boardWidth = Math.min(window.innerWidth, window.innerHeight * 0.8) * 0.85;
     const gap = 4; 
     const stoneSize = (boardWidth - (gap * (state.gridSize + 1))) / state.gridSize;
 
@@ -197,7 +200,7 @@ function updateTilePosition(value, newIndex) {
     const stone = tilesElements[value];
     if (!stone) return;
     let boardWidth = boardElement.clientWidth;
-    if (boardWidth === 0) boardWidth = Math.min(window.innerWidth, window.innerHeight) * 0.85;
+    if (boardWidth === 0) boardWidth = Math.min(window.innerWidth, window.innerHeight * 0.8) * 0.85;
     const gap = 4;
     const stoneSize = (boardWidth - (gap * (state.gridSize + 1))) / state.gridSize;
     let row = Math.floor(newIndex / state.gridSize);
