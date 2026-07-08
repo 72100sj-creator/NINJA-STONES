@@ -1,6 +1,6 @@
 /**
- * Ninja Stones - V0.0.8
- * Gestion des écrans (Menu / Jeu)
+ * Ninja Stones - V0.0.9
+ * (Aucune modification logique, le personnage est géré par le HTML/CSS)
  */
 
 // --- ÉTAT GLOBAL DU JEU ---
@@ -14,20 +14,17 @@ const state = {
 };
 
 // --- ÉLÉMENTS DU DOM ---
-// Écrans
 const screenMenu = document.getElementById('screen-menu');
 const screenGame = document.getElementById('screen-game');
 
-// Menu
 const menuLevel = document.getElementById('menu-level');
 const menuBoard = document.getElementById('menu-board');
 const playBtn = document.getElementById('play-btn');
 
-// Jeu
 const boardElement = document.getElementById('board');
 const restartBtn = document.getElementById('restart-btn');
 const continueBtn = document.getElementById('continue-btn');
-const backBtn = document.getElementById('back-btn'); // Nouveau
+const backBtn = document.getElementById('back-btn');
 const messageElement = document.getElementById('message');
 
 let tilesElements = {}; 
@@ -66,7 +63,7 @@ function updateGardenVisual(boardEl) {
     else if (state.level >= 4) boardEl.classList.add('garden-stage-2');
 }
 
-// --- NOUVEAU : RENDU DU MENU ---
+// --- RENDU DU MENU ---
 function renderMenu() {
     menuLevel.textContent = `Niveau ${state.level}`;
     updateGardenVisual(menuBoard);
@@ -77,7 +74,6 @@ function renderMenu() {
     const gap = 4; 
     const stoneSize = (boardWidth - (gap * (state.gridSize + 1))) / state.gridSize;
 
-    // On affiche le jardin à l'état parfait (résolu)
     for (let i = 1; i < state.totalTiles; i++) {
         let row = Math.floor((i - 1) / state.gridSize);
         let col = (i - 1) % state.gridSize;
@@ -114,7 +110,7 @@ function initGame() {
         state.grid = generateSolvedGrid();
         shuffleGrid(state.grid, getShuffleMovesForLevel(state.level));
         renderBoard();
-    }, 100); // Léger délai pour laisser la transition de l'écran se faire
+    }, 100);
 }
 
 function generateSolvedGrid() {
@@ -219,16 +215,13 @@ function checkWin() {
 }
 
 // --- ÉCOUTEURS ---
-
-// Bouton du menu
 playBtn.addEventListener('click', () => {
     showScreen('game');
     initGame();
 });
 
-// Boutons du jeu
 backBtn.addEventListener('click', () => {
-    renderMenu(); // On met à jour le visuel du menu avant d'y retourner
+    renderMenu();
     showScreen('menu');
 });
 
@@ -237,12 +230,11 @@ restartBtn.addEventListener('click', initGame);
 continueBtn.addEventListener('click', () => {
     state.level++; 
     saveProgress(); 
-    renderMenu(); // On affiche le jardin du niveau suivant
-    showScreen('menu'); // On retourne au menu pour le montrer
+    renderMenu();
+    showScreen('menu'); 
 });
 
 window.addEventListener('resize', () => {
-    // Redimensionne le plateau visible
     if (screenGame.classList.contains('active')) {
         for (let i = 0; i < state.totalTiles; i++) {
             let value = state.grid[i];
@@ -256,6 +248,6 @@ window.addEventListener('resize', () => {
 // --- DÉMARRAGE ---
 window.addEventListener('load', () => {
     loadProgress(); 
-    renderMenu();   // On affiche le menu au lieu de lancer le jeu direct
+    renderMenu();   
     showScreen('menu');
 });
