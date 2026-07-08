@@ -1,6 +1,6 @@
 /**
- * Ninja Stones - V0.0.7
- * Évolution visuelle du jardin en fonction du niveau
+ * Ninja Stones - V0.0.8
+ * Gestion des écrans (Menu / Jeu)
  */
 
 // --- ÉTAT GLOBAL DU JEU ---
@@ -14,71 +14,98 @@ const state = {
 };
 
 // --- ÉLÉMENTS DU DOM ---
+// Écrans
+const screenMenu = document.getElementById('screen-menu');
+const screenGame = document.getElementById('screen-game');
+
+// Menu
+const menuLevel = document.getElementById('menu-level');
+const menuBoard = document.getElementById('menu-board');
+const playBtn = document.getElementById('play-btn');
+
+// Jeu
 const boardElement = document.getElementById('board');
 const restartBtn = document.getElementById('restart-btn');
 const continueBtn = document.getElementById('continue-btn');
+const backBtn = document.getElementById('back-btn'); // Nouveau
 const messageElement = document.getElementById('message');
-const levelDisplay = document.getElementById('level-display');
 
 let tilesElements = {}; 
+
+// --- NAVIGATION ENTRE LES ÉCRANS ---
+function showScreen(screenName) {
+    screenMenu.classList.remove('active');
+    screenGame.classList.remove('active');
+    
+    if (screenName === 'menu') {
+        screenMenu.classList.add('active');
+    } else if (screenName === 'game') {
+        screenGame.classList.add('active');
+    }
+}
 
 // --- GESTION DE LA SAUVEGARDE ---
 function loadProgress() {
     try {
         const savedLevel = localStorage.getItem('ninjaStonesLevel');
-        if (savedLevel) {
-            state.level = parseInt(savedLevel, 10);
-        }
-    } catch (e) {
-        console.log("Sauvegarde locale indisponible.");
-    }
+        if (savedLevel) state.level = parseInt(savedLevel, 10);
+    } catch (e) {}
 }
 
 function saveProgress() {
     try {
         localStorage.setItem('ninjaStonesLevel', state.level.toString());
-    } catch (e) {
-        console.log("Impossible de sauvegarder.");
-    }
+    } catch (e) {}
 }
 
-// --- NOUVEAU : LOGIQUE D'ÉVOLUTION DU JARDIN ---
+// --- LOGIQUE D'ÉVOLUTION DU JARDIN ---
+function updateGardenVisual(boardEl) {
+    boardEl.classList.remove('garden-stage-2', 'garden-stage-3', 'garden-stage-4');
+    if (state.level >= 10) boardEl.classList.add('garden-stage-4');
+    else if (state.level >= 7) boardEl.classList.add('garden-stage-3');
+    else if (state.level >= 4) boardEl.classList.add('garden-stage-2');
+}
 
-/**
- * Détermine le stade visuel du jardin en fonction du niveau.
- * Le stade est déduit du niveau, pas besoin de le sauvegarder séparément !
- */
-function updateGardenVisual() {
-    // On retire l'ancienne classe de jardin au cas où on changerait de stade
-    boardElement.classList.remove('garden-stage-2', 'garden-stage-3', 'garden-stage-4');
+// --- NOUVEAU : RENDU DU MENU ---
+function renderMenu() {
+    menuLevel.textContent = `Niveau ${state.level}`;
+    updateGardenVisual(menuBoard);
+    
+    menuBoard.innerHTML = '';
+    let boardWidth = menuBoard.clientWidth;
+    if (boardWidth === 0) boardWidth = Math.min(window.innerWidth, window.innerHeight) * 0.85;
+    const gap = 4; 
+    const stoneSize = (boardWidth - (gap * (state.gridSize + 1))) / state.gridSize;
 
-    if (state.level >= 10) {
-        boardElement.classList.add('garden-stage-4');
-    } else if (state.level >= 7) {
-        boardElement.classList.add('garden-stage-3');
-    } else if (state.level >= 4) {
-        boardElement.classList.add('garden-stage-2');
+    // On affiche le jardin à l'état parfait (résolu)
+    for (let i = 1; i < state.totalTiles; i++) {
+        let row = Math.floor((i - 1) / state.gridSize);
+        let col = (i - 1) % state.gridSize;
+        let x = gap + col * (stoneSize + gap);
+        let y = gap + row * (stoneSize + gap);
+
+        const stone = document.createElement('div');
+        stone.className = 'stone';
+        stone.textContent = i;
+        stone.style.width = `${stoneSize}px`;
+        stone.style.height = `${stoneSize}px`;
+        stone.style.transform = `translate(${x}px, ${y}px)`;
+        menuBoard.appendChild(stone);
     }
-    // Si niveau 1, 2 ou 3 : on ne met aucune classe supplémentaire, c'est le sable nu par défaut
 }
 
 // --- LOGIQUE DE DIFFICULTÉ ---
 function getShuffleMovesForLevel(level) {
-    const baseMoves = 15;     
-    const increment = 15;     
-    const maxMoves = 200;     
-    return Math.min(baseMoves + (level - 1) * increment, maxMoves);
+    return Math.min(15 + (level - 1) * 15, 200);
 }
 
-// --- LOGIQUE PRINCIPALE ---
+// --- LOGIQUE PRINCIPALE DU JEU ---
 function initGame() {
     state.totalTiles = state.gridSize * state.gridSize;
     state.moves = 0;
     state.isPlaying = true;
     
-    levelDisplay.textContent = `Niveau ${state.level}`;
-    updateGardenVisual(); // NOUVEAU : On applique la couleur du jardin
-    
+    updateGardenVisual(boardElement);
     continueBtn.classList.add('hidden');
     messageElement.classList.remove('visible');
     
@@ -87,7 +114,7 @@ function initGame() {
         state.grid = generateSolvedGrid();
         shuffleGrid(state.grid, getShuffleMovesForLevel(state.level));
         renderBoard();
-    }, 300);
+    }, 100); // Léger délai pour laisser la transition de l'écran se faire
 }
 
 function generateSolvedGrid() {
@@ -124,7 +151,6 @@ function renderBoard() {
     tilesElements = {};
     let boardWidth = boardElement.clientWidth;
     if (boardWidth === 0) boardWidth = Math.min(window.innerWidth, window.innerHeight) * 0.85;
-
     const gap = 4; 
     const stoneSize = (boardWidth - (gap * (state.gridSize + 1))) / state.gridSize;
 
@@ -162,10 +188,7 @@ function handleTileClick(value) {
 
         if (checkWin()) {
             state.isPlaying = false; 
-            
-            // NOUVEAU : Message lié à l'univers
             messageElement.textContent = "L'équilibre est rétabli.";
-            
             void messageElement.offsetWidth; 
             messageElement.classList.add('visible');
             continueBtn.classList.remove('hidden');
@@ -196,22 +219,43 @@ function checkWin() {
 }
 
 // --- ÉCOUTEURS ---
+
+// Bouton du menu
+playBtn.addEventListener('click', () => {
+    showScreen('game');
+    initGame();
+});
+
+// Boutons du jeu
+backBtn.addEventListener('click', () => {
+    renderMenu(); // On met à jour le visuel du menu avant d'y retourner
+    showScreen('menu');
+});
+
 restartBtn.addEventListener('click', initGame);
+
 continueBtn.addEventListener('click', () => {
     state.level++; 
     saveProgress(); 
-    initGame();     
+    renderMenu(); // On affiche le jardin du niveau suivant
+    showScreen('menu'); // On retourne au menu pour le montrer
 });
 
 window.addEventListener('resize', () => {
-    for (let i = 0; i < state.totalTiles; i++) {
-        let value = state.grid[i];
-        if (value !== 0) updateTilePosition(value, i);
+    // Redimensionne le plateau visible
+    if (screenGame.classList.contains('active')) {
+        for (let i = 0; i < state.totalTiles; i++) {
+            let value = state.grid[i];
+            if (value !== 0) updateTilePosition(value, i);
+        }
+    } else {
+        renderMenu();
     }
 });
 
 // --- DÉMARRAGE ---
 window.addEventListener('load', () => {
     loadProgress(); 
-    initGame();
+    renderMenu();   // On affiche le menu au lieu de lancer le jeu direct
+    showScreen('menu');
 });
