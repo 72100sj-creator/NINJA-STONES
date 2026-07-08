@@ -9,38 +9,46 @@
 </head>
 <body>
 
-    <!-- ÉCRAN D'ACCUEIL (LE JARDIN) -->
-    <div id="screen-menu" class="screen active">
-        <h1 class="title">Ninja Stones</h1>
-        <p id="menu-level" class="level-text">Niveau 1</p>
+    <div class="app-container">
         
-        <!-- NOUVEAU : ZONE DU PERSONNAGE -->
-        <div id="ninja-character" class="character-container">
-            <div class="ninja-head"></div>
-            <div class="ninja-body"></div>
+        <!-- NOUVEAU : L'entête qui reste TOUJOURS visible -->
+        <header class="app-header">
+            <h1 class="title">Ninja Stones</h1>
+            <p id="level-display" class="level-text">Niveau 1</p>
+        </header>
+
+        <!-- ÉCRAN D'ACCUEIL (LE JARDIN) -->
+        <div id="screen-menu" class="screen active">
+            
+            <!-- ZONE DU PERSONNAGE -->
+            <div id="ninja-character" class="character-container">
+                <div class="ninja-head"></div>
+                <div class="ninja-body"></div>
+            </div>
+
+            <!-- Le jardin visuel (non interactif) -->
+            <div id="menu-board" class="board">
+                <!-- Généré par JS -->
+            </div>
+
+            <button id="play-btn" class="btn">Jouer</button>
         </div>
 
-        <!-- Le jardin visuel (non interactif) -->
-        <div id="menu-board" class="board">
-            <!-- Généré par JS -->
+        <!-- ÉCRAN DE JEU (LE PUZZLE) -->
+        <div id="screen-game" class="screen">
+            <div id="board" class="board">
+                <!-- Généré par JS -->
+            </div>
+
+            <div class="btn-group">
+                <button id="back-btn" class="btn">Retour</button>
+                <button id="restart-btn" class="btn">Recommencer</button>
+                <button id="continue-btn" class="btn hidden">Continuer</button>
+            </div>
+            
+            <p id="message" class="message"></p>
         </div>
 
-        <button id="play-btn" class="btn">Jouer</button>
-    </div>
-
-    <!-- ÉCRAN DE JEU (LE PUZZLE) -->
-    <div id="screen-game" class="screen">
-        <div id="board" class="board">
-            <!-- Généré par JS -->
-        </div>
-
-        <div class="btn-group">
-            <button id="back-btn" class="btn">Retour</button>
-            <button id="restart-btn" class="btn">Recommencer</button>
-            <button id="continue-btn" class="btn hidden">Continuer</button>
-        </div>
-        
-        <p id="message" class="message"></p>
     </div>
 
     <script src="game.js"></script>
