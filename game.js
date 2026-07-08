@@ -1,5 +1,5 @@
 /**
- * Ninja Stones - V0.0.9 (Structure Header Fixe)
+ * Ninja Stones - V0.0.9 (Fix Safari iOS Ghost Layout)
  */
 
 // --- ÉTAT GLOBAL DU JEU ---
@@ -16,7 +16,6 @@ const state = {
 const screenMenu = document.getElementById('screen-menu');
 const screenGame = document.getElementById('screen-game');
 
-// L'élément texte du niveau est maintenant dans le header fixe
 const levelDisplay = document.getElementById('level-display'); 
 const menuBoard = document.getElementById('menu-board');
 const playBtn = document.getElementById('play-btn');
@@ -28,6 +27,24 @@ const backBtn = document.getElementById('back-btn');
 const messageElement = document.getElementById('message');
 
 let tilesElements = {}; 
+
+// --- NOUVEAU : SUPER FONCTION DE SÉCURITÉ POUR SAFARI ---
+/**
+ * Force le calcul de la largeur du plateau.
+ * Safari retarde parfois ce calcul quand on change d'écran.
+ */
+function getSafeBoardWidth(boardEl) {
+    // 1. Essai normal
+    let width = boardEl.clientWidth;
+    if (width > 0) return width;
+    
+    // 2. Forcer Safari à calculer via les styles CSS
+    width = parseFloat(getComputedStyle(boardEl).width);
+    if (width > 0) return width;
+    
+    // 3. Si tout échoue, calcul mathématique de secours
+    return Math.min(window.innerWidth, window.innerHeight * 0.8) * 0.85;
+}
 
 // --- NAVIGATION ENTRE LES ÉCRANS ---
 function showScreen(screenName) {
@@ -69,8 +86,8 @@ function renderMenu() {
     updateGardenVisual(menuBoard);
     
     menuBoard.innerHTML = '';
-    let boardWidth = menuBoard.clientWidth;
-    if (boardWidth === 0) boardWidth = Math.min(window.innerWidth, window.innerHeight * 0.8) * 0.85;
+    // Utilisation de la fonction sécurisée
+    let boardWidth = getSafeBoardWidth(menuBoard);
     const gap = 4; 
     const stoneSize = (boardWidth - (gap * (state.gridSize + 1))) / state.gridSize;
 
@@ -101,19 +118,19 @@ function initGame() {
     state.moves = 0;
     state.isPlaying = true;
     
-    // On met à jour le texte du niveau dans le header fixe
     levelDisplay.textContent = `Niveau ${state.level}`;
     
     updateGardenVisual(boardElement);
     continueBtn.classList.add('hidden');
     messageElement.classList.remove('visible');
     
-    setTimeout(() => {
+    // On utilise requestAnimationFrame : cela dit à Safari "attends que l'écran soit dessiné AVANT de lancer la suite"
+    requestAnimationFrame(() => {
         messageElement.textContent = '';
         state.grid = generateSolvedGrid();
         shuffleGrid(state.grid, getShuffleMovesForLevel(state.level));
         renderBoard();
-    }, 100);
+    });
 }
 
 function generateSolvedGrid() {
@@ -135,122 +152,4 @@ function shuffleGrid(grid, moves) {
 }
 
 function getAdjacentIndexes(index) {
-    let row = Math.floor(index / state.gridSize);
-    let col = index % state.gridSize;
-    let neighbors = [];
-    if (row > 0) neighbors.push(index - state.gridSize);
-    if (row < state.gridSize - 1) neighbors.push(index + state.gridSize);
-    if (col > 0) neighbors.push(index - 1);
-    if (col < state.gridSize - 1) neighbors.push(index + 1);
-    return neighbors;
-}
-
-function renderBoard() {
-    boardElement.innerHTML = '';
-    tilesElements = {};
-    let boardWidth = boardElement.clientWidth;
-    if (boardWidth === 0) boardWidth = Math.min(window.innerWidth, window.innerHeight * 0.8) * 0.85;
-    const gap = 4; 
-    const stoneSize = (boardWidth - (gap * (state.gridSize + 1))) / state.gridSize;
-
-    for (let i = 0; i < state.totalTiles; i++) {
-        let value = state.grid[i];
-        if (value === 0) continue;
-        let row = Math.floor(i / state.gridSize);
-        let col = i % state.gridSize;
-        let x = gap + col * (stoneSize + gap);
-        let y = gap + row * (stoneSize + gap);
-
-        const stone = document.createElement('div');
-        stone.className = 'stone';
-        stone.textContent = value;
-        stone.style.width = `${stoneSize}px`;
-        stone.style.height = `${stoneSize}px`;
-        stone.style.transform = `translate(${x}px, ${y}px)`;
-        stone.addEventListener('click', () => handleTileClick(value));
-        boardElement.appendChild(stone);
-        tilesElements[value] = stone;
-    }
-}
-
-function handleTileClick(value) {
-    if (!state.isPlaying) return;
-    let clickedIndex = state.grid.indexOf(value);
-    let emptyIndex = state.grid.indexOf(0);
-    let neighbors = getAdjacentIndexes(emptyIndex);
-    
-    if (neighbors.includes(clickedIndex)) {
-        state.grid[emptyIndex] = value;
-        state.grid[clickedIndex] = 0;
-        state.moves++; 
-        updateTilePosition(value, emptyIndex);
-
-        if (checkWin()) {
-            state.isPlaying = false; 
-            messageElement.textContent = "L'équilibre est rétabli.";
-            void messageElement.offsetWidth; 
-            messageElement.classList.add('visible');
-            continueBtn.classList.remove('hidden');
-            saveProgress();
-        }
-    }
-}
-
-function updateTilePosition(value, newIndex) {
-    const stone = tilesElements[value];
-    if (!stone) return;
-    let boardWidth = boardElement.clientWidth;
-    if (boardWidth === 0) boardWidth = Math.min(window.innerWidth, window.innerHeight * 0.8) * 0.85;
-    const gap = 4;
-    const stoneSize = (boardWidth - (gap * (state.gridSize + 1))) / state.gridSize;
-    let row = Math.floor(newIndex / state.gridSize);
-    let col = newIndex % state.gridSize;
-    let x = gap + col * (stoneSize + gap);
-    let y = gap + row * (stoneSize + gap);
-    stone.style.transform = `translate(${x}px, ${y}px)`;
-}
-
-function checkWin() {
-    for (let i = 0; i < state.totalTiles - 1; i++) {
-        if (state.grid[i] !== i + 1) return false;
-    }
-    return true;
-}
-
-// --- ÉCOUTEURS ---
-playBtn.addEventListener('click', () => {
-    showScreen('game');
-    initGame();
-});
-
-backBtn.addEventListener('click', () => {
-    renderMenu();
-    showScreen('menu');
-});
-
-restartBtn.addEventListener('click', initGame);
-
-continueBtn.addEventListener('click', () => {
-    state.level++; 
-    saveProgress(); 
-    renderMenu();
-    showScreen('menu'); 
-});
-
-window.addEventListener('resize', () => {
-    if (screenGame.classList.contains('active')) {
-        for (let i = 0; i < state.totalTiles; i++) {
-            let value = state.grid[i];
-            if (value !== 0) updateTilePosition(value, i);
-        }
-    } else {
-        renderMenu();
-    }
-});
-
-// --- DÉMARRAGE ---
-window.addEventListener('load', () => {
-    loadProgress(); 
-    renderMenu();   
-    showScreen('menu');
-});
+    let row = Math.floor(index / state
