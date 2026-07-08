@@ -24,7 +24,7 @@ function initGame() {
     state.moves = 0;
     state.isPlaying = true;
     
-    // Masquer le message de victoire avec une transition fluide
+    // On retire la classe "visible" pour faire disparaître le message en douceur
     messageElement.classList.remove('visible');
     
     // Petit délai pour laisser le temps au message de disparaître avant de mélanger
@@ -33,7 +33,7 @@ function initGame() {
         state.grid = generateSolvedGrid();
         shuffleGrid(state.grid);
         renderBoard();
-    }, 200);
+    }, 300);
 }
 
 function generateSolvedGrid() {
@@ -109,7 +109,7 @@ function renderBoard() {
 }
 
 function handleTileClick(value) {
-    // SÉCURITÉ V0.0.4 : Si la partie est finie, on ignore totalement les clics
+    // Si la partie est finie, on ignore les clics
     if (!state.isPlaying) return;
 
     let clickedIndex = state.grid.indexOf(value);
@@ -128,14 +128,14 @@ function handleTileClick(value) {
         if (checkWin()) {
             state.isPlaying = false; // Verrouille le plateau
             
-            // Affichage zen du message
+            // Préparation du texte
             messageElement.textContent = "Jardin restauré.";
             
-            // Force le recalcul CSS puis ajoute la classe pour déclencher l'animation en fondu
+            // Astuce technique pour forcer le navigateur à voir le changement avant l'animation
             void messageElement.offsetWidth; 
+            
+            // ALLUMAGE DES LUMIÈRES : On ajoute la classe qui déclenche l'affichage en fondu
             messageElement.classList.add('visible');
-
-            // FUTUR : Déclencher la sauvegarde, l'animation du jardin, le déblocage du niveau...
         }
     }
 }
@@ -182,5 +182,5 @@ window.addEventListener('resize', () => {
     }
 });
 
-// --- DÉMARRAGE SÉCURISÉ ---
+// --- DÉMARRAGE ---
 window.addEventListener('load', initGame);
