@@ -1,5 +1,6 @@
 /**
- * Ninja Stones - V0.0.3 (Fix Bug iOS)
+ * Ninja Stones - V0.0.4
+ * Détection de victoire et verrouillage du plateau
  */
 
 // --- ÉTAT GLOBAL DU JEU ---
@@ -22,12 +23,17 @@ function initGame() {
     state.totalTiles = state.gridSize * state.gridSize;
     state.moves = 0;
     state.isPlaying = true;
-    messageElement.textContent = '';
-
-    state.grid = generateSolvedGrid();
-    shuffleGrid(state.grid);
-
-    renderBoard();
+    
+    // Masquer le message de victoire avec une transition fluide
+    messageElement.classList.remove('visible');
+    
+    // Petit délai pour laisser le temps au message de disparaître avant de mélanger
+    setTimeout(() => {
+        messageElement.textContent = '';
+        state.grid = generateSolvedGrid();
+        shuffleGrid(state.grid);
+        renderBoard();
+    }, 200);
 }
 
 function generateSolvedGrid() {
@@ -71,8 +77,6 @@ function renderBoard() {
     tilesElements = {};
 
     let boardWidth = boardElement.clientWidth;
-    
-    // SÉCURITÉ iOS : Si Safari n'a pas encore calculé la taille, on force une valeur par défaut
     if (boardWidth === 0) {
         boardWidth = Math.min(window.innerWidth, window.innerHeight) * 0.85;
     }
@@ -105,6 +109,7 @@ function renderBoard() {
 }
 
 function handleTileClick(value) {
+    // SÉCURITÉ V0.0.4 : Si la partie est finie, on ignore totalement les clics
     if (!state.isPlaying) return;
 
     let clickedIndex = state.grid.indexOf(value);
@@ -119,9 +124,18 @@ function handleTileClick(value) {
         state.moves++; 
         updateTilePosition(value, emptyIndex);
 
+        // DÉTECTION DE VICTOIRE
         if (checkWin()) {
-            state.isPlaying = false;
+            state.isPlaying = false; // Verrouille le plateau
+            
+            // Affichage zen du message
             messageElement.textContent = "Jardin restauré.";
+            
+            // Force le recalcul CSS puis ajoute la classe pour déclencher l'animation en fondu
+            void messageElement.offsetWidth; 
+            messageElement.classList.add('visible');
+
+            // FUTUR : Déclencher la sauvegarde, l'animation du jardin, le déblocage du niveau...
         }
     }
 }
@@ -169,5 +183,4 @@ window.addEventListener('resize', () => {
 });
 
 // --- DÉMARRAGE SÉCURISÉ ---
-// On attend que la page ET les styles soient 100% chargés avant de calculer les positions
 window.addEventListener('load', initGame);
