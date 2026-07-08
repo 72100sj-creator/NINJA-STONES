@@ -1,13 +1,13 @@
 /* --- VARIABLES DE DESIGN (Thème Jardin Zen) --- */
 :root {
-    --bg-color: #3e4a3e; /* Vert sombre forêt (fond de l'écran) */
+    --bg-color: #3e4a3e; /* Vert sombre forêt */
     --board-bg: #c2b280; /* Couleur sable du jardin zen */
     --stone-color: #e6e2d6; /* Pierre claire */
-    --stone-color-alt: #d4cfc2; /* Pierre légèrement plus foncée pour le dégradé */
+    --stone-color-alt: #d4cfc2; /* Pierre légèrement plus foncée */
     --stone-text: #5c5447; /* Texte gravé dans la pierre */
-    --stone-shadow: rgba(62, 74, 62, 0.4); /* Ombre portée verte/terre */
+    --stone-shadow: rgba(62, 74, 62, 0.4); /* Ombre portée */
     --board-size: min(85vw, 85vh);
-    --gap: 4px; /* Espace pour voir le sable entre les pierres */
+    --gap: 4px; 
     --stone-size: calc((var(--board-size) - (var(--gap) * 5)) / 4);
 }
 
@@ -16,7 +16,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent; /* Supprime le flash bleu au clic sur iOS */
+    -webkit-tap-highlight-color: transparent; 
 }
 
 body {
@@ -27,9 +27,9 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    min-height: 100dvh; /* Prend en compte la barre de navigation iOS */
+    min-height: 100dvh; 
     padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-    touch-action: manipulation; /* Rend le clic instantané sur mobile */
+    touch-action: manipulation; 
     user-select: none;
 }
 
@@ -37,7 +37,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 24px;
+    gap: 20px;
 }
 
 /* --- TITRE --- */
@@ -46,7 +46,17 @@ body {
     font-weight: 300;
     letter-spacing: 4px;
     text-transform: uppercase;
-    color: #d4c5a9; /* Couleur sable clair pour le titre */
+    color: #d4c5a9; 
+}
+
+/* --- NOUVEAU : Affichage du niveau --- */
+.level-text {
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #d4c5a9;
+    opacity: 0.7;
+    margin-top: -10px; /* Remonte un peu vers le titre */
 }
 
 /* --- PLATEAU --- */
@@ -56,7 +66,6 @@ body {
     height: var(--board-size);
     background-color: var(--board-bg);
     border-radius: 12px;
-    /* Ombre douce pour imiter le cadre en bois du jardin */
     box-shadow: 
         0 10px 30px rgba(0, 0, 0, 0.5),
         inset 0 0 20px rgba(0, 0, 0, 0.1); 
@@ -68,40 +77,35 @@ body {
     position: absolute;
     width: var(--stone-size);
     height: var(--stone-size);
-    
-    /* Effet pierre naturelle */
     background: linear-gradient(145deg, var(--stone-color), var(--stone-color-alt));
     border-radius: 10px;
-    
-    /* Effet de profondeur (relief de la pierre) */
     box-shadow: 
-        2px 4px 8px var(--stone-shadow),           /* Ombre portée principale */
-        inset 0 2px 3px rgba(255, 255, 255, 0.6),  /* Reflet lumière en haut */
-        inset 0 -2px 3px rgba(0, 0, 0, 0.1);       /* Ombre interne en bas */
-    
+        2px 4px 8px var(--stone-shadow),           
+        inset 0 2px 3px rgba(255, 255, 255, 0.6),  
+        inset 0 -2px 3px rgba(0, 0, 0, 0.1);       
     display: flex;
     justify-content: center;
     align-items: center;
-    
-    /* Typographie "gravée" */
     font-size: 1.6rem;
     font-weight: 600;
     color: var(--stone-text);
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4); 
-    
     cursor: pointer;
-    
-    /* Animation de glissement fluide (inertie de la pierre) */
     transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .stone:active {
-    /* Retour tactile instantané au doigt sans casser l'animation */
     transition: transform 0s;
 }
 
-/* --- BOUTON RECOMMENCER --- */
-.btn-restart {
+/* --- BOUTONS --- */
+.btn-group {
+    display: flex;
+    gap: 15px;
+    height: 44px; /* Hauteur fixe pour éviter que l'écran saute quand un bouton apparaît */
+}
+
+.btn {
     background: transparent;
     color: #d4c5a9;
     border: 1px solid #d4c5a9;
@@ -113,9 +117,14 @@ body {
     transition: all 0.2s ease;
 }
 
-.btn-restart:active {
+.btn:active {
     background: #d4c5a9;
     color: var(--bg-color);
+}
+
+/* Classe utilitaire pour cacher un élément simplement */
+.hidden {
+    display: none !important;
 }
 
 /* --- MESSAGE DE VICTOIRE --- */
@@ -124,13 +133,10 @@ body {
     font-size: 1.1rem;
     color: #d4c5a9;
     text-align: center;
-    /* Le message est invisible par défaut... */
     opacity: 0;
-    /* ...et apparaît doucement quand on lui ajoute la classe "visible" */
     transition: opacity 0.8s ease;
 }
 
-/* Classe active par le JavaScript lors de la victoire */
 .message.visible {
     opacity: 1;
 }
