@@ -1,0 +1,109 @@
+/* --- VARIABLES DE DESIGN --- */
+:root {
+    --bg-color: #2c3e50;
+    --board-bg: #34495e;
+    --stone-color: #ecf0f1;
+    --stone-text: #2c3e50;
+    --stone-shadow: rgba(0, 0, 0, 0.3);
+    --board-size: min(85vw, 85vh);
+    --gap: 4px;
+    --stone-size: calc((var(--board-size) - (var(--gap) * 5)) / 4);
+}
+
+/* --- RESET ET BASE MOBILE --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent; /* Supprime le flash bleu au clic sur iOS */
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--stone-color);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    min-height: 100dvh; /* dvh prend en compte la barre de navigation iOS */
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    touch-action: manipulation; /* Rend le clic instantané sur mobile */
+    user-select: none;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+/* --- TITRE --- */
+.title {
+    font-size: 2rem;
+    font-weight: 300;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.9;
+}
+
+/* --- PLATEAU --- */
+.board {
+    position: relative;
+    width: var(--board-size);
+    height: var(--board-size);
+    background-color: var(--board-bg);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    padding: var(--gap);
+}
+
+/* --- PIERRES --- */
+.stone {
+    position: absolute;
+    width: var(--stone-size);
+    height: var(--stone-size);
+    background-color: var(--stone-color);
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--stone-text);
+    cursor: pointer;
+    box-shadow: 0 4px 6px var(--stone-shadow);
+    
+    /* Transition fluide pour le glissement */
+    transition: transform 0.15s ease-out;
+}
+
+.stone:active {
+    transform: scale(0.95); /* Retour tactile léger */
+    /* Le translateX/Y est géré en inline par JS, on ne l'écrase pas ici */
+}
+
+/* --- BOUTON RECOMMENCER --- */
+.btn-restart {
+    background: transparent;
+    color: var(--stone-color);
+    border: 1px solid var(--stone-color);
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-restart:active {
+    background: var(--stone-color);
+    color: var(--bg-color);
+}
+
+/* --- MESSAGE (Victoire) --- */
+.message {
+    height: 20px;
+    font-size: 1rem;
+    opacity: 0.8;
+}
