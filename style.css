@@ -87,5 +87,4 @@ body {
     /* L'échelle s'applique instantanément (0s) pour un retour tactile immédiat 
        sans interférer avec l'animation de glissement */
     transition: transform 0s;
-    transform: scale(0.95); 
 }
