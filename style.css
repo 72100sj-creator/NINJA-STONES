@@ -5,7 +5,7 @@
     --stone-color-alt: #d4cfc2; /* Pierre légèrement plus foncée */
     --stone-text: #5c5447; /* Texte gravé dans la pierre */
     --stone-shadow: rgba(62, 74, 62, 0.4); /* Ombre portée */
-    --board-size: min(85vw, 85vh);
+    --board-size: min(85vw, 80vh); /* Réduit un peu pour laisser place au texte */
     --gap: 4px; 
     --stone-size: calc((var(--board-size) - (var(--gap) * 5)) / 4);
 }
@@ -22,41 +22,35 @@ body {
     background-color: var(--bg-color);
     color: var(--stone-color);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     min-height: 100vh;
     min-height: 100dvh; 
-    /* On retire le padding du body, on va le gérer directement dans les écrans */
     touch-action: manipulation; 
     user-select: none;
-    position: relative; /* Permet de contenir les écrans en absolute */
-    width: 100%;
 }
 
-/* --- SYSTÈME D'ÉCRANS --- */
-.screen {
-    display: none; 
+/* --- NOUVEAU : STRUCTURE PRINCIPALE --- */
+.app-container {
+    display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center; /* Centre verticalement le contenu de l'écran */
-    gap: 20px;
-    position: absolute;
-    /* Ces 4 lignes forcent l'écran à prendre toute la place disponible */
-    top: 0;
-    left: 0;
+    height: 100vh;
+    height: 100dvh;
     width: 100%;
-    height: 100%;
-    /* Ces 2 lignes repoussent le contenu EN-DESSOUS de l'encoche de l'iPhone */
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
+    overflow: hidden; /* Empêche de scroller */
 }
 
-.screen.active {
-    display: flex; 
+/* --- NOUVEAU : ENTÊTE FIXE --- */
+.app-header {
+    width: 100%;
+    text-align: center;
+    /* Pousse le contenu en dessous de l'encoche de l'iPhone */
+    padding-top: env(safe-area-inset-top); 
+    padding-bottom: 10px;
+    /* Fond dégradé pour faire joli */
+    background: linear-gradient(to bottom, rgba(62, 74, 62, 1) 60%, rgba(62, 74, 62, 0));
+    z-index: 10; /* Met le texte toujours au-dessus du reste */
 }
 
-/* --- TYPOGRAPHIE --- */
 .title {
     font-size: 2rem;
     font-weight: 300;
@@ -71,7 +65,23 @@ body {
     text-transform: uppercase;
     color: #d4c5a9;
     opacity: 0.7;
-    margin-top: -10px;
+}
+
+/* --- SYSTÈME D'ÉCRANS --- */
+.screen {
+    display: none; 
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Centre le contenu au milieu de l'espace restant */
+    gap: 20px;
+    flex-grow: 1; /* Prend tout l'espace restant sous le titre */
+    width: 100%;
+    /* Sécurité pour ne pas que le contenu aille sous la barre du bas de l'iPhone */
+    padding-bottom: env(safe-area-inset-bottom); 
+}
+
+.screen.active {
+    display: flex; 
 }
 
 /* --- PERSONNAGE (Ninja Temporaire CSS) --- */
@@ -83,7 +93,6 @@ body {
     flex-direction: column;
     align-items: center;
     animation: breathe 4s ease-in-out infinite;
-    margin-top: -10px;
 }
 
 .ninja-head {
@@ -107,7 +116,6 @@ body {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-5px); }
 }
-
 
 /* --- PLATEAU & ÉVOLUTION DU JARDIN --- */
 .board {
