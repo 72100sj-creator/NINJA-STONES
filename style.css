@@ -1,14 +1,12 @@
 /* --- VARIABLES DE DESIGN --- */
 :root {
-    /* Nouvelle palette : Sable et Pierre naturelle */
-    --bg-color: #3e4a3e; /* Vert sombre forêt (fond de l'écran) */
-    --board-bg: #c2b280; /* Couleur sable du jardin zen */
-    --stone-color: #e6e2d6; /* Pierre claire */
-    --stone-color-alt: #d4cfc2; /* Pierre légèrement plus foncée pour le dégradé */
-    --stone-text: #5c5447; /* Texte gravé dans la pierre */
-    --stone-shadow: rgba(62, 74, 62, 0.4); /* Ombre portée verte/terre */
+    --bg-color: #2c3e50;
+    --board-bg: #34495e;
+    --stone-color: #ecf0f1;
+    --stone-text: #2c3e50;
+    --stone-shadow: rgba(0, 0, 0, 0.3);
     --board-size: min(85vw, 85vh);
-    --gap: 5px; /* Léger espacement pour voir le "sable" entre les pierres */
+    --gap: 4px;
     --stone-size: calc((var(--board-size) - (var(--gap) * 5)) / 4);
 }
 
@@ -17,7 +15,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: transparent; /* Supprime le flash bleu au clic sur iOS */
 }
 
 body {
@@ -28,9 +26,9 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    min-height: 100dvh;
+    min-height: 100dvh; /* dvh prend en compte la barre de navigation iOS */
     padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-    touch-action: manipulation;
+    touch-action: manipulation; /* Rend le clic instantané sur mobile */
     user-select: none;
 }
 
@@ -38,17 +36,16 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 24px;
+    gap: 20px;
 }
 
 /* --- TITRE --- */
 .title {
     font-size: 2rem;
     font-weight: 300;
-    letter-spacing: 4px;
+    letter-spacing: 2px;
     text-transform: uppercase;
     opacity: 0.9;
-    color: #d4c5a9; /* Couleur sable clair pour le titre */
 }
 
 /* --- PLATEAU --- */
@@ -58,10 +55,7 @@ body {
     height: var(--board-size);
     background-color: var(--board-bg);
     border-radius: 12px;
-    /* Ombre douce pour imiter le cadre en bois du jardin */
-    box-shadow: 
-        0 10px 30px rgba(0, 0, 0, 0.5),
-        inset 0 0 20px rgba(0, 0, 0, 0.1); /* Légère usure intérieure du sable */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     padding: var(--gap);
 }
 
@@ -70,63 +64,28 @@ body {
     position: absolute;
     width: var(--stone-size);
     height: var(--stone-size);
-    
-    /* Effet pierre naturelle */
-    background: linear-gradient(145deg, var(--stone-color), var(--stone-color-alt));
-    border-radius: 10px;
-    
-    /* Effet de profondeur (relief de la pierre) */
-    box-shadow: 
-        2px 4px 8px var(--stone-shadow),           /* Ombre portée principale */
-        inset 0 2px 3px rgba(255, 255, 255, 0.6),  /* Reflet lumière en haut */
-        inset 0 -2px 3px rgba(0, 0, 0, 0.1);       /* Ombre interne en bas */
-    
+    background-color: var(--stone-color);
+    border-radius: 8px;
     display: flex;
     justify-content: center;
     align-items: center;
-    
-    /* Typographie "gravée" */
-    font-size: 1.6rem;
-    font-weight: 600;
+    font-size: 1.5rem;
+    font-weight: bold;
     color: var(--stone-text);
-    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4); /* Leger relief au texte */
-    
     cursor: pointer;
+    box-shadow: 0 4px 6px var(--stone-shadow);
     
-    /* Transition fluide pour le glissement */
-    transition: transform 0.15s ease-out, box-shadow 0.1s ease;
+    /* 
+     * V0.0.2 : Animation de glissement optimisée.
+     * On utilise cubic-bezier pour simuler l'inertie d'une pierre qui glisse sur du sable
+     * et s'arrête doucement.
+     */
+    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .stone:active {
-    /* Effet d'enfoncement dans le sable quand on touche la pierre */
-    box-shadow: 
-        1px 2px 4px var(--stone-shadow),
-        inset 0 2px 3px rgba(255, 255, 255, 0.4),
-        inset 0 -1px 2px rgba(0, 0, 0, 0.1);
-}
-
-/* --- BOUTON RECOMMENCER --- */
-.btn-restart {
-    background: transparent;
-    color: #d4c5a9;
-    border: 1px solid #d4c5a9;
-    padding: 10px 24px;
-    border-radius: 30px;
-    font-size: 1rem;
-    letter-spacing: 1px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.btn-restart:active {
-    background: #d4c5a9;
-    color: var(--bg-color);
-}
-
-/* --- MESSAGE (Victoire) --- */
-.message {
-    height: 20px;
-    font-size: 1rem;
-    opacity: 0.8;
-    color: #d4c5a9;
+    /* L'échelle s'applique instantanément (0s) pour un retour tactile immédiat 
+       sans interférer avec l'animation de glissement */
+    transition: transform 0s;
+    transform: scale(0.95); 
 }
