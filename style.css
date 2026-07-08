@@ -32,9 +32,9 @@ body {
     user-select: none;
 }
 
-/* --- NOUVEAU : SYSTÈME D'ÉCRANS --- */
+/* --- SYSTÈME D'ÉCRANS --- */
 .screen {
-    display: none; /* Caché par défaut */
+    display: none; 
     flex-direction: column;
     align-items: center;
     gap: 20px;
@@ -43,7 +43,7 @@ body {
 }
 
 .screen.active {
-    display: flex; /* Seul l'écran actif est visible */
+    display: flex; 
 }
 
 /* --- TYPOGRAPHIE --- */
@@ -63,6 +63,45 @@ body {
     opacity: 0.7;
     margin-top: -10px;
 }
+
+/* --- NOUVEAU : PERSONNAGE (Ninja Temporaire CSS) --- */
+.character-container {
+    /* Espace dédié au personnage */
+    height: 80px;
+    width: 80px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Animation de respiration zen */
+    animation: breathe 4s ease-in-out infinite;
+    margin-top: -10px;
+}
+
+.ninja-head {
+    width: 30px;
+    height: 30px;
+    background-color: #2c3e50; /* Couleur sombre pour ressortir sur le sable et l'herbe */
+    border-radius: 50%; /* Cercle parfait pour la tête */
+    z-index: 2;
+}
+
+.ninja-body {
+    width: 50px;
+    height: 40px;
+    background-color: #2c3e50;
+    /* Trapèze pour imiter la position accroupie du ninja */
+    border-radius: 5px 5px 15px 15px; 
+    margin-top: -5px; /* Fait chevaucher le corps sur la tête */
+    z-index: 1;
+}
+
+/* Keyframes : Monte de 5px, redescend de 5px, en boucle */
+@keyframes breathe {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
 
 /* --- PLATEAU & ÉVOLUTION DU JARDIN --- */
 .board {
@@ -98,13 +137,11 @@ body {
     transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-/* Les pierres du menu ne doivent pas rétrécir au toucher */
 #menu-board .stone {
     cursor: default;
     transition: none; 
 }
 
-/* Les pierres du jeu réagissent au toucher */
 #board .stone {
     cursor: pointer;
 }
