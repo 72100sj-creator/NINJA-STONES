@@ -1,13 +1,13 @@
 /**
- * Ninja Stones - V0.0.5
- * Système de niveaux et sauvegarde locale
+ * Ninja Stones - V0.0.6
+ * Gestion de la difficulté par niveau (Courbe d'apprentissage)
  */
 
 // --- ÉTAT GLOBAL DU JEU ---
 const state = {
     level: 1,
     moves: 0,
-    gridSize: 4, // Pour l'instant fixe à 4, mais prêt à évoluer par niveau
+    gridSize: 4, 
     totalTiles: 16,
     grid: [],
     isPlaying: false
@@ -16,15 +16,14 @@ const state = {
 // --- ÉLÉMENTS DU DOM ---
 const boardElement = document.getElementById('board');
 const restartBtn = document.getElementById('restart-btn');
-const continueBtn = document.getElementById('continue-btn'); // Nouveau
+const continueBtn = document.getElementById('continue-btn');
 const messageElement = document.getElementById('message');
-const levelDisplay = document.getElementById('level-display'); // Nouveau
+const levelDisplay = document.getElementById('level-display');
 
 let tilesElements = {}; 
 
 // --- GESTION DE LA SAUVEGARDE (LocalStorage) ---
 
-/** Charge le niveau atteint depuis la mémoire du téléphone */
 function loadProgress() {
     try {
         const savedLevel = localStorage.getItem('ninjaStonesLevel');
@@ -32,18 +31,31 @@ function loadProgress() {
             state.level = parseInt(savedLevel, 10);
         }
     } catch (e) {
-        // Si le navigateur bloque le localStorage (mode privé parfois), on ignore
         console.log("Sauvegarde locale indisponible.");
     }
 }
 
-/** Sauvegarde le niveau actuel dans la mémoire du téléphone */
 function saveProgress() {
     try {
         localStorage.setItem('ninjaStonesLevel', state.level.toString());
     } catch (e) {
         console.log("Impossible de sauvegarder.");
     }
+}
+
+// --- NOUVEAU : CALCUL DE LA DIFFICULTÉ ---
+
+/**
+ * Calcule le nombre de mouvements de mélange en fonction du niveau.
+ * Crée une progression douce : +15 mouvements par niveau.
+ */
+function getShuffleMovesForLevel(level) {
+    const baseMoves = 15;     // Niveau 1 : très facile
+    const increment = 15;     // On ajoute 15 mouvements à chaque niveau
+    const maxMoves = 200;     // Plafond pour un mélange optimal
+    
+    // La fonction Math.min empêche de dépasser 200 même au niveau 50
+    return Math.min(baseMoves + (level - 1) * increment, maxMoves);
 }
 
 // --- LOGIQUE PRINCIPALE ---
@@ -53,17 +65,19 @@ function initGame() {
     state.moves = 0;
     state.isPlaying = true;
     
-    // Mise à jour de l'affichage du niveau
     levelDisplay.textContent = `Niveau ${state.level}`;
     
-    // Cacher le bouton continuer et le message au démarrage
     continueBtn.classList.add('hidden');
     messageElement.classList.remove('visible');
     
     setTimeout(() => {
         messageElement.textContent = '';
         state.grid = generateSolvedGrid();
-        shuffleGrid(state.grid);
+        
+        // On passe désormais le nombre de mouvements calculé à la fonction de mélange
+        const shuffleMovesNeeded = getShuffleMovesForLevel(state.level);
+        shuffleGrid(state.grid, shuffleMovesNeeded);
+        
         renderBoard();
     }, 300);
 }
@@ -77,11 +91,13 @@ function generateSolvedGrid() {
     return grid;
 }
 
-function shuffleGrid(grid) {
+/**
+ * Mélange la grille. Le paramètre 'moves' définit maintenant la difficulté.
+ */
+function shuffleGrid(grid, moves) {
     let emptyIndex = grid.indexOf(0);
-    let shuffleMoves = 200; 
 
-    for (let i = 0; i < shuffleMoves; i++) {
+    for (let i = 0; i < moves; i++) {
         let neighbors = getAdjacentIndexes(emptyIndex);
         let randomNeighbor = neighbors[Math.floor(Math.random() * neighbors.length)];
         
@@ -156,13 +172,12 @@ function handleTileClick(value) {
         updateTilePosition(value, emptyIndex);
 
         if (checkWin()) {
-            state.isPlaying = false; // Verrouille le plateau
+            state.isPlaying = false; 
             
             messageElement.textContent = "Jardin restauré.";
             void messageElement.offsetWidth; 
             messageElement.classList.add('visible');
             
-            // NOUVEAU : Afficher le bouton Continuer et sauvegarder la progression
             continueBtn.classList.remove('hidden');
             saveProgress();
         }
@@ -201,14 +216,12 @@ function checkWin() {
 
 // --- ÉCOUTEURS ---
 
-// Recommencer le même niveau
 restartBtn.addEventListener('click', initGame);
 
-// NOUVEAU : Passer au niveau suivant
 continueBtn.addEventListener('click', () => {
-    state.level++; // Incrémenter le niveau
-    saveProgress(); // Sauvegarder ce nouveau niveau
-    initGame();     // Relancer une partie
+    state.level++; 
+    saveProgress(); 
+    initGame();     
 });
 
 window.addEventListener('resize', () => {
@@ -222,6 +235,6 @@ window.addEventListener('resize', () => {
 
 // --- DÉMARRAGE ---
 window.addEventListener('load', () => {
-    loadProgress(); // Charger la sauvegarde AVANT de lancer le jeu
+    loadProgress(); 
     initGame();
 });
