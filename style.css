@@ -27,9 +27,11 @@ body {
     align-items: center;
     min-height: 100vh;
     min-height: 100dvh; 
-    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    /* On retire le padding du body, on va le gérer directement dans les écrans */
     touch-action: manipulation; 
     user-select: none;
+    position: relative; /* Permet de contenir les écrans en absolute */
+    width: 100%;
 }
 
 /* --- SYSTÈME D'ÉCRANS --- */
@@ -37,9 +39,17 @@ body {
     display: none; 
     flex-direction: column;
     align-items: center;
+    justify-content: center; /* Centre verticalement le contenu de l'écran */
     gap: 20px;
     position: absolute;
+    /* Ces 4 lignes forcent l'écran à prendre toute la place disponible */
+    top: 0;
+    left: 0;
     width: 100%;
+    height: 100%;
+    /* Ces 2 lignes repoussent le contenu EN-DESSOUS de l'encoche de l'iPhone */
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
 }
 
 .screen.active {
@@ -64,16 +74,14 @@ body {
     margin-top: -10px;
 }
 
-/* --- NOUVEAU : PERSONNAGE (Ninja Temporaire CSS) --- */
+/* --- PERSONNAGE (Ninja Temporaire CSS) --- */
 .character-container {
-    /* Espace dédié au personnage */
     height: 80px;
     width: 80px;
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* Animation de respiration zen */
     animation: breathe 4s ease-in-out infinite;
     margin-top: -10px;
 }
@@ -81,8 +89,8 @@ body {
 .ninja-head {
     width: 30px;
     height: 30px;
-    background-color: #2c3e50; /* Couleur sombre pour ressortir sur le sable et l'herbe */
-    border-radius: 50%; /* Cercle parfait pour la tête */
+    background-color: #2c3e50; 
+    border-radius: 50%; 
     z-index: 2;
 }
 
@@ -90,13 +98,11 @@ body {
     width: 50px;
     height: 40px;
     background-color: #2c3e50;
-    /* Trapèze pour imiter la position accroupie du ninja */
     border-radius: 5px 5px 15px 15px; 
-    margin-top: -5px; /* Fait chevaucher le corps sur la tête */
+    margin-top: -5px; 
     z-index: 1;
 }
 
-/* Keyframes : Monte de 5px, redescend de 5px, en boucle */
 @keyframes breathe {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-5px); }
@@ -108,7 +114,7 @@ body {
     position: relative;
     width: var(--board-size);
     height: var(--board-size);
-    background-color: #c2b280; /* Sable de base */
+    background-color: #c2b280; 
     border-radius: 12px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 0, 0, 0.1); 
     padding: var(--gap);
