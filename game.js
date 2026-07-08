@@ -1,33 +1,65 @@
 /**
- * Ninja Stones - V0.0.4
- * Détection de victoire et verrouillage du plateau
+ * Ninja Stones - V0.0.5
+ * Système de niveaux et sauvegarde locale
  */
 
 // --- ÉTAT GLOBAL DU JEU ---
 const state = {
     level: 1,
     moves: 0,
-    gridSize: 4,
+    gridSize: 4, // Pour l'instant fixe à 4, mais prêt à évoluer par niveau
     totalTiles: 16,
     grid: [],
     isPlaying: false
 };
 
+// --- ÉLÉMENTS DU DOM ---
 const boardElement = document.getElementById('board');
 const restartBtn = document.getElementById('restart-btn');
+const continueBtn = document.getElementById('continue-btn'); // Nouveau
 const messageElement = document.getElementById('message');
+const levelDisplay = document.getElementById('level-display'); // Nouveau
 
 let tilesElements = {}; 
+
+// --- GESTION DE LA SAUVEGARDE (LocalStorage) ---
+
+/** Charge le niveau atteint depuis la mémoire du téléphone */
+function loadProgress() {
+    try {
+        const savedLevel = localStorage.getItem('ninjaStonesLevel');
+        if (savedLevel) {
+            state.level = parseInt(savedLevel, 10);
+        }
+    } catch (e) {
+        // Si le navigateur bloque le localStorage (mode privé parfois), on ignore
+        console.log("Sauvegarde locale indisponible.");
+    }
+}
+
+/** Sauvegarde le niveau actuel dans la mémoire du téléphone */
+function saveProgress() {
+    try {
+        localStorage.setItem('ninjaStonesLevel', state.level.toString());
+    } catch (e) {
+        console.log("Impossible de sauvegarder.");
+    }
+}
+
+// --- LOGIQUE PRINCIPALE ---
 
 function initGame() {
     state.totalTiles = state.gridSize * state.gridSize;
     state.moves = 0;
     state.isPlaying = true;
     
-    // On retire la classe "visible" pour faire disparaître le message en douceur
+    // Mise à jour de l'affichage du niveau
+    levelDisplay.textContent = `Niveau ${state.level}`;
+    
+    // Cacher le bouton continuer et le message au démarrage
+    continueBtn.classList.add('hidden');
     messageElement.classList.remove('visible');
     
-    // Petit délai pour laisser le temps au message de disparaître avant de mélanger
     setTimeout(() => {
         messageElement.textContent = '';
         state.grid = generateSolvedGrid();
@@ -109,7 +141,6 @@ function renderBoard() {
 }
 
 function handleTileClick(value) {
-    // Si la partie est finie, on ignore les clics
     if (!state.isPlaying) return;
 
     let clickedIndex = state.grid.indexOf(value);
@@ -124,18 +155,16 @@ function handleTileClick(value) {
         state.moves++; 
         updateTilePosition(value, emptyIndex);
 
-        // DÉTECTION DE VICTOIRE
         if (checkWin()) {
             state.isPlaying = false; // Verrouille le plateau
             
-            // Préparation du texte
             messageElement.textContent = "Jardin restauré.";
-            
-            // Astuce technique pour forcer le navigateur à voir le changement avant l'animation
             void messageElement.offsetWidth; 
-            
-            // ALLUMAGE DES LUMIÈRES : On ajoute la classe qui déclenche l'affichage en fondu
             messageElement.classList.add('visible');
+            
+            // NOUVEAU : Afficher le bouton Continuer et sauvegarder la progression
+            continueBtn.classList.remove('hidden');
+            saveProgress();
         }
     }
 }
@@ -171,7 +200,16 @@ function checkWin() {
 }
 
 // --- ÉCOUTEURS ---
+
+// Recommencer le même niveau
 restartBtn.addEventListener('click', initGame);
+
+// NOUVEAU : Passer au niveau suivant
+continueBtn.addEventListener('click', () => {
+    state.level++; // Incrémenter le niveau
+    saveProgress(); // Sauvegarder ce nouveau niveau
+    initGame();     // Relancer une partie
+});
 
 window.addEventListener('resize', () => {
     for (let i = 0; i < state.totalTiles; i++) {
@@ -183,4 +221,7 @@ window.addEventListener('resize', () => {
 });
 
 // --- DÉMARRAGE ---
-window.addEventListener('load', initGame);
+window.addEventListener('load', () => {
+    loadProgress(); // Charger la sauvegarde AVANT de lancer le jeu
+    initGame();
+});
