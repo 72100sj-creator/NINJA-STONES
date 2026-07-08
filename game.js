@@ -1,5 +1,5 @@
 /**
- * Ninja Stones - V0.0.9 (Version stable définitive Safari iOS)
+ * Ninja Stones - V0.0.9 (Taille du plateau inratable)
  */
 
 const state = {
@@ -63,7 +63,7 @@ function renderMenu() {
     updateGardenVisual(menuBoard);
     
     menuBoard.innerHTML = '';
-    // Plus besoin de sécurité complexe ici, Safari connait la taille !
+    // Le CSS garantit maintenant que clientWidth est parfait
     let boardWidth = menuBoard.clientWidth;
     const gap = 4; 
     const stoneSize = (boardWidth - (gap * (state.gridSize + 1))) / state.gridSize;
@@ -100,7 +100,6 @@ function initGame() {
     continueBtn.classList.add('hidden');
     messageElement.classList.remove('visible');
     
-    // Petit délai pour laisser la transition d'opacité se faire calmement
     setTimeout(() => {
         messageElement.textContent = '';
         state.grid = generateSolvedGrid();
