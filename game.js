@@ -131,3 +131,72 @@ function handleTileClick(value) {
 
     let clickedIndex = state.grid.indexOf(value);
     let emptyIndex = state.grid.indexOf(0);
+
+    let neighbors = getAdjacentIndexes(emptyIndex);
+    
+    if (neighbors.includes(clickedIndex)) {
+        // Inverser dans la logique
+        state.grid[emptyIndex] = value;
+        state.grid[clickedIndex] = 0;
+
+        // Mise à jour de la structure de progression
+        state.moves++; 
+
+        // Mettre à jour l'animation
+        updateTilePosition(value, emptyIndex);
+
+        // Vérifier la victoire
+        if (checkWin()) {
+            state.isPlaying = false;
+            messageElement.textContent = "Jardin restauré.";
+            // Futur : déclencher la sauvegarde de la progression ici
+        }
+    }
+}
+
+/**
+ * Met à jour la position CSS d'une pierre
+ */
+function updateTilePosition(value, newIndex) {
+    const stone = tilesElements[value];
+    if (!stone) return;
+
+    const boardWidth = boardElement.clientWidth;
+    const gap = 4;
+    const stoneSize = (boardWidth - (gap * (state.gridSize + 1))) / state.gridSize;
+
+    let row = Math.floor(newIndex / state.gridSize);
+    let col = newIndex % state.gridSize;
+    
+    let x = gap + col * (stoneSize + gap);
+    let y = gap + row * (stoneSize + gap);
+
+    stone.style.transform = `translate(${x}px, ${y}px)`;
+}
+
+/**
+ * Vérifie si le joueur a gagné
+ */
+function checkWin() {
+    for (let i = 0; i < state.totalTiles - 1; i++) {
+        if (state.grid[i] !== i + 1) {
+            return false;
+        }
+    }
+    return true;
+}
+
+// --- ÉCOUTEURS ---
+restartBtn.addEventListener('click', initGame);
+
+window.addEventListener('resize', () => {
+    for (let i = 0; i < state.totalTiles; i++) {
+        let value = state.grid[i];
+        if (value !== 0) {
+            updateTilePosition(value, i);
+        }
+    }
+});
+
+// --- DÉMARRAGE ---
+initGame();
