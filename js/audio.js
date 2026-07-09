@@ -1,10 +1,11 @@
 /**
  * audio.js
- * Gestion de l'identité sonore - Version iOS Safe
- * Attend que les fichiers soient prêts avant de les lire.
+ * Moteur audio compatible iOS Safari (Web Audio API).
+ * Télécharge et décode les sons en mémoire au premier tap.
  */
 window.NS_Audio = (function() {
     let isUnlocked = false;
+    let audioContext = null;
     
     const PATHS = {
         breeze: '../assets/sounds/breeze-loop.mp3',
@@ -16,95 +17,117 @@ window.NS_Audio = (function() {
         victoryBell: '../assets/sounds/victory-bell.mp3'
     };
 
-    let sounds = {};
+    let audioBuffers = {}; // Stocke les sons décodés en mémoire
     let birdTimeout = null;
     let leafTimeout = null;
+    let loopNodes = {}; // Gère les sons qui bouclent (vent, eau)
 
-    function init() {
-        sounds.breeze = new Audio(PATHS.breeze);
-        sounds.fountain = new Audio(PATHS.fountain);
-        sounds.bird = new Audio(PATHS.bird);
-        sounds.leaf = new Audio(PATHS.leaf);
-        sounds.stoneMove = new Audio(PATHS.stoneMove);
-        sounds.invalidToc = new Audio(PATHS.invalidToc);
-        sounds.victoryBell = new Audio(PATHS.victoryBell);
-
-        // Réglages des fonds sonores
-        sounds.breeze.loop = true;
-        sounds.fountain.loop = true;
-        
-        // On NE MET PAS preload = 'none' pour laisser Safari les précharger tranquillement en arrière-plan
-    }
-
-    /**
-     * Déverrouille l'audio et lance l'ambiance au bon moment.
-     */
-    function unlock() {
+    async function unlock() {
         if (isUnlocked) return;
         isUnlocked = true;
+        
+        // Affiche le message de chargement
+        const loader = document.getElementById('audio-loader');
+        if (loader) loader.classList.add('visible');
+
+        // 1. Créer le contexte audio (Obligatoire sur iOS)
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioContext.state === 'suspended') {
+            await audioContext.resume();
+        }
+
+        // 2. Télécharger et décoder tous les MP3 en mémoire
+        const fetchPromises = Object.keys(PATHS).map(async (key) => {
+            try {
+                const response = await fetch(PATHS[key]);
+                const arrayBuffer = await response.arrayBuffer();
+                audioBuffers[key] = await audioContext.decodeAudioData(arrayBuffer);
+            } catch (error) {
+                console.warn("Erreur chargement audio pour " + key + ":", error);
+            }
+        });
+
+        // 3. Attendre que tout soit prêt
+        await Promise.all(fetchPromises);
+
+        // 4. Cacher le message et lancer la musique
+        if (loader) loader.classList.remove('visible');
         startAmbient();
     }
 
-    /**
-     * Lance les sons d'ambiance de manière sécurisée pour iOS.
-     */
     function startAmbient() {
         if (!isUnlocked) return;
-
-        // On vérifie si le fichier de la brise est prêt (readyState 3 = HAVE_ENOUGH_DATA)
-        if (sounds.breeze.readyState >= 3) {
-            _doPlaySound('breeze', 0.15);
-            _doPlaySound('fountain', 0.12);
-            scheduleBird();
-            scheduleLeaf();
-        } else {
-            // Sinon, on attend qu'il soit prêt avant de jouer
-            sounds.breeze.addEventListener('canplaythrough', function() {
-                _doPlaySound('breeze', 0.15);
-                _doPlaySound('fountain', 0.12);
-                scheduleBird();
-                scheduleLeaf();
-            }, { once: true });
-            // On force le téléchargement au cas où Safari est en pause
-            sounds.breeze.load();
-        }
+        _startLoop('breeze', 0.15, true);
+        _startLoop('fountain', 0.12, true);
+        scheduleBird();
+        scheduleLeaf();
     }
 
-    /**
-     * Arrête l'ambiance avec un fondu doux
-     */
     function stopAmbient() {
-        fadeOut('breeze');
-        fadeOut('fountain');
+        _stopLoop('breeze');
+        _stopLoop('fountain');
         clearTimeout(birdTimeout);
         clearTimeout(leafTimeout);
     }
 
-    // --- EFFETS SONORES D'INTERACTION ---
+    // --- EFFETS SONORES INTERACTION ---
 
-    function playStoneMove() {
-        _playWhenReady('stoneMove', 0.25);
+    function playStoneMove() { _playOneShot('stoneMove', 0.25); }
+    function playInvalidToc() { _playOneShot('invalidToc', 0.15); }
+    function playVictoryBell() { _playOneShot('victoryBell', 0.4); }
+    function playElementRestored() { _playOneShot('leaf', 0.2); }
+
+    // --- LOGIQUE INTERNE (Web Audio API) ---
+
+    function _playOneShot(name, volume) {
+        if (!isUnlocked || !audioBuffers[name]) return;
+        const source = audioContext.createBufferSource();
+        const gainNode = audioContext.createGain();
+        
+        source.buffer = audioBuffers[name];
+        gainNode.gain.value = volume;
+        gainNode.connect(source);
+        source.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        source.start(0);
     }
 
-    function playInvalidToc() {
-        _playWhenReady('invalidToc', 0.15);
+    function _startLoop(name, volume) {
+        if (!isUnlocked || !audioBuffers[name]) return;
+        _stopLoop(name); // Arrête l'ancienne boucle s'il y en a une
+
+        const gainNode = audioContext.createGain();
+        gainNode.gain.value = volume;
+        gainNode.connect(audioContext.destination);
+        loopNodes[name] = { gain: gainNode };
+
+        const playLoop = () => {
+            if (!isUnlocked) return;
+            const source = audioContext.createBufferSource();
+            source.buffer = audioBuffers[name];
+            source.connect(loopNodes[name].gain);
+            source.start(0);
+            source.onended = playLoop; // Relance quand le son se termine
+        };
+        playLoop();
     }
 
-    function playVictoryBell() {
-        _playWhenReady('victoryBell', 0.4);
+    function _stopLoop(name) {
+        if (loopNodes[name]) {
+            loopNodes[name].gain.gain.value = 0; // Baisse le volume à 0 (le stop() coupe trop brutalement)
+            delete loopNodes[name];
+        }
     }
 
-    function playElementRestored() {
-        _playWhenReady('leaf', 0.2);
-    }
-
-    // --- LOGIQUE SPORADIQUE (Oiseau et Feuille) ---
+    // --- LOGIQUE SPORADIQUE ---
 
     function scheduleBird() {
         const delay = 20000 + Math.random() * 20000;
         birdTimeout = setTimeout(() => {
             if (!isUnlocked) return;
-            _playWhenReady('bird', 0.2);
+            _playOneShot('bird', 0.2);
             scheduleBird(); 
         }, delay);
     }
@@ -112,62 +135,11 @@ window.NS_Audio = (function() {
     function scheduleLeaf() {
         leafTimeout = setTimeout(() => {
             if (!isUnlocked) return;
-            _playWhenReady('leaf', 0.15);
+            _playOneShot('leaf', 0.15);
             scheduleLeaf();
         }, 33000);
     }
 
-    // --- FONCTIONS UTILITAIRES INTERNES ---
-
-    /* Joue un son immédiatement (pour l'ambiance) */
-    function _doPlaySound(name, volume) {
-        const sound = sounds[name];
-        if (!sound) return;
-        sound.volume = volume || 0.1;
-        
-        var playPromise = sound.play();
-        if (playPromise !== undefined) {
-            playPromise.catch(function(error) {
-                console.warn("Audio bloqué ou interrompu :", error.message);
-            });
-        }
-    }
-
-    /* Joue un son en vérifiant d'abord qu'il est prêt (pour les interactions) */
-    function _playWhenReady(name, volume) {
-        const sound = sounds[name];
-        if (!sound) return;
-
-        if (sound.readyState >= 3) {
-            _doPlaySound(name, volume);
-        } else {
-            sound.addEventListener('canplaythrough', function() {
-                _doPlaySound(name, volume);
-            }, { once: true });
-            sound.load();
-        }
-    }
-
-    /* Fondu sortant pour ne pas couper brutalement */
-    function fadeOut(name) {
-        const sound = sounds[name];
-        if (!sound) return;
-        let vol = sound.volume;
-        let fadeInterval = setInterval(function() {
-            if (vol > 0.01) {
-                vol -= 0.01;
-                sound.volume = vol;
-            } else {
-                sound.pause();
-                clearInterval(fadeInterval);
-            }
-        }, 50);
-    }
-
-    // --- INITIALISATION ---
-    init();
-
-    // API Publique
     return {
         unlock: unlock,
         stopAmbient: stopAmbient,
@@ -177,14 +149,4 @@ window.NS_Audio = (function() {
         playVictoryBell: playVictoryBell,
         playElementRestored: playElementRestored
     };
-})();/* --- MESSAGE DE CHARGEMENT AUDIO --- */
-.audio-loader {
-    font-size: 0.8rem;
-    color: #d4c5a9;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-    height: 15px; /* Garde l'espace même quand il est caché */
-}
-.audio-loader.visible {
-    opacity: 1;
-}
+})();
