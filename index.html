@@ -7,18 +7,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="manifest.json">
     <title>Ninja Stones</title>
-    
-    <!-- FILET DE SÉCURITÉ : Force l'affichage des écrans même si le fichier CSS ne charge pas -->
-    <style>
-        .screen { 
-            opacity: 0; pointer-events: none; position: absolute; top:0; left:0; 
-            width:100%; height:100%; display:flex; flex-direction:column; 
-            align-items:center; justify-content:center; gap: 15px; 
-        }
-        .screen.active { opacity: 1; pointer-events: auto; }
-        .hidden { display: none !important; }
-    </style>
-
+    <style>#screen-game { display: none !important; }</style>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -29,6 +18,9 @@
             <h1 class="title">Ninja Stones</h1>
             <p id="level-display" class="level-text">Niveau 1</p>
         </header>
+
+        <!-- NOUVEAU : Le nuage lumineux sur tout l'écran -->
+        <div class="ambient-cloud"></div>
 
         <div class="screens-wrapper">
             
@@ -45,12 +37,21 @@
                     </div>
                 </div>
 
-                <div id="menu-board" class="board"></div>
+                <div id="menu-board" class="board">
+                    <!-- Micro-animations du menu -->
+                    <div class="lantern-glow" style="top: 15%; left: 85%;"></div>
+                    <div class="falling-leaf"></div>
+                </div>
+                
                 <button id="play-btn" class="btn">Jouer</button>
             </div>
 
             <div id="screen-game" class="screen">
-                <div id="board" class="board"></div>
+                <div id="board" class="board">
+                    <!-- Micro-animations du jeu -->
+                    <div class="lantern-glow" style="top: 15%; left: 85%;"></div>
+                    <div class="falling-leaf"></div>
+                </div>
                 <div class="btn-group">
                     <button id="back-btn" class="btn">Retour</button>
                     <button id="restart-btn" class="btn">Recommencer</button>
