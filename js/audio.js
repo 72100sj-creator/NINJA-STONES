@@ -1,12 +1,11 @@
 /**
  * audio.js
- * Gestion de l'identité sonore de manière invisible et légère.
- * Utilise l'API Web Audio standard pour être compatible PWA.
+ * Gestion de l'identité sonore - Version iOS Safe
+ * Attend que les fichiers soient prêts avant de les lire.
  */
 window.NS_Audio = (function() {
     let isUnlocked = false;
     
-    // Chemins vers les assets (remonte depuis le dossier js/)
     const PATHS = {
         breeze: '../assets/sounds/breeze-loop.mp3',
         fountain: '../assets/sounds/fountain-plop.mp3',
@@ -17,13 +16,11 @@ window.NS_Audio = (function() {
         victoryBell: '../assets/sounds/victory-bell.mp3'
     };
 
-    // Éléments audio (créés une seule fois pour économiser la mémoire)
     let sounds = {};
     let birdTimeout = null;
     let leafTimeout = null;
 
     function init() {
-        // On crée les objets audio
         sounds.breeze = new Audio(PATHS.breeze);
         sounds.fountain = new Audio(PATHS.fountain);
         sounds.bird = new Audio(PATHS.bird);
@@ -32,37 +29,49 @@ window.NS_Audio = (function() {
         sounds.invalidToc = new Audio(PATHS.invalidToc);
         sounds.victoryBell = new Audio(PATHS.victoryBell);
 
-        // Réglages des fonds sonores (Volume très bas pour être subliminal)
+        // Réglages des fonds sonores
         sounds.breeze.loop = true;
-        sounds.breeze.volume = 0.15;
-
         sounds.fountain.loop = true;
-        sounds.fountain.volume = 0.12;
-
-        // Désactiver le preload sur mobile pour économiser la data au démarrage
-        Object.values(sounds).forEach(sound => {
-            sound.preload = 'none';
-        });
+        
+        // On NE MET PAS preload = 'none' pour laisser Safari les précharger tranquillement en arrière-plan
     }
 
     /**
-     * Déverrouille l'audio. DOIT être appelé lors d'un clic (ex: bouton Jouer).
+     * Déverrouille l'audio et lance l'ambiance au bon moment.
      */
     function unlock() {
         if (isUnlocked) return;
         isUnlocked = true;
-        
-        // On force le chargement et la lecture de la brise
-        sounds.breeze.load();
-        playSound('breeze', 0.15);
-        
-        // On lance les éléments sporadiques
-        scheduleBird();
-        scheduleLeaf();
+        startAmbient();
     }
 
     /**
-     * Arrête l'ambiance (quand on quitte le puzzle)
+     * Lance les sons d'ambiance de manière sécurisée pour iOS.
+     */
+    function startAmbient() {
+        if (!isUnlocked) return;
+
+        // On vérifie si le fichier de la brise est prêt (readyState 3 = HAVE_ENOUGH_DATA)
+        if (sounds.breeze.readyState >= 3) {
+            _doPlaySound('breeze', 0.15);
+            _doPlaySound('fountain', 0.12);
+            scheduleBird();
+            scheduleLeaf();
+        } else {
+            // Sinon, on attend qu'il soit prêt avant de jouer
+            sounds.breeze.addEventListener('canplaythrough', function() {
+                _doPlaySound('breeze', 0.15);
+                _doPlaySound('fountain', 0.12);
+                scheduleBird();
+                scheduleLeaf();
+            }, { once: true });
+            // On force le téléchargement au cas où Safari est en pause
+            sounds.breeze.load();
+        }
+    }
+
+    /**
+     * Arrête l'ambiance avec un fondu doux
      */
     function stopAmbient() {
         fadeOut('breeze');
@@ -71,87 +80,78 @@ window.NS_Audio = (function() {
         clearTimeout(leafTimeout);
     }
 
-    /**
-     * Relance l'ambiance
-     */
-    function startAmbient() {
-        if (!isUnlocked) return;
-        playSound('breeze', 0.15);
-        playSound('fountain', 0.12);
-        scheduleBird();
-        scheduleLeaf();
-    }
-
     // --- EFFETS SONORES D'INTERACTION ---
 
     function playStoneMove() {
-        playSound('stoneMove', 0.25);
+        _playWhenReady('stoneMove', 0.25);
     }
 
     function playInvalidToc() {
-        playSound('invalidToc', 0.15);
+        _playWhenReady('invalidToc', 0.15);
     }
 
     function playVictoryBell() {
-        playSound('victoryBell', 0.4);
+        _playWhenReady('victoryBell', 0.4);
     }
 
     function playElementRestored() {
-        // Le vent + une note cristalline (simulé par le son de feuille plus aigu)
-        playSound('leaf', 0.2);
+        _playWhenReady('leaf', 0.2);
     }
 
     // --- LOGIQUE SPORADIQUE (Oiseau et Feuille) ---
 
     function scheduleBird() {
-        // Aléatoire entre 20 et 40 secondes (Art Bible)
         const delay = 20000 + Math.random() * 20000;
         birdTimeout = setTimeout(() => {
             if (!isUnlocked) return;
-            playSound('bird', 0.2);
-            scheduleBird(); // On reprogramme le prochain
+            _playWhenReady('bird', 0.2);
+            scheduleBird(); 
         }, delay);
     }
 
     function scheduleLeaf() {
-        // Tombe toutes les ~33 secondes
         leafTimeout = setTimeout(() => {
             if (!isUnlocked) return;
-            playSound('leaf', 0.15);
+            _playWhenReady('leaf', 0.15);
             scheduleLeaf();
         }, 33000);
     }
 
-    // --- FONCTIONS UTILITAIRES ---
+    // --- FONCTIONS UTILITAIRES INTERNES ---
 
-    function playSound(name, volume) {
+    /* Joue un son immédiatement (pour l'ambiance) */
+    function _doPlaySound(name, volume) {
         const sound = sounds[name];
         if (!sound) return;
-
-        // On règle le volume dynamiquement
         sound.volume = volume || 0.1;
         
-        // On remet le son au début (utile pour l'oiseau qui est court)
-        if (!sound.loop) {
-            sound.currentTime = 0;
-        }
-
-        // .play() retourne une Promise. On l'attrape pour éviter les erreurs 
-        // si l'utilisateur coupe le son ou si l'audio est interrompu
         var playPromise = sound.play();
-        
         if (playPromise !== undefined) {
             playPromise.catch(function(error) {
-                console.log("Audio bloqué ou interrompu :", error);
+                console.warn("Audio bloqué ou interrompu :", error.message);
             });
         }
     }
 
+    /* Joue un son en vérifiant d'abord qu'il est prêt (pour les interactions) */
+    function _playWhenReady(name, volume) {
+        const sound = sounds[name];
+        if (!sound) return;
+
+        if (sound.readyState >= 3) {
+            _doPlaySound(name, volume);
+        } else {
+            sound.addEventListener('canplaythrough', function() {
+                _doPlaySound(name, volume);
+            }, { once: true });
+            sound.load();
+        }
+    }
+
+    /* Fondu sortant pour ne pas couper brutalement */
     function fadeOut(name) {
         const sound = sounds[name];
         if (!sound) return;
-        
-        // On diminue progressivement le volume
         let vol = sound.volume;
         let fadeInterval = setInterval(function() {
             if (vol > 0.01) {
