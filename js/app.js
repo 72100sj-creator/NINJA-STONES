@@ -35,7 +35,7 @@
             NS_UI.moveTile(value, emptyIndex, state.gridSize);
             NS_Audio.playStoneMove();
 
-            if (NS_Puzzle.checkWin(state.grid)) {
+            if (NS_Pullayer.checkWin(state.grid)) {
                 state.isPlaying = false;
                 let progressText = NS_Garden.awardPoints(getCurrentGarden(), 1);
                 NS_UI.showWinMessage(`L'équilibre est rétabli. (${progressText})`);
