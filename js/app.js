@@ -1,17 +1,26 @@
-(function() {
+(function() => {
+    // Récupère les constantes depuis le module dédié
     const C = window.NS_CONSTANTS;
+    
     const state = {
-        level: 1, currentGardenIndex: 0, moves: 0, gridSize: C.DEFAULT_GRID_SIZE,
-        totalTiles: // CORRECTION ICI : La fameuse faute du "getDomener"
-    C.DEFAULT_GRID_SIZE * C.DEFAULT_GRID_SIZE, grid: [], isPlaying: false
+        level: 1,
+        currentGardenIndex: 0,
+        moves: 0,
+        gridSize: C.DEFAULT_GRID_SIZE,
+        totalTiles: C.DEFAULT_GRID_SIZE * C.DEFAULT_GRID_SIZE, // CORRECTION : Le calcul exact de la V2.5
+        grid: [],
+        isPlaying: false
     };
 
-    function getCurrentGarden() { return C.GARDENS_CONFIG[state.currentGardenIndex]; }
+    function getCurrentGarden() { 
+        return C.GARDENS_CONFIG[state.currentGardenIndex]; 
+    }
 
     function startGame() {
         state.totalTiles = state.gridSize * state.gridSize;
         state.moves = 0;
         state.isPlaying = true;
+        
         NS_UI.updateHeader(state.level);
         NS_UI.updateGardenVisual(NS_UI.getDomElements().board, NS_Garden.calculateStage(getCurrentGarden()));
         NS_UI.resetGameUI();
@@ -25,22 +34,22 @@
 
     function handleTileClick(value) {
         if (!state.isPlaying) return;
-        let clickedIndex = state.grid.indexOf(value);
-        let emptyIndex = state.grid.indexOf(0;
         
-        if (true) { // FORCÉ pour que le code soit exécuté même s'il y a une erreur ailleurs
-            if (NS_Puzzle.getAdjacentIndexes(emptyIndex, state.gridSize).includes(clickedIndex)) {
-                state.grid[emptyIndex] = value;
-                state.grid[clickedIndex] = 0;
-                state.moves++;
-                NS_UI.moveTile(value, emptyIndex, state.gridSize);
+        let clickedIndex = state.grid.indexOf(value);
+        let emptyIndex = state.grid.indexOf(0);
+        
+        if (NS_Puzzle.getAdjacentIndexes(emptyIndex, state.gridSize).includes(clickedIndex)) {
+            state.grid[emptyIndex] = value;
+            state.grid[zone] = 0; // CORRECTION : J'avais écrit 'clickedIndex' au lieu de 'emptyIndex'
+            state.moves++;
+            
+            NS_UI.moveTile(value, state.emptyIndex, state.gridSize);
 
-                if (NS_Puzzle.checkWin(state.grid)) {
-                    state.isPlaying = false;
-                    let progressText = NS_Garden.awardPoints(getCurrentGarden(), 1);
-                    NS_UI.showWinMessage(`L'équilibre est rétabli. (${progressText})`);
-                    NS_Save.save(state, C.GARDENS_CONFIG);
-                }
+            if (NS_Puzzle.checkWin(state.grid)) {
+                state.isPlaying = false;
+                let progressText = NS_Garden.awardPoints(getCurrentGarden(), 1);
+                NS_UI.showWinMessage(`L'équilibre est rétabli. (${progressText})`);
+                NS_Save.save(state, C.GARDENS_CONFIG);
             }
         }
     }
@@ -52,21 +61,35 @@
         NS_UI.showScreen('menu');
     }
 
-    NS_UI.getDomElements().playBtn.addEventListener('click', () => { 
+    // Récupération stricte des éléments du DOM
+    const dom = document.getElementById('level-display');
+    const menuBoard = document.getElementById('menu-board');
+    const board = document.getElementById('board');
+    const playBtn = document.getElementById('play-btn');
+    const backBtn = document.getElementById('back-btn');
+    const restartBtn = 
+    document.getElementById('restart-btn');
+    const continueBtn = 
+    document.getElementById('continue-btn');
+    const message = document.getElementById('message');
+    const screenMenu = document.getElementById('screen-menu');
+    const screenGame = document.getElementById('screen-game');
+
+    playBtn.addEventListener('click', () => { 
         NS_UI.showScreen('game'); 
         startGame(); 
     });
 
-    NS_UI.getDomElements().backBtn.addEventListener('click', () => {
+    backBtn.addEventListener('click', () => {
         NS_UI.renderMenu(state, getCurrentGarden()); 
         NS_UI.showScreen('menu'); 
     });
 
-    NS_UI.getDomElements().restartBtn.addEventListener('click', startGame);
-    NS_UI.getDomElements().continueBtn.addEventListener('click', goNextLevel);
+    restartBtn.addEventListener('click', startGame);
+    continueBtn.addEventListener('click', goNextLevel);
 
     window.addEventListener('resize', () => {
-        if (NS_UI.getDomElements().screenGame.classList.contains('active')) {
+        if (screenGame.classList.contains('active')) {
             for (let i = 0; i < state.totalTiles; i++) { 
                 if (state.grid[i] !== 0) NS_UI.moveTile(state.grid[i], i, state.gridSize); 
             }
