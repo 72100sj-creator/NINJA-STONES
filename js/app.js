@@ -32,7 +32,6 @@
         NS_UI.updateGardenVisual(NS_UI.getDomElements().board, NS_Garden.calculateStage(getCurrentGarden()));
         NS_UI.resetGameUI();
         
-        // Léger délai pour laisser la transition CSS se faire
         setTimeout(() => {
             state.grid = NS_Puzzle.generateSolvedGrid(state.totalTiles);
             NS_Puzzle.shuffleGrid(state.grid, state.gridSize, NS_Levels.getShuffleMoves(state.level));
@@ -47,25 +46,16 @@
         let emptyIndex = state.grid.indexOf(0);
         
         if (NS_Puzzle.getAdjacentIndexes(emptyIndex, state.gridSize).includes(clickedIndex)) {
-            // Action Puzzle
             state.grid[emptyIndex] = value;
             state.grid[clickedIndex] = 0;
             state.moves++;
             
-            // Action UI
             NS_UI.moveTile(value, emptyIndex, state.gridSize);
 
-            // Vérification Victoire
             if (NS_Puzzle.checkWin(state.grid)) {
                 state.isPlaying = false;
-                
-                // Action Jardin
                 let progressText = NS_Garden.awardPoints(getCurrentGarden(), 1);
-                
-                // Action UI finale
                 NS_UI.showWinMessage(`L'équilibre est rétabli. (${progressText})`);
-                
-                // Sauvegarde
                 NS_Save.save(state, C.GARDENS_CONFIG);
             }
         }
@@ -103,11 +93,16 @@
         }
     });
 
-    // --- DÉMARRAGE ---
+    // --- DÉMARRAGE AVEC FILET DE SÉCURITÉ ---
     window.addEventListener('load', () => {
-        NS_Save.load(state, C.GARDENS_CONFIG);
-        NS_UI.renderMenu(state, getCurrentGarden());
-        NS_UI.showScreen('menu');
+        try {
+            NS_Save.load(state, C.GARDENS_CONFIG);
+            NS_UI.renderMenu(state, getCurrentGarden());
+            NS_UI.showScreen('menu');
+        } catch (error) {
+            // Si ça plante, on affiche l'erreur sur l'écran pour le débogage
+            document.body.innerHTML = '<div style="padding:20px;color:red;font-family:monospace;">Erreur de chargement : ' + error.message + '</div>';
+        }
     });
 
 })();
