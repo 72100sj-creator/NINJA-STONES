@@ -52,7 +52,11 @@ body {
 
 .board {
     position: relative; width: min(85vw, 70vh); aspect-ratio: 1 / 1; 
-    background-color: #c2b280; border-radius: 12px;
+    background-color: #c2b280;
+    background-image: url('../assets/images/garden-bamboo-stage-1.jpg');
+    background-size: cover;
+    background-position: center;
+    border-radius: 12px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 0, 0, 0.1); 
     padding: var(--gap); transition: background 1s ease, box-shadow 1s ease; flex-shrink: 0; 
 }
