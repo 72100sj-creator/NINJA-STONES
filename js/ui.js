@@ -9,7 +9,9 @@ window.NS_UI = (function() {
         dom.gardenName = document.getElementById('garden-name');
         dom.progressBar = document.getElementById('progress-bar');
         dom.menuBoard = document.getElementById('menu-board');
+        dom.menuBoardFrame = document.getElementById('menu-board-frame');
         dom.board = document.getElementById('board');
+        dom.boardFrame = document.getElementById('board-frame');
         dom.playBtn = document.getElementById('play-btn');
         dom.backBtn = document.getElementById('back-btn');
         dom.restartBtn = document.getElementById('restart-btn');
@@ -36,7 +38,7 @@ window.NS_UI = (function() {
         updateHeader(state.level);
         dom.gardenName.textContent = gardenConfig.name;
         dom.progressBar.style.width = NS_Garden.calculateProgress(gardenConfig) + '%';
-        updateGardenVisual(dom.menuBoard, NS_Garden.calculateStage(gardenConfig));
+        updateGardenVisual(dom.menuBoardFrame, NS_Garden.calculateStage(gardenConfig));
         dom.menuBoard.innerHTML = '';
         tilesElements = {};
         _renderStones(dom.menuBoard, NS_Puzzle.generateSolvedGrid(state.totalTiles), state.gridSize, dom.menuBoard.clientWidth, null);
