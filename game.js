@@ -1,9 +1,24 @@
 /**
- * Ninja Stones - V0.0.9 (Taille du plateau inratable)
+ * Ninja Stones - V0.1.0
+ * Système de Points d'Harmonie et Jardins Génériques
  */
 
+// --- NOUVEAU : CONFIGURATION DES JARDINS (Générique) ---
+// Pour ajouter un jardin plus tard, il suffit de rajouter un objet ici
+const GARDENS_CONFIG = [
+    {
+        id: 'bamboo',
+        name: 'Jardin du Bambou',
+        thresholds: [5, 10, 20, 35, 50, 75, 100], // Paliers d'évolution
+        points: 0 // Sera chargé depuis la sauvegarde
+    }
+    // Exemple futur : { id: 'zen', name: 'Jardin Zen', thresholds: [10, 25, 50], points: 0 }
+];
+
+// --- ÉTAT GLOBAL DU JEU ---
 const state = {
     level: 1,
+    currentGardenIndex: 0, // Quel jardin est en cours de restauration
     moves: 0,
     gridSize: 4, 
     totalTiles: 16,
@@ -11,10 +26,13 @@ const state = {
     isPlaying: false
 };
 
+// --- ÉLÉMENTS DU DOM ---
 const screenMenu = document.getElementById('screen-menu');
 const screenGame = document.getElementById('screen-game');
 
 const levelDisplay = document.getElementById('level-display'); 
+const gardenNameEl = document.getElementById('garden-name');
+const progressBarEl = document.getElementById('progress-bar');
 const menuBoard = document.getElementById('menu-board');
 const playBtn = document.getElementById('play-btn');
 
@@ -26,44 +44,90 @@ const messageElement = document.getElementById('message');
 
 let tilesElements = {}; 
 
+// --- NOUVEAU : MATHS DU SYSTÈME D'HARMONIE ---
+
+/** Calcule le stade visuel (1 à 4) en fonction des points */
+function getGardenStage(garden) {
+    let stage = 1;
+    for (let i = 0; i < garden.thresholds.length; i++) {
+        if (garden.points >= garden.thresholds[i]) {
+            stage = i + 2; // Stade 2, 3, 4...
+        }
+    }
+    // On plafonne le stade visuel au nombre de classes CSS existantes (4)
+    return Math.min(stage, 4);
+}
+
+/** Calcule le pourcentage de remplissage de la barre */
+function getGardenProgressPercent(garden) {
+    let stage = getGardenStage(garden);
+    let currentThreshold = (stage === 1) ? 0 : garden.thresholds[stage - 2];
+    
+    // Si on a dépassé le dernier palier
+    if (stage > garden.thresholds.length) return 100;
+
+    let nextThreshold = garden.thresholds[stage - 1];
+    let progress = (garden.points - currentThreshold) / (nextThreshold - currentThreshold);
+    return Math.min(progress * 100, 100);
+}
+
 // --- NAVIGATION ---
 function showScreen(screenName) {
     screenMenu.classList.remove('active');
     screenGame.classList.remove('active');
-    
     if (screenName === 'menu') screenMenu.classList.add('active');
     if (screenName === 'game') screenGame.classList.add('active');
 }
 
-// --- SAUVEGARDE ---
+// --- SAUVEGARDE GÉNÉRIQUE ---
 function loadProgress() {
     try {
         const savedLevel = localStorage.getItem('ninjaStonesLevel');
         if (savedLevel) state.level = parseInt(savedLevel, 10);
+
+        const savedGardens = JSON.parse(localStorage.getItem('ninjaStonesGardens'));
+        if (savedGardens) {
+            savedGardens.forEach(savedGarden => {
+                // On met à jour les points dans notre configuration de base
+                const configGarden = GARDENS_CONFIG.find(g => g.id === savedGarden.id);
+                if (configGarden) configGarden.points = savedGarden.points;
+            });
+        }
     } catch (e) {}
 }
 
 function saveProgress() {
     try {
         localStorage.setItem('ninjaStonesLevel', state.level.toString());
+        // On sauvegarde uniquement l'ID et les points de chaque jardin
+        const gardensToSave = GARDENS_CONFIG.map(g => ({ id: g.id, points: g.points }));
+        localStorage.setItem('ninjaStonesGardens', JSON.stringify(gardensToSave));
     } catch (e) {}
 }
 
-// --- JARDIN ---
+// --- JARDIN VISUEL ---
 function updateGardenVisual(boardEl) {
     boardEl.classList.remove('garden-stage-2', 'garden-stage-3', 'garden-stage-4');
-    if (state.level >= 10) boardEl.classList.add('garden-stage-4');
-    else if (state.level >= 7) boardEl.classList.add('garden-stage-3');
-    else if (state.level >= 4) boardEl.classList.add('garden-stage-2');
+    let currentGarden = GARDENS_CONFIG[state.currentGardenIndex];
+    let stage = getGardenStage(currentGarden);
+    
+    if (stage >= 2) boardEl.classList.add('garden-stage-' + stage);
 }
 
 // --- MENU ---
 function renderMenu() {
     levelDisplay.textContent = `Niveau ${state.level}`;
+    
+    let currentGarden = GARDENS_CONFIG[state.currentGardenIndex];
+    
+    // Mise à jour de l'interface d'harmonie
+    gardenNameEl.textContent = currentGarden.name;
+    progressBarEl.style.width = getGardenProgressPercent(currentGarden) + '%';
+    
+    // Mise à jour du visuel
     updateGardenVisual(menuBoard);
     
     menuBoard.innerHTML = '';
-    // Le CSS garantit maintenant que clientWidth est parfait
     let boardWidth = menuBoard.clientWidth;
     const gap = 4; 
     const stoneSize = (boardWidth - (gap * (state.gridSize + 1))) / state.gridSize;
@@ -84,7 +148,7 @@ function renderMenu() {
     }
 }
 
-// --- DIFFICULTÉ ---
+// --- LOGIQUE DE DIFFICULTÉ ---
 function getShuffleMovesForLevel(level) {
     return Math.min(15 + (level - 1) * 15, 200);
 }
@@ -140,7 +204,6 @@ function getAdjacentIndexes(index) {
 function renderBoard() {
     boardElement.innerHTML = '';
     tilesElements = {};
-    
     let boardWidth = boardElement.clientWidth;
     const gap = 4; 
     const stoneSize = (boardWidth - (gap * (state.gridSize + 1))) / state.gridSize;
@@ -179,11 +242,22 @@ function handleTileClick(value) {
 
         if (checkWin()) {
             state.isPlaying = false; 
-            messageElement.textContent = "L'équilibre est rétabli.";
+            
+            // NOUVEAU : SYSTÈME D'HARMONIE
+            let currentGarden = GARDENS_CONFIG[state.currentGardenIndex];
+            currentGarden.points += 1; // +1 Point d'Harmonie
+            
+            // Calcul du prochain palier pour le message
+            let nextThreshold = currentGarden.thresholds.find(t => t > currentGarden.points);
+            let progressText = nextThreshold ? `Prochain palier : ${nextThreshold}` : "Jardin maîtrisé";
+            
+            messageElement.textContent = `L'équilibre est rétabli. (${progressText})`;
+            
             void messageElement.offsetWidth; 
             messageElement.classList.add('visible');
             continueBtn.classList.remove('hidden');
-            saveProgress();
+            
+            saveProgress(); // Sauvegarde les nouveaux points
         }
     }
 }
@@ -191,7 +265,6 @@ function handleTileClick(value) {
 function updateTilePosition(value, newIndex) {
     const stone = tilesElements[value];
     if (!stone) return;
-    
     let boardWidth = boardElement.clientWidth;
     const gap = 4;
     const stoneSize = (boardWidth - (gap * (state.gridSize + 1))) / state.gridSize;
@@ -225,7 +298,7 @@ restartBtn.addEventListener('click', initGame);
 continueBtn.addEventListener('click', () => {
     state.level++; 
     saveProgress(); 
-    renderMenu();
+    renderMenu(); // Met à jour la barre de progression
     showScreen('menu'); 
 });
 
