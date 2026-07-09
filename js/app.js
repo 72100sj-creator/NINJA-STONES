@@ -12,7 +12,7 @@
         state.moves = 0;
         state.isPlaying = true;
         NS_UI.updateHeader(state.level);
-        NS_UI.updateGardenVisual(NS_UI.getDomElements().board, NS_Garden.calculateStage(getCurrentGarden()));
+        NS_UI.updateGardenVisual(NS_UI.getDomElements().boardFrame, NS_Garden.calculateStage(getCurrentGarden()));
         NS_UI.resetGameUI();
         setTimeout(() => {
             state.grid = NS_Puzzle.generateSolvedGrid(state.totalTiles);
