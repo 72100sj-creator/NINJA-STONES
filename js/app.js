@@ -14,8 +14,6 @@
         NS_UI.updateHeader(state.level);
         NS_UI.updateGardenVisual(NS_UI.getDomElements().board, NS_Garden.calculateStage(getCurrentGarden()));
         NS_UI.resetGameUI();
-        
-        // NOUVEAU : On lance l'ambiance sonore quand le puzzle s'affiche
         NS_Audio.startAmbient();
 
         setTimeout(() => {
@@ -35,24 +33,17 @@
             state.grid[clickedIndex] = 0;
             state.moves++;
             NS_UI.moveTile(value, emptyIndex, state.gridSize);
-            
-            // NOUVEAU : Son de la pierre
             NS_Audio.playStoneMove();
 
             if (NS_Puzzle.checkWin(state.grid)) {
                 state.isPlaying = false;
                 let progressText = NS_Garden.awardPoints(getCurrentGarden(), 1);
                 NS_UI.showWinMessage(`L'équilibre est rétabli. (${progressText})`);
-                
-                // NOUVEAU : Son de victoire
                 NS_Audio.playVictoryBell();
-                // NOUVEAU : Son de restauration
                 NS_Audio.playElementRestored();
-                
                 NS_Save.save(state, C.GARDENS_CONFIG);
             }
         } else {
-            // NOUVEAU : Si le joueur clique sur une pierre non adjacente
             NS_Audio.playInvalidToc();
         }
     }
@@ -65,14 +56,12 @@
     }
 
     NS_UI.getDomElements().playBtn.addEventListener('click', () => { 
-        // NOUVEAU : Déverrouiller l'audio AU PREMIER TAP
-        NS_Audio.unlock();
+        NS_Audio.unlock(); // Déverrouille et télécharge les sons
         NS_UI.showScreen('game'); 
         startGame(); 
     });
 
     NS_UI.getDomElements().backBtn.addEventListener('click', () => {
-        // NOUVEAU : Couper l'ambiance quand on retourne au menu
         NS_Audio.stopAmbient();
         NS_UI.renderMenu(state, getCurrentGarden()); 
         NS_UI.showScreen('menu'); 
