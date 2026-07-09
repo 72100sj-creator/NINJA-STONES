@@ -177,4 +177,14 @@ window.NS_Audio = (function() {
         playVictoryBell: playVictoryBell,
         playElementRestored: playElementRestored
     };
-})();
+})();/* --- MESSAGE DE CHARGEMENT AUDIO --- */
+.audio-loader {
+    font-size: 0.8rem;
+    color: #d4c5a9;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    height: 15px; /* Garde l'espace même quand il est caché */
+}
+.audio-loader.visible {
+    opacity: 1;
+}
