@@ -14,6 +14,10 @@
         NS_UI.updateHeader(state.level);
         NS_UI.updateGardenVisual(NS_UI.getDomElements().board, NS_Garden.calculateStage(getCurrentGarden()));
         NS_UI.resetGameUI();
+        
+        // NOUVEAU : On lance l'ambiance sonore quand le puzzle s'affiche
+        NS_Audio.startAmbient();
+
         setTimeout(() => {
             state.grid = NS_Puzzle.generateSolvedGrid(state.totalTiles);
             NS_Puzzle.shuffleGrid(state.grid, state.gridSize, NS_Levels.getShuffleMoves(state.level));
@@ -25,17 +29,31 @@
         if (!state.isPlaying) return;
         let clickedIndex = state.grid.indexOf(value);
         let emptyIndex = state.grid.indexOf(0);
+        
         if (NS_Puzzle.getAdjacentIndexes(emptyIndex, state.gridSize).includes(clickedIndex)) {
             state.grid[emptyIndex] = value;
             state.grid[clickedIndex] = 0;
             state.moves++;
             NS_UI.moveTile(value, emptyIndex, state.gridSize);
+            
+            // NOUVEAU : Son de la pierre
+            NS_Audio.playStoneMove();
+
             if (NS_Puzzle.checkWin(state.grid)) {
                 state.isPlaying = false;
                 let progressText = NS_Garden.awardPoints(getCurrentGarden(), 1);
                 NS_UI.showWinMessage(`L'équilibre est rétabli. (${progressText})`);
+                
+                // NOUVEAU : Son de victoire
+                NS_Audio.playVictoryBell();
+                // NOUVEAU : Son de restauration
+                NS_Audio.playElementRestored();
+                
                 NS_Save.save(state, C.GARDENS_CONFIG);
             }
+        } else {
+            // NOUVEAU : Si le joueur clique sur une pierre non adjacente
+            NS_Audio.playInvalidToc();
         }
     }
 
@@ -46,8 +64,20 @@
         NS_UI.showScreen('menu');
     }
 
-    NS_UI.getDomElements().playBtn.addEventListener('click', () => { NS_UI.showScreen('game'); startGame(); });
-    NS_UI.getDomElements().backBtn.addEventListener('click', () => { NS_UI.renderMenu(state, getCurrentGarden()); NS_UI.showScreen('menu'); });
+    NS_UI.getDomElements().playBtn.addEventListener('click', () => { 
+        // NOUVEAU : Déverrouiller l'audio AU PREMIER TAP
+        NS_Audio.unlock();
+        NS_UI.showScreen('game'); 
+        startGame(); 
+    });
+
+    NS_UI.getDomElements().backBtn.addEventListener('click', () => {
+        // NOUVEAU : Couper l'ambiance quand on retourne au menu
+        NS_Audio.stopAmbient();
+        NS_UI.renderMenu(state, getCurrentGarden()); 
+        NS_UI.showScreen('menu'); 
+    });
+
     NS_UI.getDomElements().restartBtn.addEventListener('click', startGame);
     NS_UI.getDomElements().continueBtn.addEventListener('click', goNextLevel);
 
@@ -57,5 +87,9 @@
         } else { NS_UI.renderMenu(state, getCurrentGarden()); }
     });
 
-    window.addEventListener('load', () => { NS_Save.load(state, C.GARDENS_CONFIG); NS_UI.renderMenu(state, getCurrentGarden()); NS_UI.showScreen('menu'); });
+    window.addEventListener('load', () => { 
+        NS_Save.load(state, C.GARDENS_CONFIG); 
+        NS_UI.renderMenu(state, getCurrentGarden()); 
+        NS_UI.showScreen('menu'); 
+    });
 })();
