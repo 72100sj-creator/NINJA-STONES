@@ -1,7 +1,7 @@
 /* --- VARIABLES DE DESIGN (Art Bible Officielle) --- */
 :root {
     --bg-color: #3e4a3e;
-    --stone-color: #8D8A83; /* Gris chaud - Pierre classique */
+    --stone-color: #8D8A83; 
     --stone-color-alt: #6E6B65;
     --stone-text: #4A4740;
     --stone-shadow: rgba(62, 74, 62, 0.4);
@@ -19,12 +19,11 @@ body {
     touch-action: manipulation; user-select: none; overflow: hidden; 
 }
 
-.app-container { display: flex; flex-direction: column; height: 100%; width: 100%; }
+.app-container { display: flex; flex-direction: column; height: 100%; width: 100%; position: relative; }
 
 .app-header {
     width: 100%; text-align: center;
     padding-top: env(safe-area-inset-top); padding-bottom: 10px;
-    /* Fond dégradé plus opaque pour cacher l'image derrière le titre */
     background: linear-gradient(to bottom, rgba(62, 74, 62, 1) 80%, rgba(62, 74, 62, 0));
     z-index: 10; flex-shrink: 0; 
 }
@@ -33,7 +32,7 @@ body {
 .level-text { font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase; color: #d4c5a9; opacity: 0.7; }
 
 /* --- SYSTÈME D'ÉCRANS --- */
-.screens-wrapper { flex-grow: 1; position: relative; }
+.screens-wrapper { flex-grow: 1; position: relative; z-index: 5; }
 
 .screen {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -41,41 +40,38 @@ body {
     gap: 15px; padding-bottom: env(safe-area-inset-bottom);
     opacity: 0; pointer-events: none; transition: opacity 0.3s ease; 
     
-    /* NOUVEAU : Le jardin est dézoomé à 115% pour s'aligner avec le cadre */
     background-image: url('../assets/images/garden-bamboo-stage-1.jpg');
     background-size: 115vw 115vh; 
     background-position: center;
-    background-color: #3e4a3e; /* Vert forêt visible sur les bords */
+    background-color: #3e4a3e; 
 }
 .screen.active { opacity: 1; pointer-events: auto; z-index: 2; }
 
-.garden-info { width: 85vw; max-width: 300px; text-align: center; }
+.garden-info { width: 85vw; max-width: 300px; text-align: center; z-index: 5; }
 .garden-name { font-size: 0.85rem; letter-spacing: 1px; color: #8fa86e; margin-bottom: 8px; text-transform: uppercase; }
 .progress-container { width: 100%; height: 6px; background-color: rgba(0, 0, 0, 0.2); border-radius: 3px; overflow: hidden; margin: 0 auto; }
 .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, #8fa86e, #4a6741); border-radius: 3px; transition: width 0.8s ease; }
 
 /* --- PERSONNAGE --- */
-.character-container { height: 70px; width: 70px; position: relative; display: flex; flex-direction: column; align-items: center; animation: breathe 4s ease-in-out infinite; }
+.character-container { height: 70px; width: 70px; position: relative; display: flex; flex-direction: column; align-items: center; animation: breathe 4s ease-in-out infinite; z-index: 5; }
 .ninja-head { width: 25px; height: 25px; background-color: #2c3e50; border-radius: 50%; z-index: 2; }
 .ninja-body { width: 40px; height: 35px; background-color: #2c3e50; border-radius: 5px 5px 15px 15px; margin-top: -5px; z-index: 1; }
 @keyframes breathe { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
-/* --- PLATEAU & JARDIN (LA CUVELLE DE SABLE) --- */
+/* --- PLATEAU & JARDIN --- */
 .board {
     position: relative; 
     width: min(85vw, 70vh); 
     aspect-ratio: 1 / 1; 
-    
-    /* Le cadre reste une zone de sable semi-transparente */
     background-color: rgba(194, 178, 128, 0.45); 
-    
     border-radius: 12px;
     box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.25); 
     padding: var(--gap); 
     flex-shrink: 0; 
+    overflow: hidden; /* Important pour cacher les feuilles qui sortent du cadre */
+    z-index: 3;
 }
 
-/* Les stades futurs appliqueront le même dézoomage */
 .screen.garden-bg-2 { background-image: url('../assets/images/garden-bamboo-stage-2.jpg'); background-size: 115vw 115vh; background-position: center; }
 .screen.garden-bg-3 { background-image: url('../assets/images/garden-bamboo-stage-3.jpg'); background-size: 115vw 115vh; background-position: center; }
 .screen.garden-bg-4 { background-image: url('../assets/images/garden-bamboo-stage-4.jpg'); background-size: 115vw 115vh; background-position: center; }
@@ -85,29 +81,98 @@ body {
     position: absolute;
     border-radius: 30% 70% 60% 40% / 60% 30% 70% 40%; 
     background: linear-gradient(145deg, #A9A69F 0%, #8D8A83 50%, #6E6B65 100%);
-    box-shadow: 
-        2px 4px 8px rgba(62, 74, 62, 0.35),
-        inset 0 3px 5px rgba(255, 255, 255, 0.4),
-        inset 0 -3px 5px rgba(0, 0, 0, 0.15);
+    box-shadow: 2px 4px 8px rgba(62, 74, 62, 0.35), inset 0 3px 5px rgba(255, 255, 255, 0.4), inset 0 -3px 5px rgba(0, 0, 0, 0.15);
     display: flex; justify-content: center; align-items: center;
     font-size: 1.6rem; font-weight: 600;
     color: #4A4740;
-    text-shadow: 
-        1px 1px 0 rgba(255, 255, 255, 0.3),
-        -1px -1px 0 rgba(0, 0, 0, 0.2);
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3), -1px -1px 0 rgba(0, 0, 0, 0.2);
     transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    z-index: 4; /* Les pierres sont au-dessus des animations */
 }
 
 #menu-board .stone { cursor: default; transition: none; }
 #board .stone { cursor: pointer; }
 #board .stone:active { transition: transform 0s; }
 
-/* --- BOUTONS --- */
-.btn-group { display: flex; gap: 15px; height: 44px; }
+/* --- BOUTONS & MESSAGES --- */
+.btn-group { display: flex; gap: 15px; height: 44px; z-index: 5; }
 .btn { background: transparent; color: #d4c5a9; border: 1px solid #d4c5a9; padding: 10px 24px; border-radius: 30px; font-size: 1rem; letter-spacing: 1px; cursor: pointer; transition: all 0.2s ease; }
 .btn:active { background: #d4c5a9; color: var(--bg-color); }
 .hidden { display: none !important; }
-
-/* --- MESSAGE --- */
-.message { min-height: 24px; font-size: 1rem; color: #d4c5a9; text-align: center; opacity: 0; transition: opacity 0.8s ease; }
+.message { min-height: 24px; font-size: 1rem; color: #d4c5a9; text-align: center; opacity: 0; transition: opacity 0.8s ease; z-index: 5; }
 .message.visible { opacity: 1; }
+
+
+/* =========================================================
+   🌸 MICRO-ANIMATIONS ZEN (Alpha 2.5)
+   Optimisées 60 FPS : Utilisation stricte de transform et opacity
+   ========================================================= */
+
+/* --- 🌤️ Animation 5 : Le nuage (Lumière subtile) --- */
+.ambient-cloud {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+    opacity: 0;
+    z-index: 1; /* Derrière tout le reste */
+    pointer-events: none;
+    animation: cloud-pass 12s ease-in-out infinite;
+}
+
+@keyframes cloud-pass {
+    0%, 100% { opacity: 0; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+}
+
+/* --- 🏮 Animation 4 : La lanterne (Respiration) --- */
+.lantern-glow {
+    position: absolute;
+    width: 15px; height: 15px;
+    border-radius: 50%;
+    background: rgba(216, 162, 74, 0.6); /* Couleur Lanterne de l'Art Bible */
+    box-shadow: 0 0 15px 5px rgba(216, 162, 74, 0.3);
+    z-index: 2; /* Derrière les pierres */
+    pointer-events: none;
+    animation: lantern-breath 4s ease-in-out infinite;
+    /* On donne un décalage aléatoire pour que les 2 lanternes (menu et jeu) ne respirent pas en même temps */
+    animation-delay: 0s; 
+}
+/* La deuxième lanterne (dans le menu) est décalée de 2 secondes */
+.screen-menu .lantern-glow {
+    animation-delay: 2s;
+}
+
+@keyframes lantern-breath {
+    0%, 100% { transform: scale(1); opacity: 0.6; box-shadow: 0 0 10px 2px rgba(216, 162, 74, 0.2); }
+    50% { transform: scale(1.2); opacity: 0.9; box-shadow: 0 0 20px 5px rgba(216, 162, 74, 0.5); }
+}
+
+/* --- 🍃 Animation 2 : La feuille solitaire --- */
+.falling-leaf {
+    position: absolute;
+    top: -10%;
+    left: 20%;
+    width: 8px; height: 8px;
+    background: #6FA86B; /* Vert Bambou */
+    border-radius: 0 50% 50% 50%; /* Forme de feuille */
+    opacity: 0;
+    z-index: 2;
+    pointer-events: none;
+    
+    /* Durée 8s + Délai 25s = Tombe toutes les ~33 secondes */
+    animation: leaf-fall 8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 25s infinite;
+}
+
+/* La deuxième feuille est décalée et part d'un autre endroit */
+.screen-menu .falling-leaf {
+    left: 70%;
+    animation-duration: 10s;
+    animation-delay: 40s; /* Tombe toutes les ~50 secondes de l'autre côté */
+}
+
+@keyframes leaf-fall {
+    0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.8; }
+    90% { opacity: 0.8; }
+    100% { transform: translate(15vw, 110vh) rotate(720deg); opacity: 0; }
+}
