@@ -2,26 +2,66 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <!-- Optimisation mobile : désactive le zoom, gère l'encoche des iPhones -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.json">
     <title>Ninja Stones</title>
-    <link rel="stylesheet" href="style.css">
+    
+    <!-- SÉCURITÉ : Cache l'écran jeu par défaut au cas où le CSS externe ne charge pas -->
+    <style>#screen-game { display: none !important; }</style>
+    
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-    <div class="container">
-        <h1 class="title">Ninja Stones</h1>
+    <div class="app-container">
         
-        <div id="board" class="board">
-            <!-- Les pierres seront générées par JavaScript -->
-        </div>
+        <header class="app-header">
+            <h1 class="title">Ninja Stones</h1>
+            <p id="level-display" class="level-text">Niveau 1</p>
+        </header>
 
-        <button id="restart-btn" class="btn-restart">Recommencer</button>
-        
-        <p id="message" class="message"></p>
+        <div class="screens-wrapper">
+            
+            <div id="screen-menu" class="screen active">
+                <div id="ninja-character" class="character-container">
+                    <div class="ninja-head"></div>
+                    <div class="ninja-body"></div>
+                </div>
+                
+                <div class="garden-info">
+                    <p id="garden-name" class="garden-name">Jardin du Bambou</p>
+                    <div class="progress-container">
+                        <div id="progress-bar" class="progress-bar"></div>
+                    </div>
+                </div>
+
+                <div id="menu-board" class="board"></div>
+                <button id="play-btn" class="btn">Jouer</button>
+            </div>
+
+            <div id="screen-game" class="screen">
+                <div id="board" class="board"></div>
+                <div class="btn-group">
+                    <button id="back-btn" class="btn">Retour</button>
+                    <button id="restart-btn" class="btn">Recommencer</button>
+                    <button id="continue-btn" class="btn hidden">Continuer</button>
+                </div>
+                <p id="message" class="message"></p>
+            </div>
+
+        </div>
     </div>
 
-    <script src="game.js"></script>
+    <!-- Chargement des modules dans le bon ordre -->
+    <script src="js/constants.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/save.js"></script>
+    <script src="js/levels.js"></script>
+    <script src="js/garden.js"></script>
+    <script src="js/puzzle.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
