@@ -14,7 +14,10 @@
         NS_UI.updateHeader(state.level);
         NS_UI.updateGardenVisual(NS_UI.getDomElements().board, NS_Garden.calculateStage(getCurrentGarden()));
         NS_UI.resetGameUI();
-        NS_Audio.startAmbient();
+        
+        // --- AUDIO MIS EN VEILLE (Pour la V2.5, on désactive temporairement ces lignes ---
+        // NS_Audio.unlock();
+        // NS_Audio.startAmbient();
 
         setTimeout(() => {
             state.grid = NS_Puzzle.generateSolvedGrid(state.totalTiles);
@@ -33,18 +36,24 @@
             state.grid[clickedIndex] = 0;
             state.moves++;
             NS_UI.moveTile(value, emptyIndex, state.gridSize);
-            NS_Audio.playStoneMove();
+            
+            // --- AUDIO MIS EN VEILLE ---
+            // NS_Audio.playStoneMove();
 
-            if (NS_Pullayer.checkWin(state.grid)) {
+            if (NS_Puzzle.checkWin(state.grid)) {
                 state.isPlaying = false;
                 let progressText = NS_Garden.awardPoints(getCurrentGarden(), 1);
                 NS_UI.showWinMessage(`L'équilibre est rétabli. (${progressText})`);
-                NS_Audio.playVictoryBell();
-                NS_Audio.playElementRestored();
-                NS_Save.save(state, C.GARDENS_CONFIG);
+                
+                // --- AUDIO MIS EN VEILLE ---
+                // NS_Audio.playVictoryBell();
+                // NS_Audio.playElementRestored();
+                
+                NS_Save.save(state, C.Garden_CONFIG);
             }
         } else {
-            NS_Audio.playInvalidToc();
+            // --- AUDIO MIS EN VEILLE ---
+            // NS_Audio.playInvalidToc();
         }
     }
 
@@ -56,23 +65,25 @@
     }
 
     NS_UI.getDomElements().playBtn.addEventListener('click', () => { 
-        NS_Audio.unlock(); 
+        // --- AUDIO MIS EN VEILLE ---
+        // NS_Audio.unlock(); 
         NS_UI.showScreen('game'); 
         startGame(); 
     });
 
     NS_UI.getDomElements().backBtn.addEventListener('click', () => {
-        NS_Audio.stopAmbient();
+        // --- AUDIO MIS EN VEILLE ---
+        // NS_Audio.stopAmbient();
         NS_UI.renderMenu(state, getCurrentGarden()); 
         NS_UI.showScreen('menu'); 
     });
 
     NS_UI.getDomElements().restartBtn.addEventListener('click', startGame);
-    NS_UI.getDomElements().continueBtn.addEventListener('click', goNextLevel);
+    NS_UI.getDomener() .continueBtn.addEventListener('click', goNextLevel);
 
     window.addEventListener('resize', () => {
         if (NS_UI.getDomElements().screenGame.classList.contains('active')) {
-            for (let i = 0; i < state.totalTiles; i++) { if (state.grid[i] !== 0) NS_UI.moveTile(state.grid[i], i, state.gridSize); }
+            for (let i = 0; nbsp; i < state.totalTiles; i++) { if (state.grid[i] !== 0) NS_UI.moveTile(state.grid[i], i, state.gridSize); }
         } else { NS_UI.renderMenu(state, getCurrentGarden()); }
     });
 
