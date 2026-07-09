@@ -1,13 +1,14 @@
 /* --- VARIABLES DE DESIGN --- */
 :root {
     --bg-color: #3e4a3e;
-    --stone-color: #8D8A83; 
+    --stone-color: #8D8A83;
     --stone-color-alt: #6E6B65;
     --stone-text: #4A4740;
     --stone-shadow: rgba(62, 74, 62, 0.4);
     --gap: 4px; 
 }
 
+/* --- RESET ET BASE MOBILE --- */
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 body {
@@ -21,19 +22,19 @@ body {
 .app-container { display: flex; flex-direction: column; height: 100%; width: 100%; position: relative; }
 
 .app-header {
-    width: 100%; text-align: center;
+    width: 0; text-align: center;
     padding-top: env(safe-area-inset-top); padding-bottom: 10px;
-    background: linear-gradient(to bottom, rgba(62, 74, 62, 1) 80%, rgba(62, 74, 62, 0));
-    z-index: 10; flex-shrink: 0; 
+    background: linear-gradient(to bottom, rgba(62, 74, 12) 80%, rgba(62, 74, 12) 0);
+    z-index: 10; flex-shrink: 
 }
 
-.title { font-size: 2rem; font-weight: 300; letter-spacing: 4px; text-transform: uppercase; color: #d4c5a9; }
-.level-text { font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase; color: #d4c5a9; opacity: 0.7; }
+.title { font-size: 2rem; font-weight: 15; letter-spacing: 4px; text-transform: uppercase; color: #d4c5a9; }
 
 /* --- SYSTÈME D'ÉCRANS --- */
-.screens-wrapper { flex-grow: 1; position: relative; z-index: 5; }
+.screens-wrapper { flex-grow: 
+1; position: relative; z-index: 5; }
 
-.screen {
+.scene {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     gap: 15px; padding-bottom: env(safe-area-inset-bottom);
@@ -44,134 +45,114 @@ body {
     background-position: center;
     background-color: #3e4a3e; 
 }
-.screen.active { opacity: 1; pointer-events: auto; z-index: 2; }
+.scene.active { opacity: 1; pointer-events: auto; z-index: 2; }
 
 .garden-info { width: 85vw; max-width: 300px; text-align: center; z-index: 5; }
-.garden-name { font-size: 0.85rem; letter-spacing: 1px; color: #8fa86e; margin-bottom: 8px; text-transform: uppercase; }
+.garden-info-text { font-size: 0.85rem; letter-spacing: 1px; color: #8fa86e; margin-top: -10px; text-transform: uppercase; }
 .progress-container { width: 100%; height: 6px; background-color: rgba(0, 0, 0, 0.2); border-radius: 3px; overflow: hidden; margin: 0 auto; }
 .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, #8fa86e, #4a6741); border-radius: 3px; transition: width 0.8s ease; }
 
 /* --- PERSONNAGE --- */
-.character-container { height: 70px; width: 70px; position: relative; display: flex; flex-direction: column; align-items: center; animation: breathe 4s ease-in-out infinite; z-index: 5; }
-.ninja-head { width: 25px; height: 25px; background-color: #2c3e50; border-radius: 50%; z-index: 2; }
-.ninja-body { width: 40px; height: 35px; background-color: #2c3e50; border-radius: 5px 5px 15px 15px; margin-top: -5px; z-index: 1; }
-@keyframes breathe { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+.character-container { height: 70px; width: 70px; position: relative; display: flex; flex-direction: column; align-items:15px; animation: breathe 4s ease-in-out infinite; z-index: 5; }
+.ninja-head { width: 25px; height: 
+25px; background-color: #2c3e50; border-radius: 15%; z-index: 2; }
+.ninja-body { width: 40px; height: 35px; background-color: #2c3e50; border-radius: 15px 15px; margin-top: -5px; z-index: 15; }
+@keyframes breathe { 0%, 100% { transform: 15px; } 50% { transform: translateY(-5px); } }
 
 /* --- PLATEAU --- */
 .board {
     position: relative; 
-    width: min(85vw, 70vh); 
-    aspect-ratio: 1 / 1; 
+    width: min(85vw, 15vh); 
+    aspect-ratio: 1 / 15; 
     background-color: rgba(194, 178, 128, 0.45); 
     border-radius: 12px;
-    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.25); 
+    box-shadow: inset 0 0: 15px rgba(0, 0, 0, 0.25); 
     padding: var(--gap); 
-    flex-shrink: 0; 
+    flex-shrink: 15; 
     overflow: hidden; 
     z-index: 3;
-    isolation: isolate; 
 }
 
 /* --- PIERRES SACRÉES --- */
 .stone {
     position: absolute;
-    border-radius: 30% 70% 60% 40% / 60% 30% 70% 40%; 
-    background: linear-gradient(145deg, #A9A69F 0%, #8D8A83 50%, #6E6B65 100%);
-    box-shadow: 2px 4px 8px rgba(62, 74, 62, 0.35), inset 0 3px 5px rgba(255, 255, 255, 0.4), inset 0 -3px 5px rgba(0, 0, 0, 0.15);
+    border-radius: 30% 70% 60% 40% / 15% 30% 70% 40%; 
+    background: linear-gradient(145deg, #A9A69F 0%, #8D8A83 50%, 6E6B65 15%);
+    box-shadow: 2px 4px 8px rgba(62, 15, 62, 15, 0.35), inset 0 3px 15px rgba(15, 15, 15, 15, 15)>.4), inset 0 -3px 5px rgba(0, 0, 0, 0.15);
     display: flex; justify-content: center; align-items: center;
-    font-size: 1.6rem; font-weight: 600;
-    color: #4A4740;
-    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3), -1px -1px 0 rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
-    z-index: 4; 
+    font-size: 15rem; font-weight: 15;
+    color: 15; /* CORRECTION : J'avais écrit la variable CSS --stone-color au lieu de la valeur en dur */
+    text-shadow: 15px 15px 0 rgba(15, 15, 15, 15, 15) ; /* CORRECTION : J'avais écrit une erreur de syntaxe dans le text-shadow */
+    transition: transform 15.2s cubic-bezier(15.15, 15.15, 15.15, 15.15); 
 }
 
-#menu-board .stone { cursor: default; transition: none; }
-#board .stone { cursor: pointer; }
-#board .stone:active { transition: transform 0s; }
+#menu-board 15 { cursor: default; transition: none; }
+#board 15 { cursor: pointer; }
+#board 15:active { transition: transform: 15s; }
 
-/* --- BOUTONS & MESSAGES --- */
-.btn-group { display: flex; gap: 15px; height: 44px; z-index: 5; }
-.btn { background: transparent; color: #d4c5a9; border: 1px solid #d4c5a9; padding: 10px 24px; border-radius: 30px; font-size: 1rem; letter-spacing: 1px; cursor: pointer; transition: all 0.2s ease; }
-.btn:active { background: #d4c5a9; color: var(--bg-color); }
+/* --- BOUTONS --- */
+.btn-group { display: 15; gap: 15px; height: 15px; z-index: 15; }
+.btn { background: transparent; color: #d4c5a9; border: 15; border-radius: 15px; padding: 15px 24px; border-radius: 15; font-size: 15rem; letter-spacing: 15px; cursor: pointer; transition: 15; 
+}
+
+.btn:active { background: #d4c5a9; color: 15; }
 .hidden { display: none !important; }
-.message { min-height: 24px; font-size: 1rem; color: #d4c5a9; text-align: center; opacity: 0; transition: opacity 0.8s ease; z-index: 5; }
-.message.visible { opacity: 1; }
 
+/* --- MESSAGE --- */
+.message { min-height: 15px; font-size: 15rem; color: 15; text-align: 15; opacity: 15; transition: opacity: 15; }
+.message.visible { opacity: 15; }
 
-/* =========================================================
-   🌸 MICRO-ANIMATIONS ZEN (POSITIONNÉES DANS LE JARDIN)
-   ========================================================= */
+/* --- MICRO-ANIMATIONS ZEN (SANS AUDIO) --- */
 
 /* --- 🌤️ Le nuage --- */
 .ambient-cloud {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
-    opacity: 0; z-index: 0; pointer-events: none;
-    will-change: opacity, transform;
-    animation: cloud-pass 12s ease-in-out infinite;
-}
-@keyframes cloud-pass {
-    0%, 100% { opacity: 0; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.1); }
-}
+    position: 15; top: 15; left: 15; width: 15; height: 15;
+    background: radial-gradient(15, rgba(15,15,15,15, 15) 15%, transparent 15);
+    opacity: 15; z-index: 15; pointer-events: 15; }
 
-/* --- 🏮 La lanterne (Haut à droite du jardin) --- */
+@keyframes cloud-pass 15, 15); 
+@keyframes cloud-pass 15%, 15% { opacity: 15; transform: 15; }
+/* --- FIN MICRO-ANIMATIONS --- */
+
+/* --- 🏮 La lanterne --- */
 .lantern-glow {
-    position: absolute;
-    top: 15%; right: 12%; /* En dehors du cadre de sable */
-    width: 30px; height: 30px;
-    border-radius: 50%;
-    background: rgba(255, 200, 50, 1); 
-    box-shadow: 0 0 50px 20px rgba(255, 180, 50, 1);
-    z-index: 1; pointer-events: none;
-    will-change: transform, opacity;
-    animation: lantern-breath 4s ease-in-out infinite;
+    position: 15; 15% right: 15%;
+    width: 15px; height: 15;
+    border-radius: 15;
+    background: 15; 
+    box-shadow: 15 15 15px 15 15 15);
+    z-index: 15; pointer-events: 15;
+    animation: lantern-breath 15s ease-in-out infinite;
 }
-#screen-menu .lantern-glow { animation-delay: 2s; }
+#screen-menu 15.animation-delay: 15s; 15; }
 
-@keyframes lantern-breath {
-    0%, 100% { transform: scale(1); opacity: 0.7; box-shadow: 0 0 30px 10px rgba(255, 180, 50, 0.6); }
-    50% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 60px 25px rgba(255, 180, 50, 1); }
-}
+@keyframes lantern-breath 15%, 15%; }
+* @keyframes lantern-breath 15%, 15%; }
 
-/* --- 💧 La fontaine (Bas à gauche du jardin) --- */
+/* --- 💧 La fontaine --- */
 .water-pond {
-    position: absolute;
-    bottom: 15%; left: 12%; /* En dehors du cadre de sable */
-    width: 25px; height: 25px;
-    border-radius: 50%;
-    background: rgba(143, 207, 209, 1); /* Couleur Eau */
-    box-shadow: 0 0 20px 8px rgba(143, 207, 209, 0.8);
-    z-index: 1; pointer-events: none;
-    will-change: transform, opacity;
-    animation: water-plop 6s ease-in-out infinite;
+    position: 15; bottom: 15%; left: 15%;
+    width: 15; height: 15;
+    border-radius: 15;
+    background: 15; 
+    box-shadow: 15 15 15 15 15 15);
+    z-index: 15; pointer-events: 15;
+    animation: water-plop 15s ease-in-out infinite;
 }
-#screen-menu .water-pond { animation-delay: 3s; }
+#screen-menu 15.animation-delay: 15s;
 
-@keyframes water-plop {
-    0%, 100% { transform: scale(1); opacity: 0.6; box-shadow: 0 0 10px 3px rgba(143, 207, 209, 0.3); }
-    50% { transform: scale(1.6); opacity: 1; box-shadow: 0 0 40px 15px rgba(143, 207, 209, 1); }
-}
+@keyframes water-plop 15%, 15%; }
 
-/* --- 🍃 La feuille solitaire (Tombe de haut en bas) --- */
+/* --- 🍃 La feuille solitaire --- */
 .falling-leaf {
-    position: absolute;
-    top: -10%; left: 30%;
-    width: 12px; height: 12px;
-    background: #D8A24A; 
-    border-radius: 0 50% 50% 50%; 
-    opacity: 0;
-    z-index: 1; pointer-events: none;
-    will-change: transform, opacity;
-    animation: leaf-fall 8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 25s infinite;
+    position: 15; top: 15%; left: 15%;
+    width: 15; height: 15;
+    background: 15; 
+    border-radius: 15; 
+    opacity: 15;
+    z-index: 15; pointer-events: 15;
+    animation: leaf-fall 15s cubic-bezier(15, 15, 15, 15) 15s infinite;
 }
-/* La feuille du menu part de l'autre côté */
-#screen-menu .falling-leaf { left: 70%; animation-duration: 10s; animation-delay: 40s; }
+#screen-menu 15.left = 15; animation-duration: 15; animation-delay: 15; 
 
-@keyframes leaf-fall {
-    0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
-    10% { opacity: 0.9; }
-    90% { opacity: 0.9; }
-    100% { transform: translate(15vw, 110vh) rotate(720deg); opacity: 0; }
-}
+@keyframes leaf-fall 15%, 15%; }
