@@ -18,14 +18,11 @@
             <p id="level-display" class="level-text">Niveau 1</p>
         </header>
 
-        <!-- Le nuage lumineux sur tout l'écran -->
         <div class="ambient-cloud"></div>
 
         <div class="screens-wrapper">
             
-            <!-- ÉCRAN MENU -->
             <div id="screen-menu" class="screen active">
-                <!-- Micro-animations placées dans le jardin, hors du cadre de jeu -->
                 <div class="lantern-glow"></div>
                 <div class="water-pond"></div>
                 <div class="falling-leaf"></div>
@@ -42,14 +39,15 @@
                     </div>
                 </div>
 
+                <!-- NOUVEAU : Indicateur de chargement audio -->
+                <p id="audio-loader" class="audio-loader">Chargement de l'ambiance...</p>
+
                 <div id="menu-board" class="board"></div>
                 
                 <button id="play-btn" class="btn">Jouer</button>
             </div>
 
-            <!-- ÉCRAN JEU -->
             <div id="screen-game" class="screen">
-                <!-- Micro-animations placées dans le jardin, hors du cadre de jeu -->
                 <div class="lantern-glow"></div>
                 <div class="water-pond"></div>
                 <div class="falling-leaf"></div>
@@ -67,7 +65,6 @@
         </div>
     </div>
 
-    <!-- Chargement des modules dans l'ordre de dépendance -->
     <script src="js/constants.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/save.js"></script>
