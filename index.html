@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" /* CORRECTION : Retour au fichier manifest.json de la V2.5 */
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="manifest.json">
@@ -18,11 +18,14 @@
             <p id="level-display" class="level-text">Niveau 1</p>
         </header>
 
+        <!-- Le nuage lumineux sur tout l'écran -->
         <div class="ambient-cloud"></div>
 
         <div class="screens-wrapper">
             
-            <div id="screen-menu" class="scene active">
+            <!-- ÉCRAN MENU -->
+            <div id="screen-menu" class="screen active">
+                <!-- Les éléments de vie sont ICI, en dehors du board -->
                 <div class="lantern-glow"></div>
                 <div class="water-pond"></div>
                 <div class="falling-leaf"></div>
@@ -33,7 +36,7 @@
                 </div>
                 
                 <div class="garden-info">
-                    <p id="garden-name" class="garden-info-text">Jardin du Bambou</p>
+                    <p id="garden-name" class="garden-name">Jardin du Bambou</p>
                     <div class="progress-container">
                         <div id="progress-bar" class="progress-bar"></div>
                     </div>
@@ -41,19 +44,22 @@
 
                 <div id="menu-board" class="board"></div>
                 
-                <button id="play-btn" class="btn">JOUER</button>
+                <button id="play-btn" class="btn">Jouer</button>
             </div>
 
-            <div id="screen-game" class="scene">
+            <!-- ÉCRAN JEU -->
+            <div id="screen-game" class="screen">
+                <!-- Les éléments de vie sont ICI, en dehors du board -->
                 <div class="lantern-glow"></div>
                 <div class="water-pond"></div>
-                <div class="falling-leave"></div> <!-- CORRECTION : J'avais mis "falling-leaf" dans la V2.5 -->
+                <div class="falling-leaf"></div>
+
                 <div id="board" class="board"></div>
                 
                 <div class="btn-group">
-                    <button id="back-btn" class="btn">RETOUR</button>
-                    <button id="restart-btn" class="btn">RECOMMENCER</button>
-                    <button id="continue-btn" class="btn hidden">CONTINUER</button>
+                    <button id="back-btn" class="btn">Retour</button>
+                    <button id="restart-btn" class="btn">Recommencer</button>
+                    <button id="continue-btn" class="btn hidden">Continuer</button>
                 </div>
                 <p id="message" class="message"></p>
             </div>
@@ -61,30 +67,13 @@
         </div>
     </div>
 
-    <!-- CORRECTION : Ordre de chargement sûr de l'Alpha 1 -->
     <script src="js/constants.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/save.js"></script>
     <script src="js/levels.js"></script>
-    <itle>NINJA STONES</title> <!-- CORRECTION : J'avais laissé le titre du document principal ici -->
     <script src="js/garden.js"></script>
-    <script src="html>
-        /* CORRECTION : J'avais laissé un bout de code abandonné ici lors d'une erreur de frappe */
-        window.NS_CONSTANTS = {
-            DEFAULT_GRID_SIZE: 4,
-            SHUFFLE_BASE_MOVES: 15,
-            SHUFFLE_INCREMENT: 15,
-            SHUFFLE_MAX_MOVES: 200,
-            STONE_GAP: 4,
-            CSS_STAGE_PREFIX: 'garden-stage-',
-            MAX_VISUAL_STAGE: 4,
-            GARDENS_CONFIG: [
-                { id: 'bamboo', name: 'Jardin du Bambou', thresholds: [5, 10, 20, 35, 50, 75, 100], points: 0 }
-            ]
-        };
-    </script>
     <script src="js/puzzle.js"></script>
-    <script src="ui.js"></script>
+    <script src="js/ui.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>
