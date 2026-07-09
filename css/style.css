@@ -1,0 +1,90 @@
+/* --- VARIABLES DE DESIGN --- */
+:root {
+    --bg-color: #2c3e50;
+    --board-bg: #34495e;
+    --stone-color: #ecf0f1;
+    --stone-text: #2c3e50;
+    --stone-shadow: rgba(0, 0, 0, 0.3);
+    --board-size: min(85vw, 85vh);
+    --gap: 4px;
+    --stone-size: calc((var(--board-size) - (var(--gap) * 5)) / 4);
+}
+
+/* --- RESET ET BASE MOBILE --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent; /* Supprime le flash bleu au clic sur iOS */
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--stone-color);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    min-height: 100dvh; /* dvh prend en compte la barre de navigation iOS */
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    touch-action: manipulation; /* Rend le clic instantané sur mobile */
+    user-select: none;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+/* --- TITRE --- */
+.title {
+    font-size: 2rem;
+    font-weight: 300;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.9;
+}
+
+/* --- PLATEAU --- */
+.board {
+    position: relative;
+    width: var(--board-size);
+    height: var(--board-size);
+    background-color: var(--board-bg);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    padding: var(--gap);
+}
+
+/* --- PIERRES --- */
+.stone {
+    position: absolute;
+    width: var(--stone-size);
+    height: var(--stone-size);
+    background-color: var(--stone-color);
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--stone-text);
+    cursor: pointer;
+    box-shadow: 0 4px 6px var(--stone-shadow);
+    
+    /* 
+     * V0.0.2 : Animation de glissement optimisée.
+     * On utilise cubic-bezier pour simuler l'inertie d'une pierre qui glisse sur du sable
+     * et s'arrête doucement.
+     */
+    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.stone:active {
+    /* L'échelle s'applique instantanément (0s) pour un retour tactile immédiat 
+       sans interférer avec l'animation de glissement */
+    transition: transform 0s;
+}

@@ -1,0 +1,10 @@
+{
+  "name": "Ninja Stones",
+  "short_name": "NinjaStones",
+  "description": "Un puzzle zen de restauration de jardins",
+  "start_url": "/NINJA-STONES/",
+  "display": "standalone",
+  "background_color": "#3e4a3e",
+  "theme_color": "#3e4a3e",
+  "icons": []
+}
