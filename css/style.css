@@ -41,11 +41,11 @@ body {
     gap: 15px; padding-bottom: env(safe-area-inset-bottom);
     opacity: 0; pointer-events: none; transition: opacity 0.3s ease; 
     
-    /* NOUVEAU : Le jardin remplit TOUT l'écran en arrière-plan */
+    /* NOUVEAU : Le jardin est dézoomé à 115% pour s'aligner avec le cadre */
     background-image: url('../assets/images/garden-bamboo-stage-1.jpg');
-    background-size: cover;
+    background-size: 115vw 115vh; 
     background-position: center;
-    background-color: #3e4a3e; /* Vert forêt si l'image charge mal */
+    background-color: #3e4a3e; /* Vert forêt visible sur les bords */
 }
 .screen.active { opacity: 1; pointer-events: auto; z-index: 2; }
 
@@ -66,21 +66,19 @@ body {
     width: min(85vw, 70vh); 
     aspect-ratio: 1 / 1; 
     
-    /* NOUVEAU : Le cadre devient une zone de sable semi-transparente */
-    /* On superpose un beige sable avec 40% d'opacité pour voir le jardin derrière */
+    /* Le cadre reste une zone de sable semi-transparente */
     background-color: rgba(194, 178, 128, 0.45); 
     
     border-radius: 12px;
-    /* L'ombre interne donne l'impression que le sable est "creusé" dans le jardin */
     box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.25); 
     padding: var(--gap); 
     flex-shrink: 0; 
 }
 
-/* Les stades futurs changeront la couleur de fond de l'écran, pas du cadre */
-.screen.garden-bg-2 { background-image: url('../assets/images/garden-bamboo-stage-2.jpg'); }
-.screen.garden-bg-3 { background-image: url('../assets/images/garden-bamboo-stage-3.jpg'); }
-.screen.garden-bg-4 { background-image: url('../assets/images/garden-bamboo-stage-4.jpg'); }
+/* Les stades futurs appliqueront le même dézoomage */
+.screen.garden-bg-2 { background-image: url('../assets/images/garden-bamboo-stage-2.jpg'); background-size: 115vw 115vh; background-position: center; }
+.screen.garden-bg-3 { background-image: url('../assets/images/garden-bamboo-stage-3.jpg'); background-size: 115vw 115vh; background-position: center; }
+.screen.garden-bg-4 { background-image: url('../assets/images/garden-bamboo-stage-4.jpg'); background-size: 115vw 115vh; background-position: center; }
 
 /* --- LES PIERRES SACRÉES --- */
 .stone {
