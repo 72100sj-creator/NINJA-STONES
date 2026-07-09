@@ -1,12 +1,12 @@
 /**
  * audio.js
- * Moteur audio 100% compatible iOS Safari (Web Audio API + MediaElementSource).
- * Contourne les restrictions CORS de Safari en laissant le navigateur gérer les MP3.
+ * Moteur audio 100% compatible iOS Safari (HTML5 Audio pur).
+ * Contourne le mur du CORS de GitHub Pages.
  */
 window.NS_Audio = (function() {
     let isUnlocked = false;
-    let audioContext = null;
-    
+    let fadeIntervals = {}; // Gère les fondus sortants
+
     const PATHS = {
         breeze: '../assets/sounds/breeze-loop.mp3',
         fountain: '../assets/sounds/fountain-plop.mp3',
@@ -17,11 +17,17 @@ window.NS_Audio = (function() {
         victoryBell: '../assets/sounds/victory-bell.mp3'
     };
 
-    let audioElements = {}; // Stocke les balises <audio>
-    let sourceNodes = {};   // Stocke les connexions Web Audio
-    let gainNodes = {};     // Stocke les contrôles de volume
+    let audios = {};
     let birdTimeout = null;
     let leafTimeout = null;
+
+    function init() {
+        Object.keys(PATHS).forEach(key => {
+            const audio = new Audio(PATHS[key]);
+            audio.preload = 'auto';
+            audios[key] = audio;
+        });
+    }
 
     /**
      * Déverrouille l'audio au premier tap, télécharge les fichiers et lance l'ambiance.
@@ -29,138 +35,101 @@ window.NS_Audio = (function() {
     async function unlock() {
         if (isUnlocked) return;
         isUnlocked = true;
-        
+
         const loader = document.getElementById('audio-loader');
         if (loader) loader.classList.add('visible');
 
-        // 1. Créer le contexte audio (Requis par iOS)
-        if (!audioContext) {
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        }
-        if (audioContext.state === 'suspended') {
-            await audioContext.resume();
-        }
+        // Le déverrouillage du contexte est toujours nécessaire sur iOS
+        if (!window.AudioContext) window.AudioContext = new (window.AudioContext || window.webkitAudioContext)();
+        if (window.AudioContext.state === 'suspended') await window.AudioContext.resume();
 
-        // 2. Créer les balises audio natives
-        Object.keys(PATHS).forEach(key => {
-            const audio = new Audio(PATHS[key]);
-            audio.preload = 'auto';
-            audioElements[key] = audio;
-        });
-
-        // 3. Attendre que les fichiers essentiels soient prêts (ou qu'ils échouent gracieusement)
+        // Charger les fichiers critiques
         const criticalSounds = ['breeze', 'fountain'];
-        await Promise.all(criticalSounds.map(key => {
-            return new Promise((resolve) => {
-                if (!audioElements[key]) { resolve(); return; }
-                
-                const onReady = () => {
-                    // Détache les écouteurs pour libérer la mémoire
-                    audioElements[key].removeEventListener('canplaythrough', onReady);
-                    audioElements[key].removeEventListener('error', onReady);
-                    resolve();
-                };
-                
-                audioElements[key].addEventListener('canplaythrough', onReady, { once: true });
-                audioElements[key].addEventListener('error', onReady, { once: true });
-                
-                // Force le téléchargement
-                audioElements[key].load();
-            });
+        await Promise.all(criticalSounds.map(key => new Promise(resolve => {
+            const onReady = () => {
+                audios[key].removeEventListener('canplaythrough', onReady);
+                resolve();
+            };
+            audios[key].addEventListener('canplaythrough', onReady, { once: true });
+            audios[key].addEventListener('error', onReady, { once: true }); // Débloque la promesse si le fichier est introuvable
+            audios[key].load();
         }));
 
-        // 4. Cacher le loader et lancer l'ambiance
         if (loader) loader.classList.remove('visible');
+        
         startAmbient();
     }
 
     function startAmbient() {
         if (!isUnlocked) return;
-        _startLoop('breeze', 0.15);
-        _startLoop('fountain', 0.12);
+        _playLoop('breeze', 0.15);
+        _playLoop('fountain', 0.12);
         scheduleBird();
         scheduleLeaf();
     }
 
     function stopAmbient() {
-        _stopLoop('breeze');
-        _stopLoop('fountain');
+        _fadeOut('breeze');
+        _fadeOut('fountain');
         clearTimeout(birdTimeout);
         clearTimeout(leafTimeout);
     }
 
-    // --- LOGIQUE INTERNE (La solution Safari) ---
+    // --- LOGIQUE INTERNE (HTML5 Pur) ---
 
-    function _startLoop(name, volume) {
-        _stopLoop(name); // Coupe l'ancienne boucle s'il y en a une
-        const audio = audioElements[name];
-        if (!audio || !audioContext) return;
-
-        audio.loop = true;
-        audio.volume = 0; // Commence à 0 pour le fondu entrant
-        audio.play().catch(e => console.warn("Audio bloqué :", e));
-
-        // Brancher vers Web Audio pour le contrôle précis
-        const sourceNode = audioContext.createMediaElementSource(audio);
-        const gainNode = audioContext.createGain();
-        gainNode.gain.setValueAtTime(0, audioContext.currentTime); // Volume initial à 0
+    function _playLoop(name, targetVolume) {
+        if (!audios[name]) return;
+        audios[name].volume = 0; // Démarre à 0 pour éviter le "clic" sec
+        audios[name].loop = true;
+        audios[name].play().catch(e => console.warn("Audio bloqué par le navigateur :", e));
         
-        sourceNode.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-        
-        sourceNodes[name] = sourceNode;
-        gainNodes[name] = gainNode;
-        
-        // Fondu entrant
-        gainNode.gain.linearRampToValueAtTime(volume, audioContext.currentTime + 0.5);
+        // Fondu entrant très doux
+        let currentVol = 0;
+        if (fadeIntervals[name]) clearInterval(fadeIntervals[name]);
+        fadeIntervals[name] = setInterval(() => {
+            if (currentVol < targetVolume) {
+                currentVol += 0.005; 
+                if (currentVol > targetVolume) currentVol = targetVolume;
+                audios[name].volume = currentVol;
+            } else {
+                clearInterval(fadeIntervals[name]);
+            }
+        }, 30); 
     }
 
-    function _stopLoop(name) {
-        if (sourceNodes[name] && gainNodes[name]) {
-            // Fondu sortant
-            gainNodes[name].gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.5);
-            
-            // Pause le fichier audio après le fondu
-            setTimeout(() => {
-                if (audioElements[name]) audioElements[name].pause();
-                
-                // Débranche proprement pour libérer la mémoire du téléphone
-                try { sourceNodes[name].disconnect(); } catch(e) {}
-                delete sourceNodes[name];
-                delete gainNodes[name];
-            }, 600); // 600ms = durée du fondu
-        }
-    }
+    function _fadeOut(name) {
+        if (fadeIntervals[name]) clearInterval(fadeIntervals[name]);
+        const audio = audios[name];
+        if (!audio) return;
 
-    // --- EFFETS SONORES INTERACTION ---
+        let currentVol = audio.volume;
+        fadeIntervals[name] = setInterval(() => {
+            if (currentVol > 0.005) {
+                currentVol -= 0.005;
+                audio.volume = currentVol;
+            } else {
+                audio.pause();
+                audio.volume = 0;
+                clearInterval(fadeIntervals[name]);
+                delete fadeIntervals[name];
+            }
+        }, 30);
+    }
 
     function _playOneShot(name, volume) {
         if (!isUnlocked) return;
+        let audio = audios[name];
         
-        // Utilise l'audio du menu, ou le clone si on le rejoue trop vite (Safari bloque si on appelle play() sur un son déjà en cours)
-        let audio = audioElements[name];
-        if (!audio) return;
-
+        // Si le son est déjà en cours (ex: oiseau trop rapide), on le clone
         if (!audio.paused) {
-            audio = audio.cloneNode(true); // Crée une copie temporaire
+            audio = audio.cloneNode(true);
         }
 
-        const sourceNode = audioContext.createMediaElementSource(audio);
-        const gainNode = audioContext.createGain();
-        gainNode.gain.value = volume;
-        
-        sourceNode.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-        
-        audio.play().catch(e => console.warn("Audio bloqué :", e));
-
-        // Nettoie la copie temporaire une fois le son fini
-        if (audio !== audioElements[name]) {
-            audio.addEventListener('ended', () => {
-                try { sourceNode.disconnect(); } catch(e) {}
-            }, { once: true });
-        }
+        audio.volume = volume;
+        audio.play().catch(e => {}); // Ignore silencieusement les blocages iOS
     }
+
+    // --- EFFETS SONORES INTERACTION ---
 
     function playStoneMove() { _playOneShot('stoneMove', 0.25); }
     function playInvalidToc() { _playOneShot('invalidToc', 0.15); }
@@ -186,7 +155,9 @@ window.NS_Audio = (function() {
         }, 33000);
     }
 
-    // --- API PUBLIQUE ---
+    // --- INITIALISATION ---
+    init();
+
     return {
         unlock: unlock,
         stopAmbient: stopAmbient,
