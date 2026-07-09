@@ -40,36 +40,12 @@ window.NS_UI = (function() {
         dom.menuBoard.innerHTML = '';
         tilesElements = {};
         _renderStones(dom.menuBoard, NS_Puzzle.generateSolvedGrid(state.totalTiles), state.gridSize, dom.menuBoard.clientWidth, null);
-        _injectAnimations(dom.menuBoard, 'menu');
     }
 
     function renderGameBoard(grid, gridSize, onTileClickCallback) {
         dom.board.innerHTML = '';
         tilesElements = {};
         _renderStones(dom.board, grid, gridSize, dom.board.clientWidth, onTileClickCallback);
-        _injectAnimations(dom.board, 'game');
-    }
-
-    function _injectAnimations(containerEl, screenType) {
-        // 1. La Lanterne
-        const lantern = document.createElement('div');
-        lantern.className = 'lantern-glow';
-        containerEl.appendChild(lantern);
-
-        // 2. La Fontaine
-        const pond = document.createElement('div');
-        pond.className = 'water-pond';
-        containerEl.appendChild(pond);
-
-        // 3. La Feuille solitaire
-        const leaf = document.createElement('div');
-        leaf.className = 'falling-leaf';
-        if (screenType === 'menu') {
-            leaf.style.left = '70%';
-            leaf.style.animationDuration = '10s';
-            leaf.style.animationDelay = '40s';
-        }
-        containerEl.appendChild(leaf);
     }
 
     function _renderStones(containerEl, grid, gridSize, boardWidth, onClickCallback) {
