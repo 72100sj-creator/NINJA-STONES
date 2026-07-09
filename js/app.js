@@ -56,7 +56,7 @@
     }
 
     NS_UI.getDomElements().playBtn.addEventListener('click', () => { 
-        NS_Audio.unlock(); // Déverrouille et télécharge les sons
+        NS_Audio.unlock(); 
         NS_UI.showScreen('game'); 
         startGame(); 
     });
@@ -80,5 +80,5 @@
         NS_Save.load(state, C.GARDENS_CONFIG); 
         NS_UI.renderMenu(state, getCurrentGarden()); 
         NS_UI.showScreen('menu'); 
-    });
+    })();
 })();
