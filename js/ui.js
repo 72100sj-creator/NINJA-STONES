@@ -40,12 +40,37 @@ window.NS_UI = (function() {
         dom.menuBoard.innerHTML = '';
         tilesElements = {};
         _renderStones(dom.menuBoard, NS_Puzzle.generateSolvedGrid(state.totalTiles), state.gridSize, dom.menuBoard.clientWidth, null);
+        
+        // NOUVEAU : On recrée les animations après avoir vidé le plateau
+        _injectAnimations(dom.menuBoard, 'menu');
     }
 
     function renderGameBoard(grid, gridSize, onTileClickCallback) {
         dom.board.innerHTML = '';
         tilesElements = {};
         _renderStones(dom.board, grid, gridSize, dom.board.clientWidth, onTileClickCallback);
+        
+        // NOUVEAU : On recrée les animations après avoir vidé le plateau
+        _injectAnimations(dom.board, 'game');
+    }
+
+    // --- NOUVEAU : Fonction pour injecter la vie dans le jardin ---
+    function _injectAnimations(containerEl, screenType) {
+        // 1. La Lanterne
+        const lantern = document.createElement('div');
+        lantern.className = 'lantern-glow';
+        containerEl.appendChild(lantern);
+
+        // 2. La Feuille solitaire
+        const leaf = document.createElement('div');
+        leaf.className = 'falling-leaf';
+        // Si on est sur le menu, on change légèrement sa classe pour le décalage
+        if (screenType === 'menu') {
+            leaf.style.left = '70%';
+            leaf.style.animationDuration = '10s';
+            leaf.style.animationDelay = '40s';
+        }
+        containerEl.appendChild(leaf);
     }
 
     function _renderStones(containerEl, grid, gridSize, boardWidth, onClickCallback) {
@@ -68,7 +93,7 @@ window.NS_UI = (function() {
             stone.style.height = `${stoneSize}px`;
             stone.style.transform = `translate(${x}px, ${y}px)`;
             
-            // NOUVEAU : Génère une forme organique unique pour chaque pierre
+            // Génère une forme organique unique pour chaque pierre
             const r1 = 25 + Math.random() * 15;
             const r2 = 25 + Math.random() * 15;
             const r3 = 25 + Math.random() * 15;
