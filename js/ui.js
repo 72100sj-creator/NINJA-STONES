@@ -40,8 +40,6 @@ window.NS_UI = (function() {
         dom.menuBoard.innerHTML = '';
         tilesElements = {};
         _renderStones(dom.menuBoard, NS_Puzzle.generateSolvedGrid(state.totalTiles), state.gridSize, dom.menuBoard.clientWidth, null);
-        
-        // NOUVEAU : On recrée les animations après avoir vidé le plateau
         _injectAnimations(dom.menuBoard, 'menu');
     }
 
@@ -49,22 +47,23 @@ window.NS_UI = (function() {
         dom.board.innerHTML = '';
         tilesElements = {};
         _renderStones(dom.board, grid, gridSize, dom.board.clientWidth, onTileClickCallback);
-        
-        // NOUVEAU : On recrée les animations après avoir vidé le plateau
         _injectAnimations(dom.board, 'game');
     }
 
-    // --- NOUVEAU : Fonction pour injecter la vie dans le jardin ---
     function _injectAnimations(containerEl, screenType) {
         // 1. La Lanterne
         const lantern = document.createElement('div');
         lantern.className = 'lantern-glow';
         containerEl.appendChild(lantern);
 
-        // 2. La Feuille solitaire
+        // 2. La Fontaine
+        const pond = document.createElement('div');
+        pond.className = 'water-pond';
+        containerEl.appendChild(pond);
+
+        // 3. La Feuille solitaire
         const leaf = document.createElement('div');
         leaf.className = 'falling-leaf';
-        // Si on est sur le menu, on change légèrement sa classe pour le décalage
         if (screenType === 'menu') {
             leaf.style.left = '70%';
             leaf.style.animationDuration = '10s';
@@ -93,15 +92,10 @@ window.NS_UI = (function() {
             stone.style.height = `${stoneSize}px`;
             stone.style.transform = `translate(${x}px, ${y}px)`;
             
-            // Génère une forme organique unique pour chaque pierre
-            const r1 = 25 + Math.random() * 15;
-            const r2 = 25 + Math.random() * 15;
-            const r3 = 25 + Math.random() * 15;
-            const r4 = 25 + Math.random() * 15;
-            const r5 = 25 + Math.random() * 15;
-            const r6 = 25 + Math.random() * 15;
-            const r7 = 25 + Math.random() * 15;
-            const r8 = 25 + Math.random() * 15;
+            const r1 = 25 + Math.random() * 15, r2 = 25 + Math.random() * 15;
+            const r3 = 25 + Math.random() * 15, r4 = 25 + Math.random() * 15;
+            const r5 = 25 + Math.random() * 15, r6 = 25 + Math.random() * 15;
+            const r7 = 25 + Math.random() * 15, r8 = 25 + Math.random() * 15;
             stone.style.borderRadius = `${r1}% ${r2}% ${r3}% ${r4}% / ${r5}% ${r6}% ${r7}% ${r8}%`;
 
             if (onClickCallback) stone.addEventListener('click', () => onClickCallback(value));
