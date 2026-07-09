@@ -7,7 +7,6 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="manifest.json">
     <title>Ninja Stones</title>
-    <style>#screen-game { display: none !important; }</style>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -19,7 +18,7 @@
             <p id="level-display" class="level-text">Niveau 1</p>
         </header>
 
-        <!-- NOUVEAU : Le nuage lumineux sur tout l'écran -->
+        <!-- Le nuage lumineux sur tout l'écran -->
         <div class="ambient-cloud"></div>
 
         <div class="screens-wrapper">
@@ -38,8 +37,7 @@
                 </div>
 
                 <div id="menu-board" class="board">
-                    <!-- Micro-animations du menu -->
-                    <div class="lantern-glow" style="top: 15%; left: 85%;"></div>
+                    <div class="lantern-glow"></div>
                     <div class="falling-leaf"></div>
                 </div>
                 
@@ -48,8 +46,7 @@
 
             <div id="screen-game" class="screen">
                 <div id="board" class="board">
-                    <!-- Micro-animations du jeu -->
-                    <div class="lantern-glow" style="top: 15%; left: 85%;"></div>
+                    <div class="lantern-glow"></div>
                     <div class="falling-leaf"></div>
                 </div>
                 <div class="btn-group">
