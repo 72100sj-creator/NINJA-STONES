@@ -74,4 +74,47 @@ body {
 }
 
 /* Ces classes resteront utiles plus tard quand nous aurons plusieurs images de jardin */
-.board.garden-stage-2 { background-image: url('../assets/images/garden-bamboo-stage-2.jpg'); background-color
+.board.garden-stage-2 { background-image: url('../assets/images/garden-bamboo-stage-2.jpg'); background-color: #8fa86e; }
+.board.garden-stage-3 { background-image: url('../assets/images/garden-bamboo-stage-3.jpg'); background-color: #5f7a42; }
+.board.garden-stage-4 { background-image: url('../assets/images/garden-bamboo-stage-4.jpg'); background-color: #4a6741; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 30px rgba(0, 0, 0, 0.2); }
+
+/* --- LES PIERRES SACRÉES (Alpha 2.2) --- */
+.stone {
+    position: absolute;
+    /* Forme de base "galet", le JS ajoute de l'irrégularité */
+    border-radius: 30% 70% 60% 40% / 60% 30% 70% 40%; 
+    
+    /* Texture minérale (Dégradé de la pierre classique) */
+    background: linear-gradient(145deg, #A9A69F 0%, #8D8A83 50%, #6E6B65 100%);
+    
+    /* Ombre douce (Poids naturel) */
+    box-shadow: 
+        2px 4px 8px rgba(62, 74, 62, 0.35),
+        inset 0 3px 5px rgba(255, 255, 255, 0.4),
+        inset 0 -3px 5px rgba(0, 0, 0, 0.15);
+    
+    display: flex; justify-content: center; align-items: center;
+    font-size: 1.6rem; font-weight: 600;
+    
+    /* Effet "Gravure" pour les chiffres */
+    color: #4A4740;
+    text-shadow: 
+        1px 1px 0 rgba(255, 255, 255, 0.3),
+        -1px -1px 0 rgba(0, 0, 0, 0.2);
+        
+    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+#menu-board .stone { cursor: default; transition: none; }
+#board .stone { cursor: pointer; }
+#board .stone:active { transition: transform 0s; }
+
+/* --- BOUTONS --- */
+.btn-group { display: flex; gap: 15px; height: 44px; }
+.btn { background: transparent; color: #d4c5a9; border: 1px solid #d4c5a9; padding: 10px 24px; border-radius: 30px; font-size: 1rem; letter-spacing: 1px; cursor: pointer; transition: all 0.2s ease; }
+.btn:active { background: #d4c5a9; color: var(--bg-color); }
+.hidden { display: none !important; }
+
+/* --- MESSAGE --- */
+.message { min-height: 24px; font-size: 1rem; color: #d4c5a9; text-align: center; opacity: 0; transition: opacity 0.8s ease; }
+.message.visible { opacity: 1; }
