@@ -68,10 +68,15 @@ window.NS_UI = (function() {
             stone.style.height = `${stoneSize}px`;
             stone.style.transform = `translate(${x}px, ${y}px)`;
             
-            const r1 = 25 + Math.random() * 15, r2 = 25 + Math.random() * 15;
-            const r3 = 25 + Math.random() * 15, r4 = 25 + Math.random() * 15;
-            const r5 = 25 + Math.random() * 15, r6 = 25 + Math.random() * 15;
-            const r7 = 25 + Math.random() * 15, r8 = 25 + Math.random() * 15;
+            // NOUVEAU : Génère une forme organique unique pour chaque pierre
+            const r1 = 25 + Math.random() * 15;
+            const r2 = 25 + Math.random() * 15;
+            const r3 = 25 + Math.random() * 15;
+            const r4 = 25 + Math.random() * 15;
+            const r5 = 25 + Math.random() * 15;
+            const r6 = 25 + Math.random() * 15;
+            const r7 = 25 + Math.random() * 15;
+            const r8 = 25 + Math.random() * 15;
             stone.style.borderRadius = `${r1}% ${r2}% ${r3}% ${r4}% / ${r5}% ${r6}% ${r7}% ${r8}%`;
 
             if (onClickCallback) stone.addEventListener('click', () => onClickCallback(value));
