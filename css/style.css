@@ -1,4 +1,4 @@
-/* --- VARIABLES DE DESIGN (Art Bible Officielle) --- */
+/* --- VARIABLES DE DESIGN --- */
 :root {
     --bg-color: #3e4a3e;
     --stone-color: #8D8A83; 
@@ -8,7 +8,6 @@
     --gap: 4px; 
 }
 
-/* --- RESET ET BASE MOBILE --- */
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 body {
@@ -41,7 +40,8 @@ body {
     opacity: 0; pointer-events: none; transition: opacity 0.3s ease; 
     
     background-image: url('../assets/images/garden-bamboo-stage-1.jpg');
-    background-size: 115vw 115vh; 
+    /* CORRECTION : L'image reste un carré parfait, mais 150% plus grand que le plateau */
+    background-size: min(150vw, 150vh) min(150vw, 150vh); 
     background-position: center;
     background-color: #3e4a3e; 
 }
@@ -58,7 +58,7 @@ body {
 .ninja-body { width: 40px; height: 35px; background-color: #2c3e50; border-radius: 5px 5px 15px 15px; margin-top: -5px; z-index: 1; }
 @keyframes breathe { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
-/* --- PLATEAU & JARDIN --- */
+/* --- PLATEAU --- */
 .board {
     position: relative; 
     width: min(85vw, 70vh); 
@@ -68,15 +68,11 @@ body {
     box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.25); 
     padding: var(--gap); 
     flex-shrink: 0; 
-    overflow: hidden; /* Important pour cacher les feuilles qui sortent du cadre */
+    overflow: hidden; 
     z-index: 3;
 }
 
-.screen.garden-bg-2 { background-image: url('../assets/images/garden-bamboo-stage-2.jpg'); background-size: 115vw 115vh; background-position: center; }
-.screen.garden-bg-3 { background-image: url('../assets/images/garden-bamboo-stage-3.jpg'); background-size: 115vw 115vh; background-position: center; }
-.screen.garden-bg-4 { background-image: url('../assets/images/garden-bamboo-stage-4.jpg'); background-size: 115vw 115vh; background-position: center; }
-
-/* --- LES PIERRES SACRÉES --- */
+/* --- PIERRES SACRÉES --- */
 .stone {
     position: absolute;
     border-radius: 30% 70% 60% 40% / 60% 30% 70% 40%; 
@@ -87,7 +83,7 @@ body {
     color: #4A4740;
     text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3), -1px -1px 0 rgba(0, 0, 0, 0.2);
     transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
-    z-index: 4; /* Les pierres sont au-dessus des animations */
+    z-index: 4; 
 }
 
 #menu-board .stone { cursor: default; transition: none; }
@@ -104,18 +100,19 @@ body {
 
 
 /* =========================================================
-   🌸 MICRO-ANIMATIONS ZEN (Alpha 2.5)
-   Optimisées 60 FPS : Utilisation stricte de transform et opacity
+   🌸 MICRO-ANIMATIONS ZEN (OPTIMISÉES 60 FPS SAFARI iOS)
    ========================================================= */
 
-/* --- 🌤️ Animation 5 : Le nuage (Lumière subtile) --- */
+/* --- 🌤️ Le nuage (Lumière subtile) --- */
 .ambient-cloud {
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
     opacity: 0;
-    z-index: 1; /* Derrière tout le reste */
+    z-index: 1; 
     pointer-events: none;
+    /* Force Safari à utiliser le processeur graphique */
+    will-change: opacity, transform;
     animation: cloud-pass 12s ease-in-out infinite;
 }
 
@@ -124,50 +121,51 @@ body {
     50% { opacity: 1; transform: scale(1.1); }
 }
 
-/* --- 🏮 Animation 4 : La lanterne (Respiration) --- */
+/* --- 🏮 La lanterne (Respiration) --- */
 .lantern-glow {
     position: absolute;
-    width: 15px; height: 15px;
+    top: 15%; left: 85%; /* Position dans un coin du cadre */
+    width: 12px; height: 12px;
     border-radius: 50%;
-    background: rgba(216, 162, 74, 0.6); /* Couleur Lanterne de l'Art Bible */
-    box-shadow: 0 0 15px 5px rgba(216, 162, 74, 0.3);
-    z-index: 2; /* Derrière les pierres */
+    background: rgba(216, 162, 74, 0.7); /* Couleur Lanterne Art Bible */
+    box-shadow: 0 0 15px 5px rgba(216, 162, 74, 0.4);
+    z-index: 2; 
     pointer-events: none;
+    will-change: transform, opacity;
     animation: lantern-breath 4s ease-in-out infinite;
-    /* On donne un décalage aléatoire pour que les 2 lanternes (menu et jeu) ne respirent pas en même temps */
-    animation-delay: 0s; 
 }
-/* La deuxième lanterne (dans le menu) est décalée de 2 secondes */
-.screen-menu .lantern-glow {
+
+/* La lanterne du menu est décalée pour ne pas respirer en même temps */
+#screen-menu .lantern-glow {
     animation-delay: 2s;
 }
 
 @keyframes lantern-breath {
     0%, 100% { transform: scale(1); opacity: 0.6; box-shadow: 0 0 10px 2px rgba(216, 162, 74, 0.2); }
-    50% { transform: scale(1.2); opacity: 0.9; box-shadow: 0 0 20px 5px rgba(216, 162, 74, 0.5); }
+    50% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 25px 8px rgba(216, 162, 74, 0.6); }
 }
 
-/* --- 🍃 Animation 2 : La feuille solitaire --- */
+/* --- 🍃 La feuille solitaire --- */
 .falling-leaf {
     position: absolute;
     top: -10%;
     left: 20%;
-    width: 8px; height: 8px;
+    width: 6px; height: 6px;
     background: #6FA86B; /* Vert Bambou */
     border-radius: 0 50% 50% 50%; /* Forme de feuille */
     opacity: 0;
     z-index: 2;
     pointer-events: none;
-    
-    /* Durée 8s + Délai 25s = Tombe toutes les ~33 secondes */
+    will-change: transform, opacity;
+    /* Tombe, attend, retombe */
     animation: leaf-fall 8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 25s infinite;
 }
 
-/* La deuxième feuille est décalée et part d'un autre endroit */
-.screen-menu .falling-leaf {
+/* La feuille du menu part de l'autre côté et à un autre moment */
+#screen-menu .falling-leaf {
     left: 70%;
     animation-duration: 10s;
-    animation-delay: 40s; /* Tombe toutes les ~50 secondes de l'autre côté */
+    animation-delay: 40s; 
 }
 
 @keyframes leaf-fall {
