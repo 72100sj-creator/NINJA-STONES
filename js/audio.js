@@ -1,7 +1,7 @@
 /**
  * audio.js
- * Moteur audio compatible iOS Safari (Web Audio API).
- * Télécharge et décode les sons en mémoire au premier tap.
+ * Moteur audio 100% compatible iOS Safari (Web Audio API + MediaElementSource).
+ * Contourne les restrictions CORS de Safari en laissant le navigateur gérer les MP3.
  */
 window.NS_Audio = (function() {
     let isUnlocked = false;
@@ -17,20 +17,23 @@ window.NS_Audio = (function() {
         victoryBell: '../assets/sounds/victory-bell.mp3'
     };
 
-    let audioBuffers = {}; // Stocke les sons décodés en mémoire
+    let audioElements = {}; // Stocke les balises <audio>
+    let sourceNodes = {};   // Stocke les connexions Web Audio
+    let gainNodes = {};     // Stocke les contrôles de volume
     let birdTimeout = null;
     let leafTimeout = null;
-    let loopNodes = {}; // Gère les sons qui bouclent (vent, eau)
 
+    /**
+     * Déverrouille l'audio au premier tap, télécharge les fichiers et lance l'ambiance.
+     */
     async function unlock() {
         if (isUnlocked) return;
         isUnlocked = true;
         
-        // Affiche le message de chargement
         const loader = document.getElementById('audio-loader');
         if (loader) loader.classList.add('visible');
 
-        // 1. Créer le contexte audio (Obligatoire sur iOS)
+        // 1. Créer le contexte audio (Requis par iOS)
         if (!audioContext) {
             audioContext = new (window.AudioContext || window.webkitAudioContext)();
         }
@@ -38,29 +41,43 @@ window.NS_Audio = (function() {
             await audioContext.resume();
         }
 
-        // 2. Télécharger et décoder tous les MP3 en mémoire
-        const fetchPromises = Object.keys(PATHS).map(async (key) => {
-            try {
-                const response = await fetch(PATHS[key]);
-                const arrayBuffer = await response.arrayBuffer();
-                audioBuffers[key] = await audioContext.decodeAudioData(arrayBuffer);
-            } catch (error) {
-                console.warn("Erreur chargement audio pour " + key + ":", error);
-            }
+        // 2. Créer les balises audio natives
+        Object.keys(PATHS).forEach(key => {
+            const audio = new Audio(PATHS[key]);
+            audio.preload = 'auto';
+            audioElements[key] = audio;
         });
 
-        // 3. Attendre que tout soit prêt
-        await Promise.all(fetchPromises);
+        // 3. Attendre que les fichiers essentiels soient prêts (ou qu'ils échouent gracieusement)
+        const criticalSounds = ['breeze', 'fountain'];
+        await Promise.all(criticalSounds.map(key => {
+            return new Promise((resolve) => {
+                if (!audioElements[key]) { resolve(); return; }
+                
+                const onReady = () => {
+                    // Détache les écouteurs pour libérer la mémoire
+                    audioElements[key].removeEventListener('canplaythrough', onReady);
+                    audioElements[key].removeEventListener('error', onReady);
+                    resolve();
+                };
+                
+                audioElements[key].addEventListener('canplaythrough', onReady, { once: true });
+                audioElements[key].addEventListener('error', onReady, { once: true });
+                
+                // Force le téléchargement
+                audioElements[key].load();
+            });
+        }));
 
-        // 4. Cacher le message et lancer la musique
+        // 4. Cacher le loader et lancer l'ambiance
         if (loader) loader.classList.remove('visible');
         startAmbient();
     }
 
     function startAmbient() {
         if (!isUnlocked) return;
-        _startLoop('breeze', 0.15, true);
-        _startLoop('fountain', 0.12, true);
+        _startLoop('breeze', 0.15);
+        _startLoop('fountain', 0.12);
         scheduleBird();
         scheduleLeaf();
     }
@@ -72,54 +89,83 @@ window.NS_Audio = (function() {
         clearTimeout(leafTimeout);
     }
 
+    // --- LOGIQUE INTERNE (La solution Safari) ---
+
+    function _startLoop(name, volume) {
+        _stopLoop(name); // Coupe l'ancienne boucle s'il y en a une
+        const audio = audioElements[name];
+        if (!audio || !audioContext) return;
+
+        audio.loop = true;
+        audio.volume = 0; // Commence à 0 pour le fondu entrant
+        audio.play().catch(e => console.warn("Audio bloqué :", e));
+
+        // Brancher vers Web Audio pour le contrôle précis
+        const sourceNode = audioContext.createMediaElementSource(audio);
+        const gainNode = audioContext.createGain();
+        gainNode.gain.setValueAtTime(0, audioContext.currentTime); // Volume initial à 0
+        
+        sourceNode.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        sourceNodes[name] = sourceNode;
+        gainNodes[name] = gainNode;
+        
+        // Fondu entrant
+        gainNode.gain.linearRampToValueAtTime(volume, audioContext.currentTime + 0.5);
+    }
+
+    function _stopLoop(name) {
+        if (sourceNodes[name] && gainNodes[name]) {
+            // Fondu sortant
+            gainNodes[name].gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.5);
+            
+            // Pause le fichier audio après le fondu
+            setTimeout(() => {
+                if (audioElements[name]) audioElements[name].pause();
+                
+                // Débranche proprement pour libérer la mémoire du téléphone
+                try { sourceNodes[name].disconnect(); } catch(e) {}
+                delete sourceNodes[name];
+                delete gainNodes[name];
+            }, 600); // 600ms = durée du fondu
+        }
+    }
+
     // --- EFFETS SONORES INTERACTION ---
+
+    function _playOneShot(name, volume) {
+        if (!isUnlocked) return;
+        
+        // Utilise l'audio du menu, ou le clone si on le rejoue trop vite (Safari bloque si on appelle play() sur un son déjà en cours)
+        let audio = audioElements[name];
+        if (!audio) return;
+
+        if (!audio.paused) {
+            audio = audio.cloneNode(true); // Crée une copie temporaire
+        }
+
+        const sourceNode = audioContext.createMediaElementSource(audio);
+        const gainNode = audioContext.createGain();
+        gainNode.gain.value = volume;
+        
+        sourceNode.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        audio.play().catch(e => console.warn("Audio bloqué :", e));
+
+        // Nettoie la copie temporaire une fois le son fini
+        if (audio !== audioElements[name]) {
+            audio.addEventListener('ended', () => {
+                try { sourceNode.disconnect(); } catch(e) {}
+            }, { once: true });
+        }
+    }
 
     function playStoneMove() { _playOneShot('stoneMove', 0.25); }
     function playInvalidToc() { _playOneShot('invalidToc', 0.15); }
     function playVictoryBell() { _playOneShot('victoryBell', 0.4); }
     function playElementRestored() { _playOneShot('leaf', 0.2); }
-
-    // --- LOGIQUE INTERNE (Web Audio API) ---
-
-    function _playOneShot(name, volume) {
-        if (!isUnlocked || !audioBuffers[name]) return;
-        const source = audioContext.createBufferSource();
-        const gainNode = audioContext.createGain();
-        
-        source.buffer = audioBuffers[name];
-        gainNode.gain.value = volume;
-        gainNode.connect(source);
-        source.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-        source.start(0);
-    }
-
-    function _startLoop(name, volume) {
-        if (!isUnlocked || !audioBuffers[name]) return;
-        _stopLoop(name); // Arrête l'ancienne boucle s'il y en a une
-
-        const gainNode = audioContext.createGain();
-        gainNode.gain.value = volume;
-        gainNode.connect(audioContext.destination);
-        loopNodes[name] = { gain: gainNode };
-
-        const playLoop = () => {
-            if (!isUnlocked) return;
-            const source = audioContext.createBufferSource();
-            source.buffer = audioBuffers[name];
-            source.connect(loopNodes[name].gain);
-            source.start(0);
-            source.onended = playLoop; // Relance quand le son se termine
-        };
-        playLoop();
-    }
-
-    function _stopLoop(name) {
-        if (loopNodes[name]) {
-            loopNodes[name].gain.gain.value = 0; // Baisse le volume à 0 (le stop() coupe trop brutalement)
-            delete loopNodes[name];
-        }
-    }
 
     // --- LOGIQUE SPORADIQUE ---
 
@@ -140,6 +186,7 @@ window.NS_Audio = (function() {
         }, 33000);
     }
 
+    // --- API PUBLIQUE ---
     return {
         unlock: unlock,
         stopAmbient: stopAmbient,
