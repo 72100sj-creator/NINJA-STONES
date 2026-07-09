@@ -1,30 +1,19 @@
-(function() => {
-    // Récupère les constantes depuis le module dédié
+(function() {
     const C = window.NS_CONSTANTS;
-    
     const state = {
-        level: 1,
-        currentGardenIndex: 0,
-        moves: 0,
-        gridSize: C.DEFAULT_GRID_SIZE,
-        totalTiles: C.DEFAULT_GRID_SIZE * C.DEFAULT_GRID_SIZE, // CORRECTION : Le calcul exact de la V2.5
-        grid: [],
-        isPlaying: false
+        level: 1, currentGardenIndex: 0, moves: 0, gridSize: C.DEFAULT_GRID_SIZE,
+        totalTiles: C.DEFAULT_GRID_SIZE * C.DEFAULT_GRID_SIZE, grid: [], isPlaying: false
     };
 
-    function getCurrentGarden() { 
-        return C.GARDENS_CONFIG[state.currentGardenIndex]; 
-    }
+    function getCurrentGarden() { return C.GARDENS_CONFIG[state.currentGardenIndex]; }
 
     function startGame() {
         state.totalTiles = state.gridSize * state.gridSize;
         state.moves = 0;
         state.isPlaying = true;
-        
         NS_UI.updateHeader(state.level);
         NS_UI.updateGardenVisual(NS_UI.getDomElements().board, NS_Garden.calculateStage(getCurrentGarden()));
         NS_UI.resetGameUI();
-
         setTimeout(() => {
             state.grid = NS_Puzzle.generateSolvedGrid(state.totalTiles);
             NS_Puzzle.shuffleGrid(state.grid, state.gridSize, NS_Levels.getShuffleMoves(state.level));
@@ -34,17 +23,13 @@
 
     function handleTileClick(value) {
         if (!state.isPlaying) return;
-        
         let clickedIndex = state.grid.indexOf(value);
         let emptyIndex = state.grid.indexOf(0);
-        
         if (NS_Puzzle.getAdjacentIndexes(emptyIndex, state.gridSize).includes(clickedIndex)) {
             state.grid[emptyIndex] = value;
-            state.grid[zone] = 0; // CORRECTION : J'avais écrit 'clickedIndex' au lieu de 'emptyIndex'
+            state.grid[clickedIndex] = 0;
             state.moves++;
-            
-            NS_UI.moveTile(value, state.emptyIndex, state.gridSize);
-
+            NS_UI.moveTile(value, emptyIndex, state.gridSize);
             if (NS_Puzzle.checkWin(state.grid)) {
                 state.isPlaying = false;
                 let progressText = NS_Garden.awardPoints(getCurrentGarden(), 1);
@@ -61,47 +46,16 @@
         NS_UI.showScreen('menu');
     }
 
-    // Récupération stricte des éléments du DOM
-    const dom = document.getElementById('level-display');
-    const menuBoard = document.getElementById('menu-board');
-    const board = document.getElementById('board');
-    const playBtn = document.getElementById('play-btn');
-    const backBtn = document.getElementById('back-btn');
-    const restartBtn = 
-    document.getElementById('restart-btn');
-    const continueBtn = 
-    document.getElementById('continue-btn');
-    const message = document.getElementById('message');
-    const screenMenu = document.getElementById('screen-menu');
-    const screenGame = document.getElementById('screen-game');
-
-    playBtn.addEventListener('click', () => { 
-        NS_UI.showScreen('game'); 
-        startGame(); 
-    });
-
-    backBtn.addEventListener('click', () => {
-        NS_UI.renderMenu(state, getCurrentGarden()); 
-        NS_UI.showScreen('menu'); 
-    });
-
-    restartBtn.addEventListener('click', startGame);
-    continueBtn.addEventListener('click', goNextLevel);
+    NS_UI.getDomElements().playBtn.addEventListener('click', () => { NS_UI.showScreen('game'); startGame(); });
+    NS_UI.getDomElements().backBtn.addEventListener('click', () => { NS_UI.renderMenu(state, getCurrentGarden()); NS_UI.showScreen('menu'); });
+    NS_UI.getDomElements().restartBtn.addEventListener('click', startGame);
+    NS_UI.getDomElements().continueBtn.addEventListener('click', goNextLevel);
 
     window.addEventListener('resize', () => {
-        if (screenGame.classList.contains('active')) {
-            for (let i = 0; i < state.totalTiles; i++) { 
-                if (state.grid[i] !== 0) NS_UI.moveTile(state.grid[i], i, state.gridSize); 
-            }
-        } else { 
-            NS_UI.renderMenu(state, getCurrentGarden()); 
-            NS_UI.showScreen('menu'); 
-        }
+        if (NS_UI.getDomElements().screenGame.classList.contains('active')) {
+            for (let i = 0; i < state.totalTiles; i++) { if (state.grid[i] !== 0) NS_UI.moveTile(state.grid[i], i, state.gridSize); }
+        } else { NS_UI.renderMenu(state, getCurrentGarden()); }
     });
 
-    window.addEventListener('load', () => { 
-        NS_Save.load(state, C.GARDENS_CONFIG); 
-        NS_UI.renderMenu(state, getCurrentGarden()); 
-        NS_UI.showScreen('menu'); 
-    })();
+    window.addEventListener('load', () => { NS_Save.load(state, C.GARDENS_CONFIG); NS_UI.renderMenu(state, getCurrentGarden()); NS_UI.showScreen('menu'); });
 })();
