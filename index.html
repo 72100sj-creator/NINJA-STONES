@@ -7,6 +7,18 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="manifest.json">
     <title>Ninja Stones</title>
+    
+    <!-- FILET DE SÉCURITÉ : Force l'affichage des écrans même si le fichier CSS ne charge pas -->
+    <style>
+        .screen { 
+            opacity: 0; pointer-events: none; position: absolute; top:0; left:0; 
+            width:100%; height:100%; display:flex; flex-direction:column; 
+            align-items:center; justify-content:center; gap: 15px; 
+        }
+        .screen.active { opacity: 1; pointer-events: auto; }
+        .hidden { display: none !important; }
+    </style>
+
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
