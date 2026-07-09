@@ -52,6 +52,7 @@ window.NS_UI = (function() {
         const C = window.NS_CONSTANTS;
         const gap = C.STONE_GAP; 
         const stoneSize = (boardWidth - (gap * (gridSize + 1))) / gridSize;
+        
         for (let i = 0; i < grid.length; i++) {
             let value = grid[i];
             if (value === 0) continue;
@@ -59,12 +60,25 @@ window.NS_UI = (function() {
             let col = i % gridSize;
             let x = gap + col * (stoneSize + gap);
             let y = gap + row * (stoneSize + gap);
+
             const stone = document.createElement('div');
             stone.className = 'stone';
             stone.textContent = value;
             stone.style.width = `${stoneSize}px`;
             stone.style.height = `${stoneSize}px`;
             stone.style.transform = `translate(${x}px, ${y}px)`;
+            
+            // NOUVEAU : Génère une forme organique unique pour chaque pierre
+            const r1 = 25 + Math.random() * 15;
+            const r2 = 25 + Math.random() * 15;
+            const r3 = 25 + Math.random() * 15;
+            const r4 = 25 + Math.random() * 15;
+            const r5 = 25 + Math.random() * 15;
+            const r6 = 25 + Math.random() * 15;
+            const r7 = 25 + Math.random() * 15;
+            const r8 = 25 + Math.random() * 15;
+            stone.style.borderRadius = `${r1}% ${r2}% ${r3}% ${r4}% / ${r5}% ${r6}% ${r7}% ${r8}%`;
+
             if (onClickCallback) stone.addEventListener('click', () => onClickCallback(value));
             containerEl.appendChild(stone);
             tilesElements[value] = stone;
