@@ -68,7 +68,7 @@ body {
 .board {
     position: relative; width: min(85vw, 70vh); aspect-ratio: 1 / 1;
     padding: var(--gap); flex-shrink: 0;
-    margin-top: min(9vh, calc(min(85vw, 70vh) / 4));
+    margin-top: min(5vh, calc(min(85vw, 70vh) / 6));
 }
 
 .stone {
