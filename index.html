@@ -23,60 +23,83 @@
 </head>
 <body>
 
-    <div class="garden-backdrop" id="garden-backdrop"></div>
+    <!-- ===== RFC-001 : Scene Engine =====
+         Toute la scène (photo + décorations + personnage + puzzle) vit dans .game-scene,
+         qui garde toujours exactement les proportions de la photo (9:16), quel que soit l'écran.
+         .scene-wrapper centre cette scène et comble l'espace restant (s'il y en a) avec une couleur unie,
+         plutôt que de rogner la photo différemment selon les appareils. -->
+    <div class="scene-wrapper">
+        <div class="game-scene" id="game-scene">
 
-    <div class="wind-layer" aria-hidden="true">
-        <div class="bamboo-stalk b1"><span class="bamboo-leaf"></span></div>
-        <div class="bamboo-stalk b2"><span class="bamboo-leaf"></span></div>
-        <div class="bamboo-stalk b3"><span class="bamboo-leaf"></span></div>
-        <div class="falling-leaf"></div>
-        <div class="pond-ripples">
-            <span class="ripple-ring r1"></span>
-            <span class="ripple-ring r2"></span>
-        </div>
-        <div class="lantern-glow"></div>
-    </div>
+            <!-- Background Layer -->
+            <div class="scene-background" id="garden-backdrop"></div>
 
-    <div class="app-container">
-        
-        <header class="app-header">
-            <h1 class="title">Ninja Stones</h1>
-            <p id="level-display" class="level-text">Niveau 1</p>
-        </header>
+            <!-- Decoration Layer : éléments fixes du décor (bambous, lanterne) -->
+            <div class="scene-decor" aria-hidden="true">
+                <div class="bamboo-stalk b1"><span class="bamboo-leaf"></span></div>
+                <div class="bamboo-stalk b2"><span class="bamboo-leaf"></span></div>
+                <div class="bamboo-stalk b3"><span class="bamboo-leaf"></span></div>
+                <div class="lantern-glow"></div>
+            </div>
 
-        <div class="screens-wrapper">
-            
-            <div id="screen-menu" class="screen active">
-                <div class="screen-top">
-                    <div class="garden-info">
-                        <p id="garden-name" class="garden-name">Jardin du Bambou</p>
-                        <div class="progress-container">
-                            <div id="progress-bar" class="progress-bar"></div>
+            <!-- Ambient Animation Layer : effets périodiques (feuille, onde du bassin) -->
+            <div class="scene-ambient" aria-hidden="true">
+                <div class="falling-leaf"></div>
+                <div class="pond-ripples">
+                    <span class="ripple-ring r1"></span>
+                    <span class="ripple-ring r2"></span>
+                </div>
+            </div>
+
+            <!-- Character Layer + Puzzle Layer + UI du jeu (tout ce qui doit rester aligné avec la scène) -->
+            <div class="scene-ui">
+                <header class="app-header">
+                    <h1 class="title">Ninja Stones</h1>
+                    <p id="level-display" class="level-text">Niveau 1</p>
+                </header>
+
+                <div class="screens-wrapper">
+
+                    <div id="screen-menu" class="screen active">
+                        <div class="screen-top">
+                            <div class="garden-info">
+                                <p id="garden-name" class="garden-name">Jardin du Bambou</p>
+                                <div class="progress-container">
+                                    <div id="progress-bar" class="progress-bar"></div>
+                                </div>
+                            </div>
+
+                            <button id="play-btn" class="btn">Jouer</button>
                         </div>
+                        <!-- Character Layer -->
+                        <div class="character-stage">
+                            <div id="ninja-character" class="character-container">
+                                <div class="ninja-head"></div>
+                                <div class="ninja-body"></div>
+                            </div>
+                        </div>
+                        <!-- Puzzle Layer (aperçu, non interactif) -->
+                        <div id="menu-board" class="board"></div>
                     </div>
 
-                    <button id="play-btn" class="btn">Jouer</button>
-                </div>
-                <div class="character-stage">
-                    <div id="ninja-character" class="character-container">
-                        <div class="ninja-head"></div>
-                        <div class="ninja-body"></div>
+                    <div id="screen-game" class="screen">
+                        <div class="screen-top">
+                            <div class="btn-group">
+                                <button id="back-btn" class="btn">Retour</button>
+                                <button id="restart-btn" class="btn">Recommencer</button>
+                                <button id="continue-btn" class="btn hidden">Continuer</button>
+                            </div>
+                        </div>
+                        <!-- Puzzle Layer -->
+                        <div id="board" class="board"></div>
+                        <p id="message" class="message"></p>
                     </div>
+
                 </div>
-                <div id="menu-board" class="board"></div>
             </div>
 
-            <div id="screen-game" class="screen">
-                <div class="screen-top">
-                    <div class="btn-group">
-                        <button id="back-btn" class="btn">Retour</button>
-                        <button id="restart-btn" class="btn">Recommencer</button>
-                        <button id="continue-btn" class="btn hidden">Continuer</button>
-                    </div>
-                </div>
-                <div id="board" class="board"></div>
-                <p id="message" class="message"></p>
-            </div>
+            <!-- Grille de repères pour le développement (RFC-001, debugScene). Vide par défaut, remplie par JS si activée. -->
+            <div class="scene-debug-grid" id="scene-debug-grid" aria-hidden="true"></div>
 
         </div>
     </div>
@@ -89,5 +112,6 @@
     <script src="js/puzzle.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/app.js"></script>
+    <script src="js/scene-debug.js"></script>
 </body>
 </html>
