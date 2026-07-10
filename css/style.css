@@ -65,9 +65,9 @@ body {
     position: absolute; top: -6px; left: 50%; width: 180%; height: 12px;
     background: #6f8f52; border-radius: 60% 10% 60% 10%; transform: translateX(-50%) rotate(-20deg);
 }
-.b1 { --a: 4; left: 3%; top: 16%; height: 16%; animation-duration: 11s; animation-delay: -2s; }
-.b2 { --a: 3; left: 9%; top: 38%; height: 13%; animation-duration: 13s; animation-delay: -6s; }
-.b3 { --a: 5; left: 93%; top: 18%; height: 16%; animation-duration: 10s; animation-delay: -4s; }
+.b1 { --a: 4; left: 9%; top: 4%; height: 16%; animation-duration: 11s; animation-delay: -2s; }
+.b2 { --a: 3; left: 9%; top: 72%; height: 18%; animation-duration: 13s; animation-delay: -6s; }
+.b3 { --a: 5; left: 92%; top: 25%; height: 15%; animation-duration: 10s; animation-delay: -4s; }
 
 /* Une brise passe environ toutes les 10-14s, dure environ 3s, très discrète, jamais synchronisée entre les bambous */
 @keyframes windGust {
