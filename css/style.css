@@ -171,9 +171,9 @@ body {
     display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
 
-/* Zone du personnage sur le menu : dans le cadre, même taille que la grille de jeu */
+/* Zone du personnage sur le menu : même taille que la grille de jeu (sans cadre) */
 .character-stage {
-    position: relative; width: 84%; aspect-ratio: 1 / 1;
+    position: relative; width: 74%; aspect-ratio: 1 / 1;
     display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
 
