@@ -4,7 +4,8 @@
     --stone-color-alt: #d4cfc2;
     --stone-text: #5c5447;
     --stone-shadow: rgba(62, 74, 62, 0.4);
-    --gap: 4px; 
+    --gap: 4px;
+    --scene-ratio: 0.5625; /* 9:16, ratio exact de la photo du jardin */
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -13,44 +14,60 @@ body {
     background-color: var(--bg-color);
     color: var(--stone-color);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    height: 100vh; height: 100dvh; 
-    touch-action: manipulation; user-select: none; overflow: hidden; 
+    height: 100vh; height: 100dvh;
+    touch-action: manipulation; user-select: none; overflow: hidden;
 }
 
-/* Fond plein écran, fixe, derrière toute l'application - aucun bord vert visible */
-.garden-backdrop {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
+/* ===== RFC-001 : Scene Engine =====
+   .scene-wrapper centre la scène et comble l'espace restant avec la couleur de fond,
+   plutôt que de rogner la photo différemment selon les écrans (voir RFC-001). */
+.scene-wrapper {
+    position: fixed; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background-color: var(--bg-color);
+}
+
+/* La scène garde TOUJOURS le ratio exact de la photo (9:16), quel que soit l'écran */
+.game-scene {
+    position: relative;
+    aspect-ratio: 9 / 16;
+    width: min(100vw, calc(100vh * var(--scene-ratio)));
+    height: min(100vh, calc(100vw / var(--scene-ratio)));
+    overflow: hidden;
+}
+
+/* Background Layer : la photo occupe exactement la scène, jamais rognée (les proportions correspondent) */
+.scene-background {
+    position: absolute; inset: 0;
     background-color: #c2b280;
     background-image: url('../assets/images/garden-bamboo-stage-1.jpg');
-    background-size: cover;
-    background-position: center top;
-    z-index: 0;
+    background-size: 100% 100%;
     transition: background 1s ease;
 }
-.garden-backdrop.garden-stage-2 { background-image: linear-gradient(to bottom, rgba(194, 178, 128, 0.15), rgba(143, 168, 110, 0.45)), url('../assets/images/garden-bamboo-stage-1.jpg'); }
-.garden-backdrop.garden-stage-3 { background-image: linear-gradient(to bottom, rgba(168, 184, 122, 0.35), rgba(95, 122, 66, 0.55)), url('../assets/images/garden-bamboo-stage-1.jpg'); }
-.garden-backdrop.garden-stage-4 { background-image: linear-gradient(135deg, rgba(74, 103, 65, 0.55), rgba(122, 155, 104, 0.55)), url('../assets/images/garden-bamboo-stage-1.jpg'); }
+.scene-background.garden-stage-2 { background-image: linear-gradient(to bottom, rgba(194, 178, 128, 0.15), rgba(143, 168, 110, 0.45)), url('../assets/images/garden-bamboo-stage-1.jpg'); background-size: 100% 100%, 100% 100%; }
+.scene-background.garden-stage-3 { background-image: linear-gradient(to bottom, rgba(168, 184, 122, 0.35), rgba(95, 122, 66, 0.55)), url('../assets/images/garden-bamboo-stage-1.jpg'); background-size: 100% 100%, 100% 100%; }
+.scene-background.garden-stage-4 { background-image: linear-gradient(135deg, rgba(74, 103, 65, 0.55), rgba(122, 155, 104, 0.55)), url('../assets/images/garden-bamboo-stage-1.jpg'); background-size: 100% 100%, 100% 100%; }
 
-/* Couche de vent : quelques bambous dessinés en CSS, posés sur la photo, qui se balancent chacun indépendamment */
-.wind-layer {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-    z-index: 0; pointer-events: none; overflow: hidden;
+/* Decoration Layer + Ambient Animation Layer : toutes les positions sont en % de la scène (jamais de px/vh) */
+.scene-decor, .scene-ambient {
+    position: absolute; inset: 0;
+    pointer-events: none;
 }
+
 .bamboo-stalk {
-    position: absolute; width: 12px; border-radius: 6px;
-    background: linear-gradient(to right, #3f5c35, #6f8f52 45%, #3f5c35);
+    position: absolute; width: 1.6%; border-radius: 6px;
     background-image: linear-gradient(to right, #3f5c35, #6f8f52 45%, #3f5c35),
         repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0, rgba(0, 0, 0, 0.3) 2px, transparent 2px, transparent 15%);
     transform-origin: bottom center;
     animation-name: windGust; animation-timing-function: ease-in-out; animation-iteration-count: infinite;
 }
 .bamboo-leaf {
-    position: absolute; top: -6px; left: 50%; width: 26px; height: 12px;
+    position: absolute; top: -6px; left: 50%; width: 180%; height: 12px;
     background: #6f8f52; border-radius: 60% 10% 60% 10%; transform: translateX(-50%) rotate(-20deg);
 }
-.b1 { --a: 4; left: 3%; top: 64vh; height: 18vh; animation-duration: 11s; animation-delay: -2s; }
-.b2 { --a: 3; left: 9%; top: 48vh; height: 15vh; animation-duration: 13s; animation-delay: -6s; }
-.b3 { --a: 5; right: 4%; top: 62vh; height: 20vh; animation-duration: 10s; animation-delay: -4s; }
+.b1 { --a: 4; left: 3%; top: 16%; height: 16%; animation-duration: 11s; animation-delay: -2s; }
+.b2 { --a: 3; left: 9%; top: 38%; height: 13%; animation-duration: 13s; animation-delay: -6s; }
+.b3 { --a: 5; left: 93%; top: 18%; height: 16%; animation-duration: 10s; animation-delay: -4s; }
 
 /* Une brise passe environ toutes les 10-14s, dure environ 3s, très discrète, jamais synchronisée entre les bambous */
 @keyframes windGust {
@@ -61,9 +78,10 @@ body {
     100% { transform: rotate(0deg); }
 }
 
-/* Une seule feuille tombe, environ toutes les 28 secondes, jamais deux en même temps */
+/* Une seule feuille tombe, environ toutes les 28 secondes, jamais deux en même temps. Position animée en %
+   (et non en transform) car elle doit rester exacte quelle que soit la taille de la scène. */
 .falling-leaf {
-    position: absolute; top: 0; left: 22%; width: 13px; height: 9px;
+    position: absolute; top: -3%; left: 35%; width: 13px; height: 9px;
     background: linear-gradient(135deg, #9bab5c, #5f7a42);
     border-radius: 60% 5% 60% 5%;
     box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
@@ -72,17 +90,17 @@ body {
     animation-delay: -9s;
 }
 @keyframes leafFall {
-    0% { opacity: 0; transform: translate(0, 0) rotate(0deg); }
+    0% { opacity: 0; top: -3%; left: 35%; transform: rotate(0deg); }
     2% { opacity: 1; }
-    9% { transform: translate(24px, 20vh) rotate(110deg); }
-    15% { transform: translate(-18px, 42vh) rotate(210deg); }
-    19.5% { opacity: 1; transform: translate(12px, 66vh) rotate(300deg); }
-    21% { opacity: 0; transform: translate(8px, 70vh) rotate(320deg); }
-    100% { opacity: 0; transform: translate(0, 0) rotate(0deg); }
+    9% { top: 12%; left: 38%; transform: rotate(110deg); }
+    15% { top: 30%; left: 32%; transform: rotate(210deg); }
+    19.5% { opacity: 1; top: 47%; left: 37%; transform: rotate(300deg); }
+    21% { opacity: 0; top: 50%; left: 36%; transform: rotate(320deg); }
+    100% { opacity: 0; top: -3%; left: 35%; transform: rotate(0deg); }
 }
 
-/* Le bassin : une petite onde apparaît de temps en temps à l'endroit de la fontaine sur la photo, puis s'efface */
-.pond-ripples { position: absolute; left: 14%; top: 20vh; width: 0; height: 0; }
+/* Le bassin : une petite onde à l'endroit de la fontaine, apparaît de temps en temps puis s'efface */
+.pond-ripples { position: absolute; left: 13%; top: 27%; width: 0; height: 0; }
 .ripple-ring {
     position: absolute; left: 0; top: 0; width: 6px; height: 6px; margin: -3px 0 0 -3px;
     border: 1.5px solid rgba(255, 255, 255, 0.55); border-radius: 50%;
@@ -98,7 +116,7 @@ body {
 
 /* La lanterne : une lueur douce qui respire en continu, jamais de clignotement brusque */
 .lantern-glow {
-    position: absolute; right: 15%; top: 34vh; width: 28px; height: 28px; margin: -14px -14px 0 0;
+    position: absolute; left: 85%; top: 27%; width: 22px; height: 22px; margin: -11px 0 0 -11px;
     border-radius: 50%; filter: blur(1px);
     background: radial-gradient(circle, rgba(255, 200, 120, 0.9) 0%, rgba(255, 170, 80, 0.5) 40%, rgba(255, 170, 80, 0) 75%);
     animation: lanternBreathe 4.5s ease-in-out infinite;
@@ -108,48 +126,49 @@ body {
     50% { opacity: 0.95; transform: scale(1.15); }
 }
 
-.app-container { position: relative; z-index: 1; display: flex; flex-direction: column; height: 100%; width: 100%; }
+/* Character Layer + Puzzle Layer + UI du jeu : positionnés dans la scène, en % */
+.scene-ui {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center;
+}
 
 .app-header {
     width: 100%; text-align: center;
-    padding-top: env(safe-area-inset-top); padding-bottom: 10px;
+    padding-top: env(safe-area-inset-top); padding-bottom: 2%;
     background: linear-gradient(to bottom, rgba(40, 48, 38, 0.92) 80%, rgba(40, 48, 38, 0));
-    z-index: 10; flex-shrink: 0; 
+    flex-shrink: 0;
 }
 
-.title { font-size: 2rem; font-weight: 300; letter-spacing: 4px; text-transform: uppercase; color: #f0e6d2; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8), 0 1px 3px rgba(0, 0, 0, 0.9); }
-.level-text { font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase; color: #f0e6d2; opacity: 0.9; text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8); }
+.title { font-size: 1.7rem; font-weight: 300; letter-spacing: 4px; text-transform: uppercase; color: #f0e6d2; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8), 0 1px 3px rgba(0, 0, 0, 0.9); }
+.level-text { font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; color: #f0e6d2; opacity: 0.9; text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8); }
 
-.screens-wrapper { flex-grow: 1; position: relative; }
+.screens-wrapper { flex-grow: 1; position: relative; width: 100%; }
 
-/* Les écrans (écrase le filet de sécurité si le CSS charge) */
 .screen {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-    gap: 15px; padding-top: 3vh; padding-bottom: env(safe-area-inset-bottom);
-    opacity: 0; pointer-events: none; transition: opacity 0.3s ease; 
+    gap: 3%; padding-top: 3%; padding-bottom: env(safe-area-inset-bottom);
+    opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
 }
 .screen.active { opacity: 1; pointer-events: auto; z-index: 2; }
 
-/* Zone de hauteur FIXE (et non plus minimale) : garantit une position identique du plateau, sur le menu comme en jeu */
+/* Zone de hauteur FIXE (en % de la scène) : garantit une position identique du plateau, sur le menu comme en jeu */
 .screen-top {
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 15px; width: 100%; height: 210px; overflow: hidden;
+    gap: 2%; width: 100%; height: 15%; overflow: hidden;
 }
 
-.garden-info { width: 85vw; max-width: 300px; text-align: center; }
-.garden-name { font-size: 0.85rem; letter-spacing: 1px; color: #33422b; margin-bottom: 8px; text-transform: uppercase; font-weight: 600; text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4); }
+.garden-info { width: 80%; max-width: 300px; text-align: center; }
+.garden-name { font-size: 0.8rem; letter-spacing: 1px; color: #33422b; margin-bottom: 6px; text-transform: uppercase; font-weight: 600; text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4); }
 .progress-container { width: 100%; height: 6px; background-color: rgba(0, 0, 0, 0.2); border-radius: 3px; overflow: hidden; margin: 0 auto; }
 .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, #8fa86e, #4a6741); border-radius: 3px; transition: width 0.8s ease; }
 
-/* Zone du personnage sur le menu : prend la même place que la grille de jeu */
+/* Zone du personnage sur le menu : même taille que la grille de jeu */
 .character-stage {
-    position: relative; width: min(85vw, 70vh); aspect-ratio: 1 / 1;
-    margin-top: min(5vh, calc(min(85vw, 70vh) / 6));
+    position: relative; width: 74%; aspect-ratio: 1 / 1;
     display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
 
-/* L'aperçu de grille sur le menu n'est plus affiché (remplacé par le personnage), mais reste dans la page pour ne rien casser */
 #menu-board { display: none; }
 
 .character-container { width: 42%; aspect-ratio: 0.85 / 1; position: relative; display: flex; flex-direction: column; align-items: center; animation: breathe 4s ease-in-out infinite; }
@@ -157,11 +176,10 @@ body {
 .ninja-body { width: 68%; aspect-ratio: 8 / 7; background-color: #2c3e50; border-radius: 10% 10% 28% 28%; margin-top: -6%; z-index: 1; }
 @keyframes breathe { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5%); } }
 
-/* Grille de pierres : posée directement sur le fond plein écran, transparente */
+/* Grille de pierres : posée directement sur la photo, transparente */
 .board {
-    position: relative; width: min(85vw, 70vh); aspect-ratio: 1 / 1;
+    position: relative; width: 74%; aspect-ratio: 1 / 1;
     padding: var(--gap); flex-shrink: 0;
-    margin-top: min(5vh, calc(min(85vw, 70vh) / 6));
 }
 
 .stone {
@@ -169,7 +187,7 @@ body {
     border-radius: 10px;
     box-shadow: 2px 4px 8px var(--stone-shadow), inset 0 2px 3px rgba(255, 255, 255, 0.6), inset 0 -2px 3px rgba(0, 0, 0, 0.1);
     display: flex; justify-content: center; align-items: center;
-    font-size: 1.6rem; font-weight: 600; color: var(--stone-text);
+    font-size: 1.4rem; font-weight: 600; color: var(--stone-text);
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4); transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 #menu-board .stone { cursor: default; transition: none; }
@@ -183,3 +201,10 @@ body {
 
 .message { min-height: 24px; font-size: 1rem; color: #d4c5a9; text-align: center; opacity: 0; transition: opacity 0.8s ease; }
 .message.visible { opacity: 1; }
+
+/* Grille de repères pour le développement (RFC-001) - vide et invisible par défaut */
+.scene-debug-grid { position: absolute; inset: 0; pointer-events: none; z-index: 50; display: none; }
+.scene-debug-grid.active { display: block; }
+.scene-debug-grid svg { width: 100%; height: 100%; }
+.scene-debug-grid line { stroke: rgba(255, 0, 150, 0.35); stroke-width: 0.15; }
+.scene-debug-grid text { fill: rgba(255, 0, 150, 0.8); font-size: 2px; }
