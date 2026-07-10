@@ -27,16 +27,16 @@ body {
     z-index: 0;
     transition: background 1s ease;
 }
-.garden-backdrop.garden-stage-2 { background: linear-gradient(to bottom, #c2b280 20%, #8fa86e 100%); }
-.garden-backdrop.garden-stage-3 { background: linear-gradient(to bottom, #a8b87a 0%, #5f7a42 100%); }
-.garden-backdrop.garden-stage-4 { background: linear-gradient(135deg, #4a6741 0%, #7a9b68 100%); }
+.garden-backdrop.garden-stage-2 { background-image: linear-gradient(to bottom, rgba(194, 178, 128, 0.15), rgba(143, 168, 110, 0.45)), url('../assets/images/garden-bamboo-stage-1.jpg'); }
+.garden-backdrop.garden-stage-3 { background-image: linear-gradient(to bottom, rgba(168, 184, 122, 0.35), rgba(95, 122, 66, 0.55)), url('../assets/images/garden-bamboo-stage-1.jpg'); }
+.garden-backdrop.garden-stage-4 { background-image: linear-gradient(135deg, rgba(74, 103, 65, 0.55), rgba(122, 155, 104, 0.55)), url('../assets/images/garden-bamboo-stage-1.jpg'); }
 
 .app-container { position: relative; z-index: 1; display: flex; flex-direction: column; height: 100%; width: 100%; }
 
 .app-header {
     width: 100%; text-align: center;
     padding-top: env(safe-area-inset-top); padding-bottom: 10px;
-    background: linear-gradient(to bottom, rgba(62, 74, 62, 1) 60%, rgba(62, 74, 62, 0));
+    background: linear-gradient(to bottom, rgba(40, 48, 38, 0.92) 80%, rgba(40, 48, 38, 0));
     z-index: 10; flex-shrink: 0; 
 }
 
@@ -48,14 +48,20 @@ body {
 /* Les écrans (écrase le filet de sécurité si le CSS charge) */
 .screen {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 15px; padding-bottom: env(safe-area-inset-bottom);
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+    gap: 15px; padding-top: 3vh; padding-bottom: env(safe-area-inset-bottom);
     opacity: 0; pointer-events: none; transition: opacity 0.3s ease; 
 }
 .screen.active { opacity: 1; pointer-events: auto; z-index: 2; }
 
+/* Zone de hauteur fixe : garantit que le plateau démarre toujours au même endroit, sur le menu comme en jeu */
+.screen-top {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 15px; width: 100%; min-height: 200px;
+}
+
 .garden-info { width: 85vw; max-width: 300px; text-align: center; }
-.garden-name { font-size: 0.85rem; letter-spacing: 1px; color: #d7ecc4; margin-bottom: 8px; text-transform: uppercase; text-shadow: 0 2px 5px rgba(0, 0, 0, 0.85), 0 1px 2px rgba(0, 0, 0, 0.9); }
+.garden-name { font-size: 0.85rem; letter-spacing: 1px; color: #33422b; margin-bottom: 8px; text-transform: uppercase; font-weight: 600; text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4); }
 .progress-container { width: 100%; height: 6px; background-color: rgba(0, 0, 0, 0.2); border-radius: 3px; overflow: hidden; margin: 0 auto; }
 .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, #8fa86e, #4a6741); border-radius: 3px; transition: width 0.8s ease; }
 
