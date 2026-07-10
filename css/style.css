@@ -49,7 +49,7 @@ body {
     background: #6f8f52; border-radius: 60% 10% 60% 10%; transform: translateX(-50%) rotate(-20deg);
 }
 .b1 { --a: 4; left: 3%; top: 64vh; height: 18vh; animation-duration: 11s; animation-delay: -2s; }
-.b2 { --a: 3; left: 9%; top: 8vh; height: 15vh; animation-duration: 13s; animation-delay: -6s; }
+.b2 { --a: 3; left: 9%; top: 48vh; height: 15vh; animation-duration: 13s; animation-delay: -6s; }
 .b3 { --a: 5; right: 4%; top: 62vh; height: 20vh; animation-duration: 10s; animation-delay: -4s; }
 
 /* Une brise passe environ toutes les 10-14s, dure environ 3s, très discrète, jamais synchronisée entre les bambous */
