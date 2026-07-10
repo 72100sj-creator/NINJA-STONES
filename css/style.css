@@ -96,6 +96,18 @@ body {
     100% { transform: scale(9); opacity: 0; }
 }
 
+/* La lanterne : une lueur douce qui respire en continu, jamais de clignotement brusque */
+.lantern-glow {
+    position: absolute; right: 15%; top: 34vh; width: 28px; height: 28px; margin: -14px -14px 0 0;
+    border-radius: 50%; filter: blur(1px);
+    background: radial-gradient(circle, rgba(255, 200, 120, 0.9) 0%, rgba(255, 170, 80, 0.5) 40%, rgba(255, 170, 80, 0) 75%);
+    animation: lanternBreathe 4.5s ease-in-out infinite;
+}
+@keyframes lanternBreathe {
+    0%, 100% { opacity: 0.55; transform: scale(0.9); }
+    50% { opacity: 0.95; transform: scale(1.15); }
+}
+
 .app-container { position: relative; z-index: 1; display: flex; flex-direction: column; height: 100%; width: 100%; }
 
 .app-header {
