@@ -163,9 +163,17 @@ body {
 .progress-container { width: 100%; height: 6px; background-color: rgba(0, 0, 0, 0.2); border-radius: 3px; overflow: hidden; margin: 0 auto; }
 .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, #8fa86e, #4a6741); border-radius: 3px; transition: width 0.8s ease; }
 
-/* Zone du personnage sur le menu : même taille que la grille de jeu */
+/* Plateau officiel (Art Bible) : cadre en pierre naturelle, élément central de l'écran */
+.board-frame {
+    position: relative; width: 88%; aspect-ratio: 1 / 1;
+    background-image: url('../assets/images/board-frame.png');
+    background-size: 100% 100%;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+
+/* Zone du personnage sur le menu : dans le cadre, même taille que la grille de jeu */
 .character-stage {
-    position: relative; width: 74%; aspect-ratio: 1 / 1;
+    position: relative; width: 84%; aspect-ratio: 1 / 1;
     display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
 
@@ -176,9 +184,9 @@ body {
 .ninja-body { width: 68%; aspect-ratio: 8 / 7; background-color: #2c3e50; border-radius: 10% 10% 28% 28%; margin-top: -6%; z-index: 1; }
 @keyframes breathe { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5%); } }
 
-/* Grille de pierres : posée directement sur la photo, transparente */
+/* Grille de pierres : dans le cadre, transparente */
 .board {
-    position: relative; width: 74%; aspect-ratio: 1 / 1;
+    position: relative; width: 84%; aspect-ratio: 1 / 1;
     padding: var(--gap); flex-shrink: 0;
 }
 
