@@ -192,15 +192,21 @@ body {
 
 .stone {
     position: absolute;
-    background-image: linear-gradient(160deg, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0.15)), url('../assets/images/stone-texture.jpg');
+    background-image: linear-gradient(160deg, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0.15)), url('../assets/images/stone-texture-1.jpg');
     background-size: cover; background-position: center;
-    border-radius: 14%;
+    border-radius: 14% 14% 16% 13%;
     box-shadow: 2px 4px 8px var(--stone-shadow), inset 0 2px 3px rgba(255, 255, 255, 0.35), inset 0 -2px 4px rgba(0, 0, 0, 0.25);
     display: flex; justify-content: center; align-items: center;
     font-size: 1.4rem; font-weight: 700; color: rgba(25, 40, 20, 0.55);
     text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.5), -1px -1px 1px rgba(0, 0, 0, 0.55);
     transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
+/* Chaque pierre pioche dans une zone différente de la photo, avec une légère variation
+   de teinte et de rondeur des coins, pour qu'elles ne se ressemblent pas toutes exactement */
+.stone:nth-child(5n+2) { background-image: linear-gradient(160deg, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0.15)), url('../assets/images/stone-texture-2.jpg'); border-radius: 16% 12% 15% 13%; filter: brightness(1.04); }
+.stone:nth-child(5n+3) { background-image: linear-gradient(160deg, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0.15)), url('../assets/images/stone-texture-3.jpg'); border-radius: 12% 15% 13% 16%; filter: brightness(0.96) saturate(1.05); }
+.stone:nth-child(5n+4) { background-image: linear-gradient(160deg, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0.15)), url('../assets/images/stone-texture-4.jpg'); border-radius: 15% 13% 16% 12%; filter: brightness(1.06) saturate(0.95); }
+.stone:nth-child(5n+5) { background-image: linear-gradient(160deg, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0.15)), url('../assets/images/stone-texture-5.jpg'); border-radius: 13% 16% 12% 15%; filter: brightness(0.94); }
 #menu-board .stone { cursor: default; transition: none; }
 #board .stone { cursor: pointer; }
 #board .stone:active { transition: transform 0s; }
