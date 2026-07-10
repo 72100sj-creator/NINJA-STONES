@@ -100,7 +100,7 @@ body {
 }
 
 /* Le bassin : une petite onde à l'endroit de la fontaine, apparaît de temps en temps puis s'efface */
-.pond-ripples { position: absolute; left: 13%; top: 27%; width: 0; height: 0; }
+.pond-ripples { position: absolute; left: 15%; top: 28%; width: 0; height: 0; }
 .ripple-ring {
     position: absolute; left: 0; top: 0; width: 6px; height: 6px; margin: -3px 0 0 -3px;
     border: 1.5px solid rgba(255, 255, 255, 0.55); border-radius: 50%;
@@ -116,7 +116,7 @@ body {
 
 /* La lanterne : une lueur douce qui respire en continu, jamais de clignotement brusque */
 .lantern-glow {
-    position: absolute; left: 85%; top: 27%; width: 22px; height: 22px; margin: -11px 0 0 -11px;
+    position: absolute; left: 88%; top: 30%; width: 22px; height: 22px; margin: -11px 0 0 -11px;
     border-radius: 50%; filter: blur(1px);
     background: radial-gradient(circle, rgba(255, 200, 120, 0.9) 0%, rgba(255, 170, 80, 0.5) 40%, rgba(255, 170, 80, 0) 75%);
     animation: lanternBreathe 4.5s ease-in-out infinite;
