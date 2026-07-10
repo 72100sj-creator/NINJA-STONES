@@ -31,6 +31,37 @@ body {
 .garden-backdrop.garden-stage-3 { background-image: linear-gradient(to bottom, rgba(168, 184, 122, 0.35), rgba(95, 122, 66, 0.55)), url('../assets/images/garden-bamboo-stage-1.jpg'); }
 .garden-backdrop.garden-stage-4 { background-image: linear-gradient(135deg, rgba(74, 103, 65, 0.55), rgba(122, 155, 104, 0.55)), url('../assets/images/garden-bamboo-stage-1.jpg'); }
 
+/* Couche de vent : quelques bambous dessinés en CSS, posés sur la photo, qui se balancent chacun indépendamment */
+.wind-layer {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
+    z-index: 0; pointer-events: none; overflow: hidden;
+}
+.bamboo-stalk {
+    position: absolute; width: 12px; border-radius: 6px;
+    background: linear-gradient(to right, #3f5c35, #6f8f52 45%, #3f5c35);
+    background-image: linear-gradient(to right, #3f5c35, #6f8f52 45%, #3f5c35),
+        repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0, rgba(0, 0, 0, 0.3) 2px, transparent 2px, transparent 15%);
+    transform-origin: bottom center;
+    animation-name: windGust; animation-timing-function: ease-in-out; animation-iteration-count: infinite;
+}
+.bamboo-leaf {
+    position: absolute; top: -6px; left: 50%; width: 26px; height: 12px;
+    background: #6f8f52; border-radius: 60% 10% 60% 10%; transform: translateX(-50%) rotate(-20deg);
+}
+.b1 { --a: 4; left: 3%; top: 9vh; height: 20vh; animation-duration: 11s; animation-delay: -2s; }
+.b2 { --a: 3; left: 8%; top: 7vh; height: 16vh; animation-duration: 13s; animation-delay: -6s; }
+.b3 { --a: 5; right: 4%; top: 10vh; height: 22vh; animation-duration: 10s; animation-delay: -4s; }
+.b4 { --a: 2.5; right: 9%; top: 8vh; height: 15vh; animation-duration: 14s; animation-delay: -9s; }
+
+/* Une brise passe environ toutes les 10-14s, dure environ 3s, très discrète, jamais synchronisée entre les bambous */
+@keyframes windGust {
+    0%, 68% { transform: rotate(0deg); }
+    78% { transform: rotate(calc(var(--a) * 1deg)); }
+    86% { transform: rotate(calc(var(--a) * -0.4deg)); }
+    93% { transform: rotate(calc(var(--a) * 0.3deg)); }
+    100% { transform: rotate(0deg); }
+}
+
 .app-container { position: relative; z-index: 1; display: flex; flex-direction: column; height: 100%; width: 100%; }
 
 .app-header {
