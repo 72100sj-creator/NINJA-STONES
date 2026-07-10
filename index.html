@@ -35,27 +35,31 @@
         <div class="screens-wrapper">
             
             <div id="screen-menu" class="screen active">
-                <div id="ninja-character" class="character-container">
-                    <div class="ninja-head"></div>
-                    <div class="ninja-body"></div>
-                </div>
-                
-                <div class="garden-info">
-                    <p id="garden-name" class="garden-name">Jardin du Bambou</p>
-                    <div class="progress-container">
-                        <div id="progress-bar" class="progress-bar"></div>
+                <div class="screen-top">
+                    <div id="ninja-character" class="character-container">
+                        <div class="ninja-head"></div>
+                        <div class="ninja-body"></div>
                     </div>
-                </div>
+                    
+                    <div class="garden-info">
+                        <p id="garden-name" class="garden-name">Jardin du Bambou</p>
+                        <div class="progress-container">
+                            <div id="progress-bar" class="progress-bar"></div>
+                        </div>
+                    </div>
 
-                <button id="play-btn" class="btn">Jouer</button>
+                    <button id="play-btn" class="btn">Jouer</button>
+                </div>
                 <div id="menu-board" class="board"></div>
             </div>
 
             <div id="screen-game" class="screen">
-                <div class="btn-group">
-                    <button id="back-btn" class="btn">Retour</button>
-                    <button id="restart-btn" class="btn">Recommencer</button>
-                    <button id="continue-btn" class="btn hidden">Continuer</button>
+                <div class="screen-top">
+                    <div class="btn-group">
+                        <button id="back-btn" class="btn">Retour</button>
+                        <button id="restart-btn" class="btn">Recommencer</button>
+                        <button id="continue-btn" class="btn hidden">Continuer</button>
+                    </div>
                 </div>
                 <div id="board" class="board"></div>
                 <p id="message" class="message"></p>
