@@ -6,7 +6,7 @@ window.NS_CONSTANTS = {
     STONE_GAP: 4,
     CSS_STAGE_PREFIX: 'garden-stage-',
     MAX_VISUAL_STAGE: 4,
-    DEBUG_SCENE: true, // Grille de repères pour le développement (RFC-001) - ne jamais activer en production
+    DEBUG_SCENE: false, // Grille de repères pour le développement (RFC-001) - ne jamais activer en production
     
     // NOUVEAU : La palette officielle de l'Art Bible
     PALETTE: {
