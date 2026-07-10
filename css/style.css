@@ -100,7 +100,7 @@ body {
 #board .stone:active { transition: transform 0s; }
 
 .btn-group { display: flex; gap: 15px; height: 44px; }
-.btn { background: transparent; color: #d4c5a9; border: 1px solid #d4c5a9; padding: 10px 24px; border-radius: 30px; font-size: 1rem; letter-spacing: 1px; cursor: pointer; transition: all 0.2s ease; }
+.btn { background: transparent; color: #3f5c35; border: 1px solid #d4c5a9; padding: 10px 24px; border-radius: 30px; font-size: 1rem; letter-spacing: 1px; cursor: pointer; transition: all 0.2s ease; }
 .btn:active { background: #d4c5a9; color: var(--bg-color); }
 .hidden { display: none !important; }
 
