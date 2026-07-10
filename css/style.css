@@ -54,10 +54,10 @@ body {
 }
 .screen.active { opacity: 1; pointer-events: auto; z-index: 2; }
 
-/* Zone de hauteur fixe : garantit que le plateau démarre toujours au même endroit, sur le menu comme en jeu */
+/* Zone de hauteur FIXE (et non plus minimale) : garantit une position identique du plateau, sur le menu comme en jeu */
 .screen-top {
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 15px; width: 100%; min-height: 200px;
+    gap: 15px; width: 100%; height: 210px; overflow: hidden;
 }
 
 .garden-info { width: 85vw; max-width: 300px; text-align: center; }
