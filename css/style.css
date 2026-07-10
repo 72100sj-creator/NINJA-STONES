@@ -176,12 +176,19 @@ body {
     position: relative; width: 74%; aspect-ratio: 1 / 1;
     display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
+/* Ombre au sol : ancre le personnage dans le sable, comme les autres éléments de la photo */
+.character-stage::after {
+    content: ''; position: absolute; bottom: 14%; width: 44%; height: 8%;
+    background: radial-gradient(ellipse, rgba(40, 32, 20, 0.4) 0%, rgba(40, 32, 20, 0) 72%);
+    filter: blur(2px); z-index: 0;
+}
 
 #menu-board { display: none; }
 
 .character-container {
-    width: 46%; aspect-ratio: 552 / 638; object-fit: contain;
-    filter: drop-shadow(2px 8px 6px rgba(0, 0, 0, 0.35));
+    width: 58%; aspect-ratio: 552 / 638; object-fit: contain;
+    position: relative; z-index: 1;
+    filter: drop-shadow(3px 10px 8px rgba(30, 22, 10, 0.4)) saturate(0.94) brightness(1.02);
     animation: breathe 4s ease-in-out infinite;
 }
 @keyframes breathe { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3%); } }
