@@ -82,7 +82,7 @@ body {
 }
 
 /* Le bassin : une petite onde apparaît de temps en temps à l'endroit de la fontaine sur la photo, puis s'efface */
-.pond-ripples { position: absolute; left: 17%; top: 20vh; width: 0; height: 0; }
+.pond-ripples { position: absolute; left: 14%; top: 20vh; width: 0; height: 0; }
 .ripple-ring {
     position: absolute; left: 0; top: 0; width: 6px; height: 6px; margin: -3px 0 0 -3px;
     border: 1.5px solid rgba(255, 255, 255, 0.55); border-radius: 50%;
