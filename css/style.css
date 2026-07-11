@@ -184,8 +184,6 @@ body {
     filter: blur(2px); z-index: 0;
 }
 
-#menu-board { display: none; }
-
 .character-container {
     width: 58%; aspect-ratio: 552 / 638; object-fit: contain;
     position: relative; z-index: 1;
@@ -217,7 +215,6 @@ body {
 .stone:nth-child(5n+3) { background-image: linear-gradient(160deg, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.1)), url('../assets/images/stone-texture-3.jpg'); border-radius: 12% 15% 13% 16%; filter: brightness(0.96) saturate(1.05); }
 .stone:nth-child(5n+4) { background-image: linear-gradient(160deg, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.1)), url('../assets/images/stone-texture-4.jpg'); border-radius: 15% 13% 16% 12%; filter: brightness(1.06) saturate(0.95); }
 .stone:nth-child(5n+5) { background-image: linear-gradient(160deg, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.1)), url('../assets/images/stone-texture-5.jpg'); border-radius: 13% 16% 12% 15%; filter: brightness(0.94); }
-#menu-board .stone { cursor: default; transition: none; }
 #board .stone { cursor: pointer; }
 #board .stone:active { transition: transform 0s; }
 
