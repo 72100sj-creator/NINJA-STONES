@@ -30,6 +30,7 @@
             state.grid[clickedIndex] = 0;
             state.moves++;
             NS_UI.moveTile(value, emptyIndex, state.gridSize);
+            NS_Audio.playStoneSlide();
             if (NS_Puzzle.checkWin(state.grid)) {
                 state.isPlaying = false;
                 let currentGarden = getCurrentGarden();
@@ -41,6 +42,7 @@
                     state.currentGardenIndex++;
                 }
                 NS_UI.showWinMessage(`L'équilibre est rétabli. (${progressText})`);
+                NS_Audio.playVictoryChime();
                 NS_Save.save(state, C.GARDENS_CONFIG);
             }
         }
@@ -56,6 +58,7 @@
     NS_UI.getDomElements().playBtn.addEventListener('click', () => { NS_UI.showScreen('game'); startGame(); });
     NS_UI.getDomElements().backBtn.addEventListener('click', () => { NS_UI.renderMenu(state, getCurrentGarden()); NS_UI.showScreen('menu'); });
     NS_UI.getDomElements().continueBtn.addEventListener('click', goNextLevel);
+    NS_UI.getDomElements().muteBtn.addEventListener('click', () => { NS_Audio.toggleMuted(); NS_UI.updateMuteButton(); });
 
     window.addEventListener('resize', () => {
         if (NS_UI.getDomElements().screenGame.classList.contains('active')) {
@@ -63,5 +66,10 @@
         } else { NS_UI.renderMenu(state, getCurrentGarden()); }
     });
 
-    window.addEventListener('load', () => { NS_Save.load(state, C.GARDENS_CONFIG); NS_UI.renderMenu(state, getCurrentGarden()); NS_UI.showScreen('menu'); });
+    window.addEventListener('load', () => {
+        NS_Save.load(state, C.GARDENS_CONFIG);
+        NS_UI.renderMenu(state, getCurrentGarden());
+        NS_UI.showScreen('menu');
+        NS_UI.updateMuteButton();
+    });
 })();

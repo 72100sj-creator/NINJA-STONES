@@ -18,6 +18,7 @@ window.NS_UI = (function() {
         dom.continueBtn = document.getElementById('continue-btn');
         dom.message = document.getElementById('message');
         dom.winOverlay = document.getElementById('win-overlay');
+        dom.muteBtn = document.getElementById('mute-btn');
     }
 
     function showScreen(name) {
@@ -108,6 +109,12 @@ window.NS_UI = (function() {
         dom.winOverlay.classList.add('visible');
     }
 
+    function updateMuteButton() {
+        const muted = NS_Audio.isMuted();
+        dom.muteBtn.textContent = muted ? '🔇' : '🔊';
+        dom.muteBtn.setAttribute('aria-label', muted ? 'Activer le son' : 'Couper le son');
+    }
+
     function resetGameUI() {
         dom.winOverlay.classList.remove('visible');
         dom.message.textContent = '';
@@ -118,6 +125,7 @@ window.NS_UI = (function() {
     return {
         showScreen: showScreen, updateHeader: updateHeader, updateGardenVisual: updateGardenVisual,
         renderMenu: renderMenu, renderGameBoard: renderGameBoard, moveTile: moveTile,
-        showWinMessage: showWinMessage, resetGameUI: resetGameUI, getDomElements: function() { return dom; }
+        showWinMessage: showWinMessage, resetGameUI: resetGameUI, updateMuteButton: updateMuteButton,
+        getDomElements: function() { return dom; }
     };
 })();
