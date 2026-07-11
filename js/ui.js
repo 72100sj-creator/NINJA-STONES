@@ -7,6 +7,7 @@ window.NS_UI = (function() {
         dom.screenGame = document.getElementById('screen-game');
         dom.levelDisplay = document.getElementById('level-display');
         dom.gardenName = document.getElementById('garden-name');
+        dom.gardenStage = document.getElementById('garden-stage');
         dom.progressBar = document.getElementById('progress-bar');
         dom.board = document.getElementById('board');
         dom.gardenBackdrop = document.getElementById('garden-backdrop');
@@ -44,7 +45,9 @@ window.NS_UI = (function() {
         updateHeader(state.level);
         dom.gardenName.textContent = gardenConfig.name;
         dom.progressBar.style.width = NS_Garden.calculateProgress(gardenConfig) + '%';
-        updateGardenVisual(dom.gardenBackdrop, NS_Garden.calculateStage(gardenConfig));
+        let stage = NS_Garden.calculateStage(gardenConfig);
+        dom.gardenStage.textContent = gardenConfig.stageNames[stage - 1];
+        updateGardenVisual(dom.gardenBackdrop, stage);
         tilesElements = {};
     }
 

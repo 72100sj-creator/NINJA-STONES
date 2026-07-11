@@ -20,6 +20,7 @@ window.NS_CONSTANTS = {
     },
 
     GARDENS_CONFIG: [
-        { id: 'bamboo', name: 'Jardin du Bambou', thresholds: [5, 10, 20, 35, 50, 75, 100], points: 0 }
+        { id: 'bamboo', name: 'Jardin du Bambou', thresholds: [5, 10, 20, 35, 50, 75, 100], points: 0,
+          stageNames: ['Jardin naissant', 'Jardin en éveil', 'Jardin fleurissant', 'Jardin épanoui'] }
     ]
 };
