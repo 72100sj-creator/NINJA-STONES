@@ -6,6 +6,7 @@ window.NS_UI = (function() {
         dom.screenMenu = document.getElementById('screen-menu');
         dom.screenGame = document.getElementById('screen-game');
         dom.levelDisplay = document.getElementById('level-display');
+        dom.levelNameDisplay = document.getElementById('level-name-display');
         dom.gardenName = document.getElementById('garden-name');
         dom.gardenStage = document.getElementById('garden-stage');
         dom.progressBar = document.getElementById('progress-bar');
@@ -33,7 +34,10 @@ window.NS_UI = (function() {
         }
     }
 
-    function updateHeader(level) { dom.levelDisplay.textContent = `Niveau ${level}`; }
+    function updateHeader(level) {
+        dom.levelDisplay.textContent = `Niveau ${level}`;
+        dom.levelNameDisplay.textContent = NS_Levels.getLevelName(level);
+    }
 
     function updateGardenVisual(boardEl, stage) {
         const C = window.NS_CONSTANTS;
