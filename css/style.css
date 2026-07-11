@@ -111,12 +111,15 @@ body {
 /* Jardin d'Automne : la feuille prend une teinte chaude plutôt que verte */
 .game-scene.garden-autumn .falling-leaf { background: linear-gradient(135deg, #d98a3d, #b8531f); }
 @keyframes leafFall {
-    0% { opacity: 0; transform: translate(0, -3vh) rotate(0deg); }
+    0% { opacity: 0; transform: translate(0, -3vh) rotate(0deg); animation-timing-function: ease-in; }
     2% { opacity: 1; }
-    9% { transform: translate(24px, 12vh) rotate(110deg); }
-    15% { transform: translate(-18px, 30vh) rotate(210deg); }
-    19.5% { opacity: 1; transform: translate(12px, 47vh) rotate(300deg); }
-    21% { opacity: 0; transform: translate(8px, 50vh) rotate(320deg); }
+    5% { transform: translate(10px, 4vh) rotate(32deg); animation-timing-function: ease-out; }
+    8% { transform: translate(23px, 9vh) rotate(68deg); animation-timing-function: ease-in-out; }
+    11% { transform: translate(7px, 17vh) rotate(38deg); animation-timing-function: ease-out; }
+    14% { transform: translate(-15px, 25vh) rotate(88deg); animation-timing-function: ease-in-out; }
+    17% { transform: translate(-5px, 35vh) rotate(55deg); animation-timing-function: ease-out; }
+    19.5% { opacity: 1; transform: translate(10px, 46vh) rotate(95deg); animation-timing-function: ease-in; }
+    21% { opacity: 0; transform: translate(6px, 50vh) rotate(85deg); }
     100% { opacity: 0; transform: translate(0, -3vh) rotate(0deg); }
 }
 
