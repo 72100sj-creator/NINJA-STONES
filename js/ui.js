@@ -15,6 +15,7 @@ window.NS_UI = (function() {
         dom.backBtn = document.getElementById('back-btn');
         dom.continueBtn = document.getElementById('continue-btn');
         dom.message = document.getElementById('message');
+        dom.winOverlay = document.getElementById('win-overlay');
     }
 
     function showScreen(name) {
@@ -87,14 +88,11 @@ window.NS_UI = (function() {
 
     function showWinMessage(text) {
         dom.message.textContent = text;
-        void dom.message.offsetWidth;
-        dom.message.classList.add('visible');
-        dom.continueBtn.classList.remove('hidden');
+        dom.winOverlay.classList.add('visible');
     }
 
     function resetGameUI() {
-        dom.continueBtn.classList.add('hidden');
-        dom.message.classList.remove('visible');
+        dom.winOverlay.classList.remove('visible');
         dom.message.textContent = '';
     }
 
