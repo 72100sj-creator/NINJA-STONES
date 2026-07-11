@@ -51,15 +51,32 @@ body {
 }
 
 .bamboo-stalk {
-    position: absolute; width: 1.6%; border-radius: 6px;
-    background-image: linear-gradient(to right, #3f5c35, #6f8f52 45%, #3f5c35),
-        repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0, rgba(0, 0, 0, 0.3) 2px, transparent 2px, transparent 15%);
+    position: absolute; width: 1.6%; border-radius: 50% 50% 4px 4px;
+    background-image:
+        linear-gradient(to right, #253a20 0%, #3f5c35 12%, #6f8f52 38%, #8fae6c 50%, #6f8f52 62%, #3f5c35 88%, #253a20 100%),
+        repeating-linear-gradient(to bottom,
+            transparent 0, transparent 13.5%,
+            rgba(255, 255, 255, 0.18) 13.5%, rgba(255, 255, 255, 0.18) 14.1%,
+            rgba(0, 0, 0, 0.4) 14.1%, rgba(0, 0, 0, 0.4) 15%,
+            transparent 15%, transparent 15.6%
+        );
     transform-origin: bottom center;
     animation-name: windGust; animation-iteration-count: infinite;
 }
+/* Touffe de feuilles en haut de la tige */
 .bamboo-leaf {
-    position: absolute; top: -6px; left: 50%; width: 180%; height: 12px;
-    background: #6f8f52; border-radius: 60% 10% 60% 10%; transform: translateX(-50%) rotate(-20deg);
+    position: absolute; top: -4%; left: 50%; width: 260%; height: 22%;
+    background: linear-gradient(120deg, #7a9c5f, #587840);
+    clip-path: polygon(0% 50%, 20% 32%, 100% 0%, 78% 50%, 100% 100%, 20% 68%);
+    transform: translateX(-58%) rotate(-24deg);
+}
+/* Deuxième petite touffe à mi-hauteur, pour une silhouette moins nue (pseudo-élément, aucun HTML ajouté) */
+.bamboo-stalk::after {
+    content: ''; position: absolute; top: 42%; left: 50%; width: 220%; height: 16%;
+    background: linear-gradient(120deg, #6f8f52, #4a6b3d);
+    clip-path: polygon(0% 50%, 20% 32%, 100% 0%, 78% 50%, 100% 100%, 20% 68%);
+    transform: translateX(-30%) rotate(18deg);
+    opacity: 0.9;
 }
 /* Chaque bambou garde sa propre vitesse, amplitude et un tempo légèrement irrégulier (jamais un multiple rond du voisin) */
 .b1 { --a: 4; left: 9%; top: 4%; height: 16%; animation-duration: 11.3s; animation-delay: -2.1s; }
@@ -70,12 +87,13 @@ body {
    plusieurs fois avec une amplitude qui diminue de façon irrégulière, comme un vrai roseau relâché
    après une poussée de vent - jamais un simple balancier mécanique. */
 @keyframes windGust {
-    0%, 60% { transform: rotate(0deg); animation-timing-function: ease-in-out; }
-    68% { transform: rotate(calc(var(--a) * 1deg)); animation-timing-function: cubic-bezier(0.3, 1.4, 0.6, 1); }
-    74% { transform: rotate(calc(var(--a) * -0.42deg)); animation-timing-function: ease-out; }
-    80% { transform: rotate(calc(var(--a) * 0.2deg)); animation-timing-function: ease-out; }
-    86% { transform: rotate(calc(var(--a) * -0.09deg)); animation-timing-function: ease-out; }
-    92% { transform: rotate(calc(var(--a) * 0.03deg)); animation-timing-function: ease-out; }
+    0%, 58% { transform: rotate(0deg); animation-timing-function: ease-in-out; }
+    67% { transform: rotate(calc(var(--a) * 0.85deg)); animation-timing-function: cubic-bezier(0.33, 1.15, 0.6, 1); }
+    74% { transform: rotate(calc(var(--a) * -0.32deg)); animation-timing-function: ease-out; }
+    80% { transform: rotate(calc(var(--a) * 0.15deg)); animation-timing-function: ease-out; }
+    85% { transform: rotate(calc(var(--a) * -0.07deg)); animation-timing-function: ease-out; }
+    90% { transform: rotate(calc(var(--a) * 0.03deg)); animation-timing-function: ease-out; }
+    95% { transform: rotate(calc(var(--a) * -0.01deg)); animation-timing-function: ease-out; }
     100% { transform: rotate(0deg); }
 }
 
