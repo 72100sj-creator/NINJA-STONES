@@ -5,8 +5,6 @@ Un jeu mobile de puzzle zen et de restauration de jardins.
 
 Le projet est organisé de manière modulaire pour garantir une maintenance facile sur le long terme.
 
-ninja-stones/│├── index.html            # Point d'entrée HTML├── manifest.json         # Configuration PWA├── service-worker.js     # Mise en cache hors-ligne (PWA)├── README.md             # Documentation│├── css/│   └── style.css         # Styles visuels et animations│├── js/│   ├── constants.js      # Dictionnaire du jeu (tailles, paliers, noms)│   ├── utils.js          # Fonctions mathématiques génériques│   ├── save.js           # Gestion du LocalStorage│   ├── levels.js         # Logique de difficulté et de niveaux│   ├── garden.js         # Calculs d'Harmonie et d'évolution des jardins│   ├── puzzle.js         # Logique pure du puzzle (grille, déplacements)│   ├── ui.js             # Manipulation du DOM et affichage visuel│   └── app.js            # Chef d'orchestre (Initialisation et événements)│└── assets/    ├── images/           # (Futur) Illustrations    ├── sounds/           # (Futur) Musique et bruitages    └── icons/            # (Futur) Icônes d'application
-
 🧩 Rôle des modules
 
      constants.js : Centralise toutes les valeurs fixes. Si vous voulez modifier le nombre de points requis pour évoluer un jardin, c'est ici.
