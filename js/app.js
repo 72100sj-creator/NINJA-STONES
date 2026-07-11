@@ -12,7 +12,7 @@
         state.moves = 0;
         state.isPlaying = true;
         NS_UI.updateHeader(state.level);
-        NS_UI.updateGardenVisual(NS_UI.getDomElements().gardenBackdrop, NS_Garden.calculateStage(getCurrentGarden()));
+        NS_UI.updateGardenVisual(NS_UI.getDomElements().gardenBackdrop, getCurrentGarden(), NS_Garden.calculateStage(getCurrentGarden()));
         NS_UI.resetGameUI();
         setTimeout(() => {
             state.grid = NS_Puzzle.generateSolvedGrid(state.totalTiles);
@@ -32,7 +32,14 @@
             NS_UI.moveTile(value, emptyIndex, state.gridSize);
             if (NS_Puzzle.checkWin(state.grid)) {
                 state.isPlaying = false;
-                let progressText = NS_Garden.awardPoints(getCurrentGarden(), 1);
+                let currentGarden = getCurrentGarden();
+                let maxThreshold = currentGarden.thresholds[currentGarden.thresholds.length - 1];
+                let wasMastered = currentGarden.points >= maxThreshold;
+                let progressText = NS_Garden.awardPoints(currentGarden, 1);
+                let justMastered = !wasMastered && currentGarden.points >= maxThreshold;
+                if (justMastered && state.currentGardenIndex < C.GARDENS_CONFIG.length - 1) {
+                    state.currentGardenIndex++;
+                }
                 NS_UI.showWinMessage(`L'équilibre est rétabli. (${progressText})`);
                 NS_Save.save(state, C.GARDENS_CONFIG);
             }

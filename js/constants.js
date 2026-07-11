@@ -4,7 +4,6 @@ window.NS_CONSTANTS = {
     SHUFFLE_INCREMENT: 15,
     SHUFFLE_MAX_MOVES: 200,
     STONE_GAP: 4,
-    CSS_STAGE_PREFIX: 'garden-stage-',
     MAX_VISUAL_STAGE: 4,
     DEBUG_SCENE: false, // Grille de repères pour le développement (RFC-001) - ne jamais activer en production
     
@@ -21,6 +20,20 @@ window.NS_CONSTANTS = {
 
     GARDENS_CONFIG: [
         { id: 'bamboo', name: 'Jardin du Bambou', thresholds: [5, 10, 20, 35, 50, 75, 100], points: 0,
-          stageNames: ['Jardin naissant', 'Jardin en éveil', 'Jardin fleurissant', 'Jardin épanoui'] }
+          stageNames: ['Jardin naissant', 'Jardin en éveil', 'Jardin fleurissant', 'Jardin épanoui'],
+          backgroundImage: 'assets/images/garden-bamboo-stage-1.jpg',
+          stageTints: [
+              'linear-gradient(to bottom, rgba(194, 178, 128, 0.15), rgba(143, 168, 110, 0.45))',
+              'linear-gradient(to bottom, rgba(168, 184, 122, 0.35), rgba(95, 122, 66, 0.55))',
+              'linear-gradient(135deg, rgba(74, 103, 65, 0.55), rgba(122, 155, 104, 0.55))'
+          ] },
+        { id: 'autumn', name: "Jardin d'Automne", thresholds: [5, 10, 20, 35, 50, 75, 100], points: 0,
+          stageNames: ['Feuilles naissantes', 'Feuilles dorées', 'Feuilles ardentes', 'Jardin embrasé'],
+          backgroundImage: 'assets/images/garden-autumn-stage-1.jpg',
+          stageTints: [
+              'linear-gradient(to bottom, rgba(200, 150, 90, 0.15), rgba(190, 110, 60, 0.4))',
+              'linear-gradient(to bottom, rgba(180, 100, 50, 0.35), rgba(140, 60, 30, 0.5))',
+              'linear-gradient(135deg, rgba(120, 50, 20, 0.55), rgba(170, 80, 30, 0.5))'
+          ] }
     ]
 };

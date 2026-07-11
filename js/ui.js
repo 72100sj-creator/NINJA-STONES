@@ -12,6 +12,7 @@ window.NS_UI = (function() {
         dom.progressBar = document.getElementById('progress-bar');
         dom.board = document.getElementById('board');
         dom.gardenBackdrop = document.getElementById('garden-backdrop');
+        dom.gameScene = document.getElementById('game-scene');
         dom.playBtn = document.getElementById('play-btn');
         dom.backBtn = document.getElementById('back-btn');
         dom.continueBtn = document.getElementById('continue-btn');
@@ -39,10 +40,14 @@ window.NS_UI = (function() {
         dom.levelNameDisplay.textContent = NS_Levels.getLevelName(level);
     }
 
-    function updateGardenVisual(boardEl, stage) {
+    function updateGardenVisual(boardEl, gardenConfig, stage) {
+        const img = `url('${gardenConfig.backgroundImage}')`;
+        const tint = (stage >= 2 && gardenConfig.stageTints) ? gardenConfig.stageTints[stage - 2] : null;
+        boardEl.style.backgroundImage = tint ? `${tint}, ${img}` : img;
+
         const C = window.NS_CONSTANTS;
-        for (let i = 2; i <= C.MAX_VISUAL_STAGE; i++) boardEl.classList.remove(C.CSS_STAGE_PREFIX + i);
-        if (stage >= 2) boardEl.classList.add(C.CSS_STAGE_PREFIX + stage);
+        C.GARDENS_CONFIG.forEach(g => dom.gameScene.classList.remove('garden-' + g.id));
+        dom.gameScene.classList.add('garden-' + gardenConfig.id);
     }
 
     function renderMenu(state, gardenConfig) {
@@ -51,7 +56,7 @@ window.NS_UI = (function() {
         dom.progressBar.style.width = NS_Garden.calculateProgress(gardenConfig) + '%';
         let stage = NS_Garden.calculateStage(gardenConfig);
         dom.gardenStage.textContent = gardenConfig.stageNames[stage - 1];
-        updateGardenVisual(dom.gardenBackdrop, stage);
+        updateGardenVisual(dom.gardenBackdrop, gardenConfig, stage);
         tilesElements = {};
     }
 
