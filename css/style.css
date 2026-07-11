@@ -65,17 +65,17 @@ body {
 }
 /* Touffe de feuilles en haut de la tige */
 .bamboo-leaf {
-    position: absolute; top: -4%; left: 50%; width: 260%; height: 11%;
+    position: absolute; top: -4%; left: 50%; width: 340%; height: 9%;
     background: linear-gradient(120deg, #7a9c5f, #587840);
-    clip-path: polygon(0% 50%, 24% 38%, 100% 0%, 90% 50%, 100% 100%, 24% 62%);
-    transform: translateX(-58%) rotate(-24deg);
+    clip-path: polygon(0% 50%, 14% 32%, 92% 45%, 100% 50%, 92% 55%, 14% 68%);
+    transform: translateX(-62%) rotate(-22deg);
 }
 /* Deuxième petite touffe à mi-hauteur, pour une silhouette moins nue (pseudo-élément, aucun HTML ajouté) */
 .bamboo-stalk::after {
-    content: ''; position: absolute; top: 42%; left: 50%; width: 220%; height: 8%;
+    content: ''; position: absolute; top: 42%; left: 50%; width: 290%; height: 7%;
     background: linear-gradient(120deg, #6f8f52, #4a6b3d);
-    clip-path: polygon(0% 50%, 24% 38%, 100% 0%, 90% 50%, 100% 100%, 24% 62%);
-    transform: translateX(-30%) rotate(18deg);
+    clip-path: polygon(0% 50%, 14% 32%, 92% 45%, 100% 50%, 92% 55%, 14% 68%);
+    transform: translateX(-32%) rotate(16deg);
     opacity: 0.9;
 }
 /* Chaque bambou garde sa propre vitesse, amplitude et un tempo légèrement irrégulier (jamais un multiple rond du voisin) */
