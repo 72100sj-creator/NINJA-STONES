@@ -8,7 +8,6 @@ window.NS_UI = (function() {
         dom.levelDisplay = document.getElementById('level-display');
         dom.gardenName = document.getElementById('garden-name');
         dom.progressBar = document.getElementById('progress-bar');
-        dom.menuBoard = document.getElementById('menu-board');
         dom.board = document.getElementById('board');
         dom.gardenBackdrop = document.getElementById('garden-backdrop');
         dom.playBtn = document.getElementById('play-btn');
@@ -38,9 +37,7 @@ window.NS_UI = (function() {
         dom.gardenName.textContent = gardenConfig.name;
         dom.progressBar.style.width = NS_Garden.calculateProgress(gardenConfig) + '%';
         updateGardenVisual(dom.gardenBackdrop, NS_Garden.calculateStage(gardenConfig));
-        dom.menuBoard.innerHTML = '';
         tilesElements = {};
-        _renderStones(dom.menuBoard, NS_Puzzle.generateSolvedGrid(state.totalTiles), state.gridSize, dom.menuBoard.clientWidth, null);
     }
 
     function renderGameBoard(grid, gridSize, onTileClickCallback) {
