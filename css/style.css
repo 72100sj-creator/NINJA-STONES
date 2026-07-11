@@ -157,6 +157,9 @@ body {
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     gap: 2%; width: 100%; height: 15%; overflow: hidden;
 }
+/* Sur l'écran de jeu uniquement : zone plus haute pour que le cadre en pierre démarre
+   plus bas et ne recouvre plus la fontaine et la lanterne */
+#screen-game .screen-top { height: 27%; padding: 0 5%; }
 
 .garden-info { width: 80%; max-width: 300px; text-align: center; }
 .garden-name { font-size: 0.8rem; letter-spacing: 1px; color: #33422b; margin-bottom: 6px; text-transform: uppercase; font-weight: 600; text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4); }
@@ -165,7 +168,7 @@ body {
 
 /* Plateau officiel (Art Bible) : cadre en pierre naturelle, élément central de l'écran */
 .board-frame {
-    position: relative; width: 88%; aspect-ratio: 1 / 1;
+    position: relative; width: 80%; aspect-ratio: 1 / 1;
     background-image: url('../assets/images/board-frame.png');
     background-size: 100% 100%;
     display: flex; align-items: center; justify-content: center; flex-shrink: 0;
@@ -201,7 +204,7 @@ body {
 
 .stone {
     position: absolute;
-    background-image: linear-gradient(160deg, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0.15)), url('../assets/images/stone-texture-1.jpg');
+    background-image: linear-gradient(160deg, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.1)), url('../assets/images/stone-texture-1.jpg');
     background-size: cover; background-position: center;
     border-radius: 14% 14% 16% 13%;
     box-shadow: 2px 4px 8px var(--stone-shadow), inset 0 2px 3px rgba(255, 255, 255, 0.35), inset 0 -2px 4px rgba(0, 0, 0, 0.25);
@@ -212,10 +215,10 @@ body {
 }
 /* Chaque pierre pioche dans une zone différente de la photo, avec une légère variation
    de teinte et de rondeur des coins, pour qu'elles ne se ressemblent pas toutes exactement */
-.stone:nth-child(5n+2) { background-image: linear-gradient(160deg, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0.15)), url('../assets/images/stone-texture-2.jpg'); border-radius: 16% 12% 15% 13%; filter: brightness(1.04); }
-.stone:nth-child(5n+3) { background-image: linear-gradient(160deg, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0.15)), url('../assets/images/stone-texture-3.jpg'); border-radius: 12% 15% 13% 16%; filter: brightness(0.96) saturate(1.05); }
-.stone:nth-child(5n+4) { background-image: linear-gradient(160deg, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0.15)), url('../assets/images/stone-texture-4.jpg'); border-radius: 15% 13% 16% 12%; filter: brightness(1.06) saturate(0.95); }
-.stone:nth-child(5n+5) { background-image: linear-gradient(160deg, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0.15)), url('../assets/images/stone-texture-5.jpg'); border-radius: 13% 16% 12% 15%; filter: brightness(0.94); }
+.stone:nth-child(5n+2) { background-image: linear-gradient(160deg, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.1)), url('../assets/images/stone-texture-2.jpg'); border-radius: 16% 12% 15% 13%; filter: brightness(1.04); }
+.stone:nth-child(5n+3) { background-image: linear-gradient(160deg, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.1)), url('../assets/images/stone-texture-3.jpg'); border-radius: 12% 15% 13% 16%; filter: brightness(0.96) saturate(1.05); }
+.stone:nth-child(5n+4) { background-image: linear-gradient(160deg, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.1)), url('../assets/images/stone-texture-4.jpg'); border-radius: 15% 13% 16% 12%; filter: brightness(1.06) saturate(0.95); }
+.stone:nth-child(5n+5) { background-image: linear-gradient(160deg, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.1)), url('../assets/images/stone-texture-5.jpg'); border-radius: 13% 16% 12% 15%; filter: brightness(0.94); }
 #menu-board .stone { cursor: default; transition: none; }
 #board .stone { cursor: pointer; }
 #board .stone:active { transition: transform 0s; }
