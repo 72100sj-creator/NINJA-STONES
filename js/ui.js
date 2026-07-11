@@ -13,7 +13,6 @@ window.NS_UI = (function() {
         dom.gardenBackdrop = document.getElementById('garden-backdrop');
         dom.playBtn = document.getElementById('play-btn');
         dom.backBtn = document.getElementById('back-btn');
-        dom.restartBtn = document.getElementById('restart-btn');
         dom.continueBtn = document.getElementById('continue-btn');
         dom.message = document.getElementById('message');
     }

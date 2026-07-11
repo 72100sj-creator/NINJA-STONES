@@ -48,7 +48,6 @@
 
     NS_UI.getDomElements().playBtn.addEventListener('click', () => { NS_UI.showScreen('game'); startGame(); });
     NS_UI.getDomElements().backBtn.addEventListener('click', () => { NS_UI.renderMenu(state, getCurrentGarden()); NS_UI.showScreen('menu'); });
-    NS_UI.getDomElements().restartBtn.addEventListener('click', startGame);
     NS_UI.getDomElements().continueBtn.addEventListener('click', goNextLevel);
 
     window.addEventListener('resize', () => {
