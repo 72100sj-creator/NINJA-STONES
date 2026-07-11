@@ -34,17 +34,15 @@ body {
     overflow: hidden;
 }
 
-/* Background Layer : la photo occupe exactement la scène, jamais rognée (les proportions correspondent) */
+/* Background Layer : la photo occupe exactement la scène, jamais rognée (les proportions correspondent).
+   L'image et les teintes de progression sont appliquées en JS depuis la configuration du jardin actif
+   (voir NS_UI.updateGardenVisual) : ajouter un futur jardin ne nécessite aucune nouvelle règle ici. */
 .scene-background {
     position: absolute; inset: 0;
     background-color: #c2b280;
-    background-image: url('../assets/images/garden-bamboo-stage-1.jpg');
     background-size: 100% 100%;
-    transition: background 1s ease;
+    transition: background-image 1s ease;
 }
-.scene-background.garden-stage-2 { background-image: linear-gradient(to bottom, rgba(194, 178, 128, 0.15), rgba(143, 168, 110, 0.45)), url('../assets/images/garden-bamboo-stage-1.jpg'); background-size: 100% 100%, 100% 100%; }
-.scene-background.garden-stage-3 { background-image: linear-gradient(to bottom, rgba(168, 184, 122, 0.35), rgba(95, 122, 66, 0.55)), url('../assets/images/garden-bamboo-stage-1.jpg'); background-size: 100% 100%, 100% 100%; }
-.scene-background.garden-stage-4 { background-image: linear-gradient(135deg, rgba(74, 103, 65, 0.55), rgba(122, 155, 104, 0.55)), url('../assets/images/garden-bamboo-stage-1.jpg'); background-size: 100% 100%, 100% 100%; }
 
 /* Decoration Layer + Ambient Animation Layer : toutes les positions sont en % de la scène (jamais de px/vh) */
 .scene-decor, .scene-ambient {
@@ -87,6 +85,8 @@ body {
     animation: leafFall 28s ease-in infinite;
     animation-delay: -9s;
 }
+/* Jardin d'Automne : la feuille prend une teinte chaude plutôt que verte */
+.game-scene.garden-autumn .falling-leaf { background: linear-gradient(135deg, #d98a3d, #b8531f); }
 @keyframes leafFall {
     0% { opacity: 0; transform: translate(0, -3vh) rotate(0deg); }
     2% { opacity: 1; }
