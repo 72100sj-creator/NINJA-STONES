@@ -18,10 +18,18 @@ window.NS_UI = (function() {
     }
 
     function showScreen(name) {
-        dom.screenMenu.classList.remove('active');
-        dom.screenGame.classList.remove('active');
-        if (name === 'menu') dom.screenMenu.classList.add('active');
-        if (name === 'game') dom.screenGame.classList.add('active');
+        const target = (name === 'menu') ? dom.screenMenu : dom.screenGame;
+        const current = dom.screenMenu.classList.contains('active') ? dom.screenMenu
+            : (dom.screenGame.classList.contains('active') ? dom.screenGame : null);
+
+        if (current === target) return;
+
+        if (current) {
+            current.classList.remove('active');
+            setTimeout(() => { target.classList.add('active'); }, 420);
+        } else {
+            target.classList.add('active');
+        }
     }
 
     function updateHeader(level) { dom.levelDisplay.textContent = `Niveau ${level}`; }
