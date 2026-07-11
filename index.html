@@ -99,6 +99,9 @@
                 </div>
             </div>
 
+            <!-- Bouton silence : visible sur le menu comme en jeu, état mémorisé (Sprint 6) -->
+            <button id="mute-btn" class="mute-btn" aria-label="Couper ou activer le son">🔊</button>
+
             <!-- Grille de repères pour le développement (RFC-001, debugScene). Vide par défaut, remplie par JS si activée. -->
             <div class="scene-debug-grid" id="scene-debug-grid" aria-hidden="true"></div>
 
@@ -107,6 +110,7 @@
 
     <script src="js/constants.js"></script>
     <script src="js/utils.js"></script>
+    <script src="js/audio.js"></script>
     <script src="js/save.js"></script>
     <script src="js/levels.js"></script>
     <script src="js/garden.js"></script>
