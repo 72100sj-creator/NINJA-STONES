@@ -1,609 +1,125 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Morning Ninja</title>
-<link rel="icon" href="apple-touch-icon.png">
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
-<style>
-:root{--bg-warm:#FDF1E3;--fg:#2B2B36;--fg-muted:#5C6B7A;--accent:#D98350;--accent-hover:#C76A3E;--accent-light:#F0C49A;--accent-glow:rgba(217,131,80,0.15);--card:#FFFFFF;--border:#E1E8EE;--success:#6A9B4A;--danger:#C75450;--radius:16px;--radius-sm:10px;--nav-h:72px;--safe-bottom:env(safe-area-inset-bottom,0px)}
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-html,body{height:100%;overflow:hidden;font-family:'Nunito',sans-serif;background:linear-gradient(180deg, #89C7E8 0%, #B6E0F5 35%, #FFE8D6 100%);background-attachment:fixed;color:var(--fg);-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
-#app{position:fixed;top:0;left:0;right:0;bottom:var(--nav-h);overflow:hidden;transition:bottom .4s ease}
-#app.fullscreen{bottom:0}
-.screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .5s ease,visibility .5s ease;padding:24px;overflow-y:auto}
-.screen.active{opacity:1;visibility:visible;pointer-events:auto}
-#nav{position:fixed;bottom:0;left:0;right:0;height:var(--nav-h);background:var(--card);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-around;padding-bottom:var(--safe-bottom);transition:transform .4s ease,opacity .4s ease;z-index:100}
-#nav.hidden{transform:translateY(100%);opacity:0;pointer-events:none}
-.nav-btn{background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--fg-muted);font-family:inherit;font-size:11px;font-weight:600;padding:8px 16px;border-radius:var(--radius-sm);transition:color .3s ease}
-.nav-btn svg{width:22px;height:22px;transition:transform .3s ease}
-.nav-btn.active{color:var(--accent)}
-.nav-btn.active svg{transform:scale(1.1)}
-.home-content{text-align:center;max-width:360px}
-.home-logo{width:80px;height:80px;margin-bottom:20px}
-.home-title{font-size:34px;font-weight:900;letter-spacing:-.5px;margin-bottom:8px;line-height:1.1}
-.home-subtitle{font-size:15px;color:var(--fg-muted);font-weight:400;margin-bottom:40px;line-height:1.5}
-.home-streak{display:inline-flex;align-items:center;gap:8px;background:var(--accent-glow);color:var(--accent);padding:8px 18px;border-radius:100px;font-size:14px;font-weight:700;margin-bottom:36px}
-.home-version{margin-top:28px;font-size:11px;font-weight:600;color:var(--fg-muted);opacity:.55;letter-spacing:.3px}
-.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(135deg, #E89A5B 0%, #D98350 100%);color:#fff;border:none;border-radius:100px;padding:16px 52px;font-family:inherit;font-size:17px;font-weight:700;cursor:pointer;transition:background .3s ease,transform .15s ease,box-shadow .3s ease;box-shadow:0 4px 24px rgba(217,131,80,0.35)}
-.btn-primary:hover{transform:scale(1.03);box-shadow:0 6px 28px rgba(217,131,80,0.45)}
-.btn-primary:active{transform:scale(.97)}
-.btn-secondary{display:inline-flex;align-items:center;justify-content:center;background:var(--card);color:var(--fg);border:1px solid var(--border);border-radius:100px;padding:14px 44px;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s ease}
-.btn-secondary:active{background:var(--bg-warm);transform:scale(.97)}
-.ready-content, .go-content{text-align:center;max-width:360px}
-.ready-icon{font-size:60px;margin-bottom:20px}
-.ready-title{font-size:28px;font-weight:800;margin-bottom:12px}
-.ready-text{font-size:15px;color:var(--fg-muted);margin-bottom:40px;line-height:1.5}
-.ready-ok{font-size:14px;color:var(--success);font-weight:700;margin-top:20px;opacity:0;transition:opacity .3s ease}
-.ready-ok.visible{opacity:1}
-.go-text{font-size:90px;font-weight:900;color:var(--accent);line-height:1;animation:goPop .5s cubic-bezier(.17,.67,.35,1.4)}
-@keyframes goPop{0%{transform:scale(0.2);opacity:0}100%{transform:scale(1);opacity:1}}
-.countdown-number{font-size:120px;font-weight:900;color:var(--accent);line-height:1;animation:cdPulse .8s ease-out}
-@keyframes cdPulse{0%{transform:scale(.4);opacity:0}50%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
-.routine-header{width:100%;max-width:400px;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.routine-progress-text{font-size:13px;font-weight:600;color:var(--fg-muted)}
-.routine-pause-btn{background:var(--bg-warm);border:none;border-radius:50%;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--fg);transition:background .2s ease}
-.routine-pause-btn:active{background:var(--border)}
-.routine-exercise-name{font-size:22px;font-weight:800;margin-bottom:4px;text-align:center}
-.routine-instruction{font-size:13px;color:var(--fg-muted);text-align:center;max-width:280px;line-height:1.4;margin-bottom:10px}
-.routine-illustration{width:270px;height:270px;margin-bottom:12px;flex-shrink:0;border-radius:20px;overflow:hidden;position:relative;box-shadow:0 6px 30px rgba(43,43,54,0.12);background:var(--bg-warm)}
-.routine-illustration img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .4s ease}
-.routine-illustration img.loaded{opacity:1}
-.routine-illustration .fallback-svg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;transition:opacity .4s ease}
-.routine-illustration .fallback-svg.hidden{opacity:0;pointer-events:none}
-.routine-illustration .fallback-svg svg{width:100%;height:100%;display:block}
-.routine-timer-wrap{position:relative;width:130px;height:130px;margin-bottom:14px}
-.routine-timer-ring{width:100%;height:100%;transform:rotate(-90deg)}
-.routine-timer-ring .bg{fill:none;stroke:var(--border);stroke-width:6}
-.routine-timer-ring .fg{fill:none;stroke:var(--accent);stroke-width:6;stroke-linecap:round;transition:stroke-dashoffset 1s linear}
-.routine-timer-ring.transition-mode .fg{stroke:var(--accent-light)}
-.routine-timer-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:800;color:var(--fg)}
-.routine-skip-btn{background:none;border:1px solid var(--border);border-radius:100px;padding:10px 24px;font-family:inherit;font-size:14px;font-weight:600;color:var(--fg-muted);cursor:pointer;transition:all .2s ease}
-.routine-skip-btn:active{background:var(--bg-warm)}
-.wakelock-indicator{position:absolute;top:12px;right:12px;display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:var(--accent);opacity:0;transition:opacity .4s ease;pointer-events:none}
-.wakelock-indicator.visible{opacity:1}
-.wakelock-indicator svg{width:14px;height:14px}
-.end-emoji{font-size:64px;margin-bottom:16px;animation:endGlow 2s ease-in-out infinite alternate}
-@keyframes endGlow{0%{transform:scale(1)}100%{transform:scale(1.06)}}
-.end-title{font-size:26px;font-weight:800;margin-bottom:8px}
-.end-subtitle{font-size:15px;color:var(--fg-muted);margin-bottom:32px}
-.end-quote{font-size:15px;font-style:italic;color:var(--fg-muted);text-align:center;max-width:280px;line-height:1.6;margin-bottom:36px;padding:20px 24px;background:rgba(255,255,255,0.6);border-radius:var(--radius)}
-.page-container{width:100%;max-width:400px}
-.page-title{font-size:26px;font-weight:800;margin-bottom:24px}
-.history-section-title{font-size:13px;font-weight:700;color:var(--fg-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
-.history-item{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--card);border-radius:var(--radius-sm);margin-bottom:8px;border:1px solid var(--border)}
-.history-check{color:var(--success);font-size:18px;flex-shrink:0}
-.history-date{font-size:15px;font-weight:600}
-.history-total{margin-top:24px;padding:16px;background:var(--accent-glow);border-radius:var(--radius-sm);font-size:14px;color:var(--accent);font-weight:600;text-align:center}
-.stat-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
-.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px 16px;text-align:center}
-.stat-card-icon{font-size:28px;margin-bottom:8px}
-.stat-card-value{font-size:32px;font-weight:900;color:var(--accent);line-height:1;margin-bottom:4px}
-.stat-card-label{font-size:12px;font-weight:600;color:var(--fg-muted)}
-.stat-card.full{grid-column:1/-1}
-.mini-cal{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
-.mini-cal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.mini-cal-month{font-size:15px;font-weight:700}
-.mini-cal-nav{background:none;border:none;cursor:pointer;color:var(--fg-muted);padding:4px 10px;font-size:18px;border-radius:6px;transition:background .2s;font-family:inherit}
-.mini-cal-nav:active{background:var(--bg-warm)}
-.mini-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
-.mini-cal-day-label{font-size:11px;font-weight:700;color:var(--fg-muted);padding:6px 0}
-.mini-cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;border-radius:50%;color:var(--fg-muted);position:relative}
-.mini-cal-day.today{color:var(--fg);font-weight:800}
-.mini-cal-day.done::after{content:'';position:absolute;bottom:1px;width:5px;height:5px;background:var(--accent);border-radius:50%}
-.mini-cal-day.empty{visibility:hidden}
-.settings-group{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:16px}
-.settings-item{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border)}
-.settings-item:last-child{border-bottom:none}
-.settings-label{font-size:15px;font-weight:600}
-.toggle{position:relative;width:50px;height:28px;cursor:pointer}
-.toggle input{display:none}
-.toggle-slider{position:absolute;inset:0;background:var(--border);border-radius:100px;transition:background .3s ease}
-.toggle-slider::after{content:'';position:absolute;top:3px;left:3px;width:22px;height:22px;background:#fff;border-radius:50%;transition:transform .3s ease;box-shadow:0 1px 3px rgba(0,0,0,0.15)}
-.toggle input:checked+.toggle-slider{background:var(--accent)}
-.toggle input:checked+.toggle-slider::after{transform:translateX(22px)}
-.volume-wrap{display:flex;align-items:center;gap:10px}
-.volume-icon{color:var(--fg-muted);flex-shrink:0}
-input[type=range]{-webkit-appearance:none;appearance:none;width:110px;height:6px;background:var(--border);border-radius:100px;outline:none}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:22px;height:22px;background:var(--accent);border-radius:50%;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,0.15)}
-.btn-danger{background:none;border:1px solid var(--danger);color:var(--danger);border-radius:var(--radius-sm);padding:12px 24px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s ease;width:100%}
-.btn-danger:active{background:rgba(199,84,80,0.08)}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;z-index:200;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .3s ease,visibility .3s ease;padding:24px}
-.modal-overlay.active{opacity:1;visibility:visible;pointer-events:auto}
-.modal-box{background:var(--card);border-radius:var(--radius);padding:28px 24px;max-width:320px;width:100%;text-align:center;transform:scale(.9);transition:transform .3s ease}
-.modal-overlay.active .modal-box{transform:scale(1)}
-.modal-title{font-size:18px;font-weight:800;margin-bottom:8px}
-.modal-text{font-size:14px;color:var(--fg-muted);margin-bottom:24px;line-height:1.5}
-.modal-actions{display:flex;gap:10px}
-.modal-actions button{flex:1;padding:12px;border-radius:var(--radius-sm);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s ease;border:none}
-.modal-cancel{background:var(--bg-warm);color:var(--fg)}
-.modal-confirm{background:var(--danger);color:#fff}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
-/* ===== Écran "portrait uniquement" : affiche sur mobile en mode paysage ===== */
-#rotate-overlay{display:none;position:fixed;inset:0;z-index:300;background:linear-gradient(180deg, #89C7E8 0%, #B6E0F5 35%, #FFE8D6 100%);flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;gap:20px}
-.rotate-phone{width:46px;height:76px;border:4px solid var(--fg);border-radius:12px;position:relative;animation:rotHint 2.4s ease-in-out infinite}
-.rotate-phone::after{content:'';position:absolute;bottom:6px;left:50%;transform:translateX(-50%);width:14px;height:3px;background:var(--fg);border-radius:2px;opacity:.5}
-@keyframes rotHint{0%,15%{transform:rotate(90deg)}50%,100%{transform:rotate(0deg)}}
-.rotate-title{font-size:22px;font-weight:800;color:var(--fg)}
-.rotate-text{font-size:15px;color:var(--fg-muted);line-height:1.5;max-width:260px}
-@media (orientation: landscape) and (hover: none) and (pointer: coarse){#rotate-overlay{display:flex}}
-/* ===== Fin ecran "portrait uniquement" ===== */
-@media(max-height:640px){.routine-illustration{width:185px;height:185px;margin-bottom:8px}.routine-timer-wrap{width:110px;height:110px;margin-bottom:10px}.routine-timer-text{font-size:28px}.home-logo{width:56px;height:56px;margin-bottom:12px}.home-title{font-size:26px}.countdown-number{font-size:90px}.routine-exercise-name{font-size:19px}.go-text{font-size:70px}}
-@media(min-width:500px){.routine-illustration{width:310px;height:310px}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Ninja Stones">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="assets/images/icon-180.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/icon-32.png">
+    <title>Ninja Stones</title>
+    
+    <!-- FILET DE SÉCURITÉ : Force l'affichage des écrans même si le fichier CSS ne charge pas -->
+    <style>
+        .screen { 
+            opacity: 0; pointer-events: none; position: absolute; top:0; left:0; 
+            width:100%; height:100%; display:flex; flex-direction:column; 
+            align-items:center; justify-content:center; gap: 15px; 
+        }
+        .screen.active { opacity: 1; pointer-events: auto; }
+        .hidden { display: none !important; }
+    </style>
+
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<div id="app">
-<section class="screen active" id="screen-home" aria-label="Accueil"><div class="home-content"><div class="home-logo" aria-hidden="true"><svg viewBox="0 0 80 80" fill="none"><circle cx="40" cy="40" r="18" fill="var(--accent)" opacity="0.15"/><circle cx="40" cy="40" r="12" fill="var(--accent)"/><line x1="40" y1="6" x2="40" y2="18" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/><line x1="40" y1="62" x2="40" y2="74" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/><line x1="6" y1="40" x2="18" y2="40" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/><line x1="62" y1="40" x2="74" y2="40" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/><line x1="16.4" y1="16.4" x2="24.7" y2="24.7" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/><line x1="55.3" y1="55.3" x2="63.6" y2="63.6" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/><line x1="63.6" y1="16.4" x2="55.3" y2="24.7" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/><line x1="24.7" y1="55.3" x2="16.4" y2="63.6" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/></svg></div><h1 class="home-title">Morning Ninja</h1><p class="home-subtitle">Quelques minutes de mobilité pour bien commencer la journée.</p><div class="home-streak" id="home-streak" aria-live="polite"></div><br><button class="btn-primary" id="btn-start" aria-label="Commencer la routine">C'est parti</button><p class="home-version">v2.8</p></div></section>
-<section class="screen" id="screen-ready" aria-label="Prêt"><div class="ready-content"><div class="ready-icon" aria-hidden="true">&#128266;</div><h2 class="ready-title">Prêt ?</h2><p class="ready-text">Cliquez sur le bouton pour activer le son.<br>Vous devez entendre un petit "Ding".</p><button class="btn-primary" id="btn-activate-sound">Activer le son</button><p class="ready-ok" id="ready-ok">&#10004;&#65039; Son activé !</p></div></section>
-<section class="screen" id="screen-go" aria-label="Go"><div class="go-content"><div class="go-text">GO</div></div></section>
-<section class="screen" id="screen-countdown" aria-label="Compte à rebours"><div id="countdown-display" aria-live="assertive"></div></section>
-<section class="screen" id="screen-routine" aria-label="Routine en cours" style="position:relative"><div class="wakelock-indicator" id="wakelock-indicator"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>Écran activé</div><div class="routine-header"><span class="routine-progress-text" id="routine-progress"></span><button class="routine-pause-btn" id="btn-pause" aria-label="Pause"><svg id="icon-pause" width="20" height="20" viewBox="0 0 20 20" fill="var(--fg)"><rect x="4" y="3" width="4" height="14" rx="1"/><rect x="12" y="3" width="4" height="14" rx="1"/></svg><svg id="icon-play" width="20" height="20" viewBox="0 0 20 20" fill="var(--fg)" style="display:none"><path d="M5 3l12 7-12 7V3z"/></svg></button></div><h2 class="routine-exercise-name" id="routine-name"></h2><p class="routine-instruction" id="routine-instruction"></p><div class="routine-illustration" id="routine-illustration" aria-hidden="true"></div><div class="routine-timer-wrap"><svg id="timer-ring-container" class="routine-timer-ring" viewBox="0 0 160 160"><circle class="bg" cx="80" cy="80" r="70"/><circle class="fg" id="timer-ring" cx="80" cy="80" r="70" stroke-dasharray="439.82" stroke-dashoffset="0"/></svg><div class="routine-timer-text" id="timer-text" aria-live="polite">60</div></div><button class="routine-skip-btn" id="btn-skip">Suivant</button></section>
-<section class="screen" id="screen-end" aria-label="Routine terminée"><div class="end-emoji" aria-hidden="true">&#9728;&#65039;</div><h2 class="end-title">Routine terminée</h2><p class="end-subtitle">Bonne journée !</p><div class="home-streak" id="end-streak" aria-live="polite" style="display:none"></div><blockquote class="end-quote" id="end-quote"></blockquote><button class="btn-secondary" id="btn-home">Retour</button></section>
-<section class="screen" id="screen-history" aria-label="Historique"><div class="page-container" id="history-content"></div></section>
-<section class="screen" id="screen-calendar" aria-label="Calendrier"><div class="page-container" id="calendar-content"></div></section>
-<section class="screen" id="screen-settings" aria-label="Paramètres"><div class="page-container"><h2 class="page-title">Paramètres</h2><div class="settings-group"><div class="settings-item"><span class="settings-label">Annonces vocales</span><label class="toggle"><input type="checkbox" id="setting-voice" checked><span class="toggle-slider"></span></label></div><div class="settings-item"><span class="settings-label">Volume</span><div class="volume-wrap"><svg class="volume-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg><input type="range" id="setting-volume" min="0" max="1" step="0.05" value="0.8"></div></div></div><div class="settings-group"><div class="settings-item" style="flex-direction:column;align-items:stretch;gap:12px"><span class="settings-label">Sauvegarde</span><button class="btn-secondary" id="btn-export" style="width:100%">Exporter mes donn&eacute;es</button><button class="btn-secondary" id="btn-import" style="width:100%">Importer une sauvegarde</button><input type="file" id="import-file" accept=".json,application/json" style="display:none"><p id="backup-status" style="font-size:13px;color:var(--fg-muted);text-align:center;margin:0;display:none" aria-live="polite"></p></div></div><div class="settings-group"><div class="settings-item" style="flex-direction:column;align-items:stretch;gap:12px"><span class="settings-label">Réinitialiser les données</span><button class="btn-danger" id="btn-reset">Tout effacer</button></div></div></div></section>
-</div>
-<nav id="nav" aria-label="Navigation principale"><button class="nav-btn active" data-screen="home" aria-label="Accueil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-9 9 9"/><path d="M5 10v10a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h3a1 1 0 001-1V10"/></svg>Accueil</button><button class="nav-btn" data-screen="history" aria-label="Historique"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Historique</button><button class="nav-btn" data-screen="calendar" aria-label="Calendrier"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Calendrier</button><button class="nav-btn" data-screen="settings" aria-label="Paramètres"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Paramètres</button></nav>
-<div id="rotate-overlay" aria-hidden="true"><div class="rotate-phone"></div><h2 class="rotate-title">Mode portrait uniquement</h2><p class="rotate-text">Tourne ton t&eacute;l&eacute;phone pour continuer &#129399;</p></div>
-<div class="modal-overlay" id="modal" role="dialog" aria-modal="true"><div class="modal-box"><h3 class="modal-title" id="modal-title"></h3><p class="modal-text" id="modal-text"></p><div class="modal-actions"><button class="modal-cancel" id="modal-cancel">Annuler</button><button class="modal-confirm" id="modal-confirm">Confirmer</button></div></div></div>
-<script>
-(function(){'use strict';
 
-var IMAGES = [
-    "exercise-1.jpg",
-    "exercise-2.jpg",
-    "exercise-3.jpg",
-    "exercise-4.jpg",
-    "exercise-5.jpg",
-    "exercise-6.jpg",
-    "exercise-7.jpg",
-    "exercise-8.jpg",
-    "exercise-9.jpg"
-];
+    <!-- ===== RFC-001 : Scene Engine =====
+         Toute la scène (photo + décorations + personnage + puzzle) vit dans .game-scene,
+         qui garde toujours exactement les proportions de la photo (9:16), quel que soit l'écran.
+         .scene-wrapper centre cette scène et comble l'espace restant (s'il y en a) avec une couleur unie,
+         plutôt que de rogner la photo différemment selon les appareils. -->
+    <div class="scene-wrapper">
+        <div class="game-scene" id="game-scene">
 
-var EXERCISES=[
-{name:"Respiration",duration:60,voiceIntro:"Respiration profonde. Inspire par le nez, expire par la bouche.",instruction:"Inspire 4 secondes, expire 6 secondes. Détends les épaules et le visage."},
-{name:"Mobilisation du bassin",duration:60,voiceIntro:"Mobilisation douce du bassin. Couché sur le dos, genoux fléchis.",instruction:"Bascule le bassin lentement : creuse très légèrement, puis colle le bas du dos au sol."},
-{name:"Chat / Vache",duration:60,voiceIntro:"Chat vache. À quatre pattes, dos neutre au départ.",instruction:"Arrondis le dos en soufflant, puis relâche très doucement sans cambrer."},
-{name:"Bird dog lent",duration:60,voiceIntro:"Bird dog. À quatre pattes, garde le dos bien neutre.",instruction:"Tends le bras droit et la jambe gauche lentement. Pas de rotation du bassin."},
-{name:"Ouverture des hanches",duration:60,voiceIntro:"Ouverture des hanches. Assis, plantes de pieds jointes.",instruction:"Laisse les genoux descendre doucement vers le sol. Ne force pas, respire."},
-{name:"Mobilité thoracique",duration:60,voiceIntro:"Mobilité thoracique. Assis, rotation douce du haut du dos.",instruction:"Tourne le buste à droite puis à gauche. Le bassin reste fixe."},
-{name:"Pont fessier",duration:60,voiceIntro:"Pont fessier. Couché sur le dos, genoux fléchis, pieds au sol.",instruction:"Soulève les hanches doucement en contractant les fessiers. Pas de cambrure."},
-{name:"Mobilité des épaules",duration:60,voiceIntro:"Mobilité des épaules. Debout, cercles lents avec les bras.",instruction:"Fais des cercles lents et amples. Alterne le sens. Détends le cou."},
-{name:"Étirements doux",duration:60,voiceIntro:"Étirements doux. Debout, penche-toi lentement vers l'avant.",instruction:"Laisse la tête et les bras pendre. Ne force pas. Respire dans l'étirement."}
-];
-var TRANSITION_DURATION = 10;
-var CIRCUMFERENCE=2*Math.PI*70;
-var FALLBACK_COLORS=[["#D98350","#89C7E8"],["#89C7E8","#F0C49A"],["#5D7E9C","#FFE8D6"],["#D98350","#F0C49A"],["#89C7E8","#A3C4D8"],["#5D7E9C","#F0C49A"],["#D98350","#89C7E8"],["#89C7E8","#FDF1E3"],["#5D7E9C","#F0C49A"]];
-var QUOTES=["Une petite victoire chaque matin construit une grande victoire demain.","Le corps est ton temple. Prends-en soin chaque jour.","Chaque matin est une page blanche. Écris quelque chose de beau.","La constance bat l'intensité. Chaque jour compte.","Commencer est la moitie du chemin.","Ton corps t'a porté jusqu'ici. Remercie-le.","Pas besoin d'être parfait. Juste présent.","Un matin de plus, un pas de plus.","La discipline est un choix quotidien, pas un talent.","Prends soin de toi d'abord. Le reste suivra.","Le mouvement est un remerciement adressé à ton corps.","Rien de grand ne se construit sans habitude."];
-var JOURS=["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"];
-var MOIS=["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+            <!-- Background Layer -->
+            <div class="scene-background" id="garden-backdrop"></div>
 
-var state={
-    currentScreen:"home",
-    exerciseIndex:0,
-    timeRemaining:0,
-    isPaused:false,
-    timerInterval:null,
-    spokeMid:false,
-    voiceEnabled:true,
-    volume:0.8,
-    sessions:[],
-    calYear:new Date().getFullYear(),
-    calMonth:new Date().getMonth(),
-    isTransition:false
-};
+            <!-- Decoration Layer : éléments fixes du décor (bambous, lanterne) -->
+            <div class="scene-decor" aria-hidden="true">
+                <div class="bamboo-stalk b1"><span class="bamboo-leaf"></span></div>
+                <div class="bamboo-stalk b2"><span class="bamboo-leaf"></span></div>
+                <div class="bamboo-stalk b3"><span class="bamboo-leaf"></span></div>
+                <div class="lantern-glow"></div>
+            </div>
 
-var STORAGE_KEY="morning_ninja_data";
-function loadData(){try{var raw=localStorage.getItem(STORAGE_KEY);if(raw){var data=JSON.parse(raw);state.sessions=Array.isArray(data.sessions)?data.sessions:[];state.voiceEnabled=data.voiceEnabled!==undefined?data.voiceEnabled:true;state.volume=data.volume!==undefined?data.volume:0.8;}}catch(e){state.sessions=[];}}
-function saveData(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify({sessions:state.sessions,voiceEnabled:state.voiceEnabled,volume:state.volume}));}catch(e){}}
+            <!-- Ambient Animation Layer : effets périodiques (feuille, onde du bassin) -->
+            <div class="scene-ambient" aria-hidden="true">
+                <div class="falling-leaf"></div>
+                <div class="pond-ripples">
+                    <span class="ripple-ring r1"></span>
+                    <span class="ripple-ring r2"></span>
+                </div>
+            </div>
 
-function getFallbackSvg(index){var colors=FALLBACK_COLORS[index]||FALLBACK_COLORS[0];var id="fb"+index;return '<div class="fallback-svg"><svg viewBox="0 0 160 160" fill="none"><defs><linearGradient id="'+id+'-g1" x1="0" y1="0" x2="160" y2="160" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="'+colors[0]+'" stop-opacity="0.25"/><stop offset="100%" stop-color="'+colors[1]+'" stop-opacity="0.12"/></linearGradient></defs><circle cx="80" cy="80" r="70" fill="url(#'+id+'-g1)"/><circle cx="80" cy="80" r="50" stroke="'+colors[0]+'" stroke-width="2" stroke-opacity="0.3" fill="none"/><circle cx="80" cy="80" r="28" stroke="'+colors[0]+'" stroke-width="1.5" stroke-opacity="0.2" fill="none"/><circle cx="80" cy="80" r="6" fill="'+colors[0]+'" opacity="0.4"/></svg></div>';}
+            <!-- Character Layer + Puzzle Layer + UI du jeu (tout ce qui doit rester aligné avec la scène) -->
+            <div class="scene-ui">
+                <header class="app-header">
+                    <h1 class="title">Ninja Stones</h1>
+                    <p id="level-display" class="level-text">Niveau 1</p>
+                    <p id="level-name-display" class="level-name-text"></p>
+                </header>
 
-function setIllustration(index){
-    var container=document.getElementById("routine-illustration");
-    container.innerHTML = getFallbackSvg(index);
-    var img = document.createElement("img");
-    img.src = IMAGES[index];
-    img.alt = EXERCISES[index].name;
-    img.onload = function(){
-        this.classList.add("loaded");
-        var fb = container.querySelector(".fallback-svg");
-        if(fb) fb.classList.add("hidden");
-    };
-    img.onerror = function(){
-        var fb = container.querySelector(".fallback-svg");
-        if(fb) fb.classList.remove("hidden");
-    };
-    container.appendChild(img);
-}
+                <div class="screens-wrapper">
 
-var audioCtx=null;
-function getAudioCtx(){if(!audioCtx){audioCtx=new(window.AudioContext||window.webkitAudioContext)();}return audioCtx;}
+                    <div id="screen-menu" class="screen active">
+                        <div class="screen-top">
+                            <div class="garden-info">
+                                <p id="garden-name" class="garden-name">Jardin du Bambou</p>
+                                <div class="progress-container">
+                                    <div id="progress-bar" class="progress-bar"></div>
+                                </div>
+                                <p id="garden-stage" class="garden-stage"></p>
+                            </div>
 
-/* ===== V2.0 : sons joues via de vrais fichiers audio (fiables sur iOS face a la voix).
-   Le synthetiseur Web Audio ci-dessous est conserve uniquement en secours si un fichier ne charge pas. ===== */
-var dingAudio=null,successAudio=null;
-try{
-    dingAudio=new Audio("sound-ding.mp3");dingAudio.preload="auto";dingAudio.load();
-    successAudio=new Audio("sound-success.mp3");successAudio.preload="auto";successAudio.load();
-}catch(e){}
-function unlockSound(el){
-    if(!el)return;
-    try{
-        el.muted=true;
-        var p=el.play();
-        if(p&&p.then){p.then(function(){el.pause();el.currentTime=0;el.muted=false;}).catch(function(){el.muted=false;});}
-        else{el.pause();el.currentTime=0;el.muted=false;}
-    }catch(e){try{el.muted=false;}catch(e2){}}
-}
-function playFile(el,fallback){
-    if(state.volume===0)return;
-    if(!el){fallback();return;}
-    try{
-        try{el.volume=state.volume;}catch(e){}
-        try{el.currentTime=0;}catch(e){}
-        var p=el.play();
-        if(p&&p.catch){p.catch(function(){fallback();});}
-    }catch(e){fallback();}
-}
-function playChime(){playFile(dingAudio,synthChime);}
-function playSuccessSound(){playFile(successAudio,synthSuccess);}
+                            <button id="play-btn" class="btn">Jouer</button>
+                        </div>
+                        <!-- Character Layer -->
+                        <div class="character-stage">
+                            <img id="ninja-character" class="character-container" src="assets/images/ninja-character.png" alt="Le Ninja Jardinier">
+                        </div>
+                    </div>
 
-function synthChime(){
-    try{
-        var ctx=getAudioCtx();
-        if(ctx.state!=="running"){ctx.resume().then(function(){chimeNotes(ctx);}).catch(function(){});return;}
-        chimeNotes(ctx);
-    }catch(e){}
-}
-function chimeNotes(ctx){
-    try{
-        var now=ctx.currentTime;
-        var duration=2.0;
-        var master=ctx.createGain();
-        master.gain.setValueAtTime(0, now);
-        master.gain.linearRampToValueAtTime(state.volume*0.3, now+0.02);
-        master.gain.exponentialRampToValueAtTime(0.001, now+duration);
-        master.connect(ctx.destination);
-        var osc1=ctx.createOscillator();osc1.type="sine";osc1.frequency.value=196;osc1.connect(master);osc1.start(now);osc1.stop(now+duration);
-        var osc2=ctx.createOscillator();osc2.type="sine";osc2.frequency.value=293.66;osc2.connect(master);osc2.start(now);osc2.stop(now+duration);
-        var osc3=ctx.createOscillator();osc3.type="triangle";osc3.frequency.value=392;osc3.connect(master);osc3.start(now);osc3.stop(now+duration);
-    }catch(e){}
-}
+                    <div id="screen-game" class="screen">
+                        <div class="screen-top">
+                            <div class="btn-group">
+                                <button id="back-btn" class="btn">Retour</button>
+                            </div>
+                        </div>
+                        <!-- Puzzle Layer -->
+                        <div class="board-frame">
+                            <div id="board" class="board"></div>
+                            <div id="win-overlay" class="win-overlay">
+                                <img class="win-character" src="assets/images/ninja-character-win.png" alt="Le Ninja Jardinier célèbre la victoire">
+                                <p id="message" class="message"></p>
+                                <button id="continue-btn" class="btn btn-primary">Continuer</button>
+                            </div>
+                        </div>
+                    </div>
 
-/* ===== Son de reussite (secours synthetise) : petit carillon zen ascendant ===== */
-function synthSuccess(){
-    try{
-        var ctx=getAudioCtx();
-        if(ctx.state!=="running"){ctx.resume().then(function(){successNotes(ctx);}).catch(function(){});return;}
-        successNotes(ctx);
-    }catch(e){}
-}
-function successNotes(ctx){
-    try{
-        var now=ctx.currentTime;
-        var notes=[392,523.25,659.25,783.99,1046.5]; /* Sol - Do - Mi - Sol - Do aigu : arpege doux et positif */
-        for(var i=0;i<notes.length;i++){
-            var start=now+i*0.55;
-            var noteDur=4.5;
-            var gain=ctx.createGain();
-            gain.gain.setValueAtTime(0,start);
-            gain.gain.linearRampToValueAtTime(state.volume*0.22,start+0.03);
-            gain.gain.exponentialRampToValueAtTime(0.001,start+noteDur);
-            gain.connect(ctx.destination);
-            var osc=ctx.createOscillator();
-            osc.type="sine";
-            osc.frequency.value=notes[i];
-            osc.connect(gain);
-            osc.start(start);
-            osc.stop(start+noteDur);
-            /* Harmonique discrete a l'octave pour un timbre de clochette */
-            var gain2=ctx.createGain();
-            gain2.gain.setValueAtTime(0,start);
-            gain2.gain.linearRampToValueAtTime(state.volume*0.06,start+0.03);
-            gain2.gain.exponentialRampToValueAtTime(0.001,start+noteDur*0.7);
-            gain2.connect(ctx.destination);
-            var osc2=ctx.createOscillator();
-            osc2.type="sine";
-            osc2.frequency.value=notes[i]*2;
-            osc2.connect(gain2);
-            osc2.start(start);
-            osc2.stop(start+noteDur*0.7);
-        }
-    }catch(e){}
-}
-/* ===== Fin son de reussite ===== */
+                </div>
+            </div>
 
-/* ===== Wake Lock : empeche l'extinction de l'ecran pendant les exercices ===== */
-var wakeLock=null;
-var wakeLockSupported=('wakeLock' in navigator);
+            <!-- Bouton silence : visible sur le menu comme en jeu, état mémorisé (Sprint 6) -->
+            <button id="mute-btn" class="mute-btn" aria-label="Couper ou activer le son">🔊</button>
 
-function requestWakeLock(){
-    releaseWakeLock();
-    if(!wakeLockSupported) return;
-    navigator.wakeLock.request('screen').then(function(lock){
-        wakeLock=lock;
-        var indicator=document.getElementById("wakelock-indicator");
-        if(indicator) indicator.classList.add("visible");
-        wakeLock.addEventListener('release',function(){
-            wakeLock=null;
-            var ind=document.getElementById("wakelock-indicator");
-            if(ind) ind.classList.remove("visible");
-        });
-    }).catch(function(){
-        /* L'API peut echouer (HTTPS requis, batterie faible, etc.) : on ignore silencieusement */
-    });
-}
+            <!-- Grille de repères pour le développement (RFC-001, debugScene). Vide par défaut, remplie par JS si activée. -->
+            <div class="scene-debug-grid" id="scene-debug-grid" aria-hidden="true"></div>
 
-function releaseWakeLock(){
-    if(wakeLock){
-        wakeLock.release().catch(function(){});
-        wakeLock=null;
-    }
-    var indicator=document.getElementById("wakelock-indicator");
-    if(indicator) indicator.classList.remove("visible");
-}
+        </div>
+    </div>
 
-/* Si l'utilisateur quitte l'app puis revient, le wake lock est automatiquement libere.
-   On le reacquiert si on est toujours dans un exercice. */
-document.addEventListener('visibilitychange',function(){
-    if(document.visibilityState==='visible' && wakeLockSupported && !wakeLock){
-        var s=state.currentScreen;
-        if(s==='countdown'||s==='routine'){
-            requestWakeLock();
-        }
-    }
-});
-/* ===== Fin Wake Lock ===== */
-
-var bestVoiceFound = null;
-var preferredVoices = ["Amelie", "Virginie", "Aurelie", "Alice", "Thomas", "Daniel"];
-if(typeof speechSynthesis!=="undefined"){speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=function(){speechSynthesis.getVoices();};}
-function findBestVoice() {
-    if (bestVoiceFound) return bestVoiceFound;
-    var voices = speechSynthesis.getVoices();
-    if (!voices.length) return null;
-    var frVoices = [];
-    for (var i = 0; i < voices.length; i++) {
-        if (voices[i].lang && voices[i].lang.startsWith("fr")) { frVoices.push(voices[i]); }
-    }
-    if (frVoices.length === 0) return null;
-    var selectedVoice = null;
-    for (var p = 0; p < preferredVoices.length; p++) {
-        for (var v = 0; v < frVoices.length; v++) {
-            var voiceName = frVoices[v].name.toLowerCase();
-            var voiceId = (frVoices[v].voiceURI || "").toLowerCase();
-            if (voiceName.indexOf(preferredVoices[p].toLowerCase()) !== -1 || voiceId.indexOf(preferredVoices[p].toLowerCase()) !== -1) {
-                if (voiceName.indexOf("enhanced") !== -1 || voiceId.indexOf("compact") !== -1 || voiceId.indexOf("premium") !== -1) {
-                    bestVoiceFound = frVoices[v]; return bestVoiceFound;
-                }
-                if (!selectedVoice) selectedVoice = frVoices[v];
-            }
-        }
-    }
-    for (var j = 0; j < frVoices.length; j++) {
-        var n = frVoices[j].name.toLowerCase();
-        var u = (frVoices[j].voiceURI || "").toLowerCase();
-        if (n.indexOf("enhanced") !== -1 || u.indexOf("compact") !== -1) { bestVoiceFound = frVoices[j]; return bestVoiceFound; }
-    }
-    if (selectedVoice) { bestVoiceFound = selectedVoice; return bestVoiceFound; }
-    bestVoiceFound = frVoices[0]; return bestVoiceFound;
-}
-function speak(text){
-    if(!state.voiceEnabled) return;
-    try{
-        speechSynthesis.cancel();
-        var utter=new SpeechSynthesisUtterance(text);
-        utter.lang="fr-FR"; utter.rate = 0.88; utter.pitch = 1.1; utter.volume = state.volume;
-        var voice = findBestVoice();
-        if (voice) utter.voice = voice;
-        /* iOS : la fin d'une phrase vocale est le seul moment fiable pour reveiller le moteur des sons */
-        utter.onend=function(){try{getAudioCtx().resume();}catch(e2){}};
-        utter.onerror=utter.onend;
-        speechSynthesis.speak(utter);
-    }catch(e){}
-}
-var appEl=document.getElementById("app");var navEl=document.getElementById("nav");
-function showScreen(name){state.currentScreen=name;var isImmersive=(name==="ready"||name==="go"||name==="countdown"||name==="routine"||name==="end");appEl.classList.toggle("fullscreen",isImmersive);navEl.classList.toggle("hidden",isImmersive);var screens=document.querySelectorAll(".screen");for(var i=0;i<screens.length;i++){screens[i].classList.remove("active");}var target=document.getElementById("screen-"+name);if(target)target.classList.add("active");var navBtns=document.querySelectorAll(".nav-btn");for(var j=0;j<navBtns.length;j++){navBtns[j].classList.toggle("active",navBtns[j].dataset.screen===name);}if(name==="home")refreshHome();if(name==="history")refreshHistory();if(name==="calendar")refreshCalendar();if(name==="settings")refreshSettings();}
-var navBtns=document.querySelectorAll(".nav-btn");for(var n=0;n<navBtns.length;n++){navBtns[n].addEventListener("click",function(){if(state.timerInterval){clearInterval(state.timerInterval);state.timerInterval=null;speechSynthesis.cancel();}releaseWakeLock();showScreen(this.dataset.screen);});}
-function refreshHome(){var streak=calcStreak().current;var el=document.getElementById("home-streak");if(streak>0){el.innerHTML="&#128293; "+streak+" jour"+(streak>1?"s":"")+" de suite";el.style.display="inline-flex";}else{el.style.display="none";}}
-document.getElementById("btn-start").addEventListener("click",function(){showScreen("ready");});
-document.getElementById("btn-activate-sound").addEventListener("click",function(){
-    var btn = this; btn.disabled = true; btn.textContent = "Activation...";
-    /* Reveil de la synthese vocale (iOS exige un declenchement pendant le toucher) : phrase vide et silencieuse */
-    try{var warm=new SpeechSynthesisUtterance(" ");warm.volume=0;speechSynthesis.speak(warm);}catch(e){}
-    /* Deblocage du carillon de fin pendant le toucher (iOS n'autorise un fichier audio qu'apres un geste) */
-    unlockSound(successAudio);
-    /* Le Ding est joue directement : ce geste le debloque en meme temps */
-    playChime();
-    document.getElementById("ready-ok").classList.add("visible");
-    setTimeout(function(){ showScreen("go"); setTimeout(function(){ startCountdown(); }, 600); }, 1000);
-});
-function startCountdown(){
-    showScreen("countdown"); requestWakeLock(); var display = document.getElementById("countdown-display"); var steps = ["3", "2", "1"]; var i = 0;
-    function nextStep(){ if(i >= steps.length){ startRoutine(); return; } display.innerHTML = ""; var el = document.createElement("div"); el.className = "countdown-number"; el.textContent = steps[i]; display.appendChild(el); playChime(); i++; setTimeout(nextStep, 1000); }
-    nextStep();
-}
-function startRoutine(){state.exerciseIndex=0;state.isPaused=false;updatePauseIcon();showScreen("routine");loadExercise(0);}
-
-function loadExercise(index){
-    if(index>=EXERCISES.length){endRoutine();return;}
-    state.exerciseIndex=index;
-    state.isTransition=false;
-    state.timeRemaining=EXERCISES[index].duration;
-    state.spokeMid=false;
-    
-    document.getElementById("timer-ring-container").classList.remove("transition-mode");
-    var ex=EXERCISES[index];
-    document.getElementById("routine-progress").textContent=(index+1)+" / "+EXERCISES.length;
-    document.getElementById("routine-name").textContent=ex.name;
-    document.getElementById("routine-instruction").textContent=ex.instruction;
-    setIllustration(index);
-    updateTimerDisplay();
-    speak(ex.voiceIntro);
-    clearInterval(state.timerInterval);
-    state.timerInterval=setInterval(tick,1000);
-}
-
-function loadTransition(){
-    state.isTransition=true;
-    state.timeRemaining=TRANSITION_DURATION;
-    
-    document.getElementById("timer-ring-container").classList.add("transition-mode");
-    var nextIndex = state.exerciseIndex + 1;
-    var nextEx = EXERCISES[nextIndex];
-    
-    document.getElementById("routine-name").textContent="Mise en place";
-    document.getElementById("routine-instruction").textContent="Prochain exercice : " + nextEx.name;
-    
-    setIllustration(nextIndex);
-    
-    updateTimerDisplay();
-    speak("Mise en place. Prochain exercice : " + nextEx.name + ". Préparez-vous.");
-    clearInterval(state.timerInterval);
-    state.timerInterval=setInterval(tick,1000);
-}
-
-function tick(){
-    if(state.isPaused)return;
-    state.timeRemaining--;
-    
-    if(!state.isTransition && state.timeRemaining===10 && !state.spokeMid){
-        state.spokeMid=true;
-        speak("Dix secondes");
-    }
-    
-    if(state.timeRemaining<=0){
-        playChime();
-        clearInterval(state.timerInterval);
-        state.timerInterval=null;
-        
-        if(!state.isTransition && (state.exerciseIndex + 1) < EXERCISES.length){
-            setTimeout(function(){loadTransition();},1200);
-        } else {
-            setTimeout(function(){loadExercise(state.exerciseIndex+1);},1200);
-        }
-        return;
-    }
-    updateTimerDisplay();
-}
-
-function updateTimerDisplay(){
-    var maxDuration = state.isTransition ? TRANSITION_DURATION : EXERCISES[state.exerciseIndex].duration;
-    var progress=state.timeRemaining/maxDuration;
-    var offset=CIRCUMFERENCE*(1-progress);
-    document.getElementById("timer-ring").style.strokeDashoffset=offset;
-    document.getElementById("timer-text").textContent=state.timeRemaining;
-}
-
-document.getElementById("btn-pause").addEventListener("click",function(){state.isPaused=!state.isPaused;updatePauseIcon();});
-function updatePauseIcon(){document.getElementById("icon-pause").style.display=state.isPaused?"none":"block";document.getElementById("icon-play").style.display=state.isPaused?"block":"none";}
-
-document.getElementById("btn-skip").addEventListener("click",function(){
-    clearInterval(state.timerInterval);
-    state.timerInterval=null;
-    playChime();
-    if(state.isTransition){
-        loadExercise(state.exerciseIndex + 1);
-    } else {
-        var nextIndex = state.exerciseIndex + 1;
-        if(nextIndex < EXERCISES.length){
-            loadTransition();
-        } else {
-            endRoutine();
-        }
-    }
-});
-
-function endRoutine(){releaseWakeLock();setTimeout(playSuccessSound,400);var today=todayStr();if(state.sessions.indexOf(today)===-1){state.sessions.push(today);}saveData();var st=calcStreak().current;var es=document.getElementById("end-streak");if(st>0){es.innerHTML="&#128293; "+st+" jour"+(st>1?"s":"")+" de suite !";es.style.display="inline-flex";}else{es.style.display="none";}var quote=QUOTES[Math.floor(Math.random()*QUOTES.length)];document.getElementById("end-quote").textContent="\u00AB "+quote+" \u00BB";showScreen("end");}
-document.getElementById("btn-home").addEventListener("click",function(){showScreen("home");});
-function formatDateFr(ds){var d=new Date(ds+"T12:00:00");var jours=["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"];return jours[d.getDay()]+" "+d.getDate()+" "+MOIS[d.getMonth()].toLowerCase()+" "+d.getFullYear();}
-function refreshHistory(){
-    var container=document.getElementById("history-content");
-    var today=todayStr();
-    var html='<h2 class="page-title">Historique</h2>';
-    html+='<p class="history-section-title">Aujourd\'hui</p>';
-    if(state.sessions.indexOf(today)!==-1){html+='<div class="history-item"><span class="history-check">&#10004;&#65039;</span><span class="history-date">Routine effectuée</span></div>';}
-    else{html+='<div class="history-item" style="opacity:0.5"><span class="history-check">&#9675;</span><span class="history-date">Pas encore faite</span></div>';}
-    var past=state.sessions.slice().sort().reverse();
-    var list='';var shown=0;var prev=null;
-    for(var i=0;i<past.length&&shown<10;i++){
-        if(past[i]===today||past[i]===prev)continue;
-        prev=past[i];
-        list+='<div class="history-item"><span class="history-check">&#10004;&#65039;</span><span class="history-date">'+formatDateFr(past[i])+'</span></div>';
-        shown++;
-    }
-    if(shown>0){html+='<p class="history-section-title" style="margin-top:20px">Derniers jours</p>'+list;}
-    html+='<div class="history-total">Nombre total de routines : '+state.sessions.length+'</div>';
-    container.innerHTML=html;
-}
-function refreshCalendar(){var container=document.getElementById("calendar-content");var streaks=calcStreak();var html='<h2 class="page-title">Calendrier</h2>';html+='<div class="stat-cards">';html+='<div class="stat-card"><div class="stat-card-icon">&#128293;</div><div class="stat-card-value">'+streaks.current+'</div><div class="stat-card-label">Série actuelle</div></div>';html+='<div class="stat-card"><div class="stat-card-icon">&#127942;</div><div class="stat-card-value">'+streaks.best+'</div><div class="stat-card-label">Meilleure série</div></div>';html+='<div class="stat-card full"><div class="stat-card-icon">&#128197;</div><div class="stat-card-value">'+state.sessions.length+'</div><div class="stat-card-label">Jours réalisés</div></div>';html+='</div>';html+=buildMiniCalendar();container.innerHTML=html;document.getElementById("cal-prev").addEventListener("click",function(){state.calMonth--;if(state.calMonth<0){state.calMonth=11;state.calYear--;}refreshCalendar();});document.getElementById("cal-next").addEventListener("click",function(){state.calMonth++;if(state.calMonth>11){state.calMonth=0;state.calYear++;}refreshCalendar();});}
-function buildMiniCalendar(){var year=state.calYear,month=state.calMonth;var today=todayStr();var html='<div class="mini-cal"><div class="mini-cal-header">';html+='<button class="mini-cal-nav" id="cal-prev" aria-label="Mois précédent">&lsaquo;</button>';html+='<span class="mini-cal-month">'+MOIS[month]+" "+year+'</span>';html+='<button class="mini-cal-nav" id="cal-next" aria-label="Mois suivant">&rsaquo;</button>';html+='</div><div class="mini-cal-grid">';for(var d=0;d<JOURS.length;d++){html+='<div class="mini-cal-day-label">'+JOURS[d]+"</div>";}var firstDay=new Date(year,month,1).getDay();var startOffset=(firstDay+6)%7;for(var e=0;e<startOffset;e++){html+='<div class="mini-cal-day empty"></div>';}var daysInMonth=new Date(year,month+1,0).getDate();for(var day=1;day<=daysInMonth;day++){var ds=year+"-"+pad2(month+1)+"-"+pad2(day);var cls="mini-cal-day";if(ds===today)cls+=" today";if(state.sessions.indexOf(ds)!==-1)cls+=" done";html+='<div class="'+cls+'">'+day+"</div>";}html+="</div></div>";return html;}
-function calcStreak(){if(state.sessions.length===0)return{current:0,best:0};var dates=state.sessions.slice().sort();var unique=[dates[0]];for(var i=1;i<dates.length;i++){if(dates[i]!==dates[i-1])unique.push(dates[i]);}var today=todayStr();var yesterday=dateStr(new Date(Date.now()-86400000));var current=0;if(unique[unique.length-1]===today||unique[unique.length-1]===yesterday){var checkDate=new Date(unique[unique.length-1]+"T12:00:00");for(var j=unique.length-1;j>=0;j--){var expected=dateStr(checkDate);if(unique[j]===expected){current++;checkDate.setDate(checkDate.getDate()-1);}else{break;}}}var best=0,temp=1;for(var k=1;k<unique.length;k++){var prev=new Date(unique[k-1]+"T12:00:00");var curr=new Date(unique[k]+"T12:00:00");var diffDays=Math.round((curr-prev)/86400000);if(diffDays===1){temp++;}else{if(temp>best)best=temp;temp=1;}}if(temp>best)best=temp;return{current:current,best:best};}
-function refreshSettings(){document.getElementById("setting-voice").checked=state.voiceEnabled;document.getElementById("setting-volume").value=state.volume;}
-document.getElementById("setting-voice").addEventListener("change",function(){state.voiceEnabled=this.checked;saveData();});
-document.getElementById("setting-volume").addEventListener("input",function(){state.volume=parseFloat(this.value);saveData();});
-document.getElementById("btn-reset").addEventListener("click",function(){showModal("Réinitialiser","Toutes vos données seront effacées. Cette action est irréversible.",function(){state.sessions=[];saveData();showScreen("settings");});});
-
-/* ===== Sauvegarde : export / import des donnees (fusion sans perte) ===== */
-function backupStatus(msg){var el=document.getElementById("backup-status");el.textContent=msg;el.style.display="block";}
-document.getElementById("btn-export").addEventListener("click",function(){
-    try{
-        var payload={app:"morning-ninja",format:1,exportedAt:new Date().toISOString(),data:{sessions:state.sessions,voiceEnabled:state.voiceEnabled,volume:state.volume}};
-        var blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
-        var a=document.createElement("a");
-        a.href=URL.createObjectURL(blob);
-        a.download="morning-ninja-sauvegarde-"+todayStr()+".json";
-        document.body.appendChild(a);a.click();document.body.removeChild(a);
-        setTimeout(function(){URL.revokeObjectURL(a.href);},2000);
-        backupStatus("Sauvegarde exportée ("+state.sessions.length+" séance"+(state.sessions.length>1?"s":"")+").");
-    }catch(e){backupStatus("Export impossible sur cet appareil.");}
-});
-document.getElementById("btn-import").addEventListener("click",function(){document.getElementById("import-file").click();});
-document.getElementById("import-file").addEventListener("change",function(){
-    var file=this.files&&this.files[0];this.value="";
-    if(!file)return;
-    var reader=new FileReader();
-    reader.onload=function(){
-        try{
-            var obj=JSON.parse(reader.result);
-            var d=(obj&&obj.data)?obj.data:obj;
-            if(!d||!Array.isArray(d.sessions))throw new Error("format");
-            var valid=[];
-            for(var i=0;i<d.sessions.length;i++){
-                if(typeof d.sessions[i]==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(d.sessions[i]))valid.push(d.sessions[i]);
-            }
-            showModal("Importer","Cette sauvegarde contient "+valid.length+" séance"+(valid.length>1?"s":"")+". Elle sera fusionnée avec votre historique actuel, sans aucune perte.",function(){
-                for(var j=0;j<valid.length;j++){if(state.sessions.indexOf(valid[j])===-1)state.sessions.push(valid[j]);}
-                state.sessions.sort();
-                if(d.voiceEnabled!==undefined)state.voiceEnabled=!!d.voiceEnabled;
-                if(typeof d.volume==="number"&&d.volume>=0&&d.volume<=1)state.volume=d.volume;
-                saveData();refreshSettings();
-                backupStatus("Import réussi : "+state.sessions.length+" séance"+(state.sessions.length>1?"s":"")+" au total.");
-            });
-        }catch(e){backupStatus("Fichier non reconnu. Choisissez une sauvegarde Morning Ninja (.json).");}
-    };
-    reader.onerror=function(){backupStatus("Lecture du fichier impossible.");};
-    reader.readAsText(file);
-});
-/* ===== Fin sauvegarde ===== */
-var modalCallback=null;
-function showModal(title,text,onConfirm){document.getElementById("modal-title").textContent=title;document.getElementById("modal-text").textContent=text;modalCallback=onConfirm;document.getElementById("modal").classList.add("active");}
-function hideModal(){document.getElementById("modal").classList.remove("active");modalCallback=null;}
-document.getElementById("modal-cancel").addEventListener("click",hideModal);
-document.getElementById("modal-confirm").addEventListener("click",function(){if(modalCallback)modalCallback();hideModal();});
-document.getElementById("modal").addEventListener("click",function(e){if(e.target===this)hideModal();});
-function todayStr(){return dateStr(new Date());}
-function dateStr(d){return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate());}
-function pad2(n){return n<10?"0"+n:""+n;}
-loadData();refreshHome();document.getElementById("timer-ring").style.strokeDasharray=CIRCUMFERENCE;document.getElementById("timer-ring").style.strokeDashoffset="0";
-})();
-</script>
+    <script src="js/constants.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/save.js"></script>
+    <script src="js/levels.js"></script>
+    <script src="js/garden.js"></script>
+    <script src="js/puzzle.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/scene-debug.js"></script>
 </body>
 </html>
