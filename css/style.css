@@ -331,6 +331,8 @@ body {
 .btn-primary:active { background: #f0e6d2; }
 .hidden { display: none !important; }
 
+.app-version { font-size: 0.65rem; color: #f0e6d2; opacity: 0.4; margin-top: 2%; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6); }
+
 .message { min-height: 24px; font-size: 1rem; color: #d4c5a9; text-align: center; opacity: 0; transition: opacity 0.8s ease; }
 .message.visible { opacity: 1; }
 
