@@ -153,6 +153,30 @@ body {
     100% { opacity: 0.55; transform: scale(0.9); }
 }
 
+/* Lucioles / pollen doré : quelques points de lumière qui dérivent très lentement dans l'air,
+   toujours discrets, jamais plus de 4 à l'écran, jamais synchronisés entre eux. */
+.firefly {
+    position: absolute; width: 5px; height: 5px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 224, 160, 0.95) 0%, rgba(255, 200, 120, 0.5) 55%, rgba(255, 200, 120, 0) 80%);
+    filter: blur(0.3px);
+    opacity: 0;
+    animation-name: fireflyDrift; animation-timing-function: ease-in-out; animation-iteration-count: infinite;
+}
+.f1 { left: 22%; top: 42%; animation-duration: 16s; animation-delay: -2s; }
+.f2 { left: 68%; top: 58%; animation-duration: 19s; animation-delay: -9s; }
+.f3 { left: 35%; top: 63%; animation-duration: 14s; animation-delay: -5s; }
+.f4 { left: 78%; top: 40%; animation-duration: 21s; animation-delay: -13s; }
+
+@keyframes fireflyDrift {
+    0%   { opacity: 0; transform: translate(0, 0); }
+    12%  { opacity: 0.55; }
+    35%  { transform: translate(18px, -22px); }
+    55%  { opacity: 0.6; transform: translate(-10px, -42px); }
+    78%  { opacity: 0.3; transform: translate(14px, -60px); }
+    92%  { opacity: 0; }
+    100% { opacity: 0; transform: translate(0, -70px); }
+}
+
 /* Character Layer + Puzzle Layer + UI du jeu : positionnés dans la scène, en % */
 .scene-ui {
     position: absolute; inset: 0;
