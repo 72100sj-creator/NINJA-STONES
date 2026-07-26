@@ -85,6 +85,7 @@ window.NS_UI = (function() {
             stone.textContent = value;
             stone.style.width = `${stoneSize}px`;
             stone.style.height = `${stoneSize}px`;
+            stone.style.animationDelay = `${i * 0.035}s`;
             stone.style.transform = `translate(${x}px, ${y}px)`;
             if (onClickCallback) stone.addEventListener('click', () => onClickCallback(value));
             containerEl.appendChild(stone);
