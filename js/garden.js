@@ -1,29 +1,44 @@
 window.NS_Garden = {
-    // Calcule le palier atteint sur l'ensemble des paliers (non limité) - sert de base commune
-    calculateProgressStage: function(garden) {
-        let stage = 1;
-        for (let i = 0; i < garden.thresholds.length; i++) {
-            if (garden.points >= garden.thresholds[i]) stage = i + 2;
-        }
-        return stage;
-    },
-    // Aspect visuel du jardin (teinte du décor) : volontairement limité à MAX_VISUAL_STAGE apparences
-    calculateStage: function(garden) {
+    // Index du jardin (0 à 4) correspondant à un niveau global (1 à 100+).
+    // Au-delà du dernier jardin, on reste sur le dernier (pas de crash si on dépasse 100).
+    getGardenIndexForLevel: function(level) {
         const C = window.NS_CONSTANTS;
-        return NS_Utils.clamp(this.calculateProgressStage(garden), 1, C.MAX_VISUAL_STAGE);
+        const index = Math.floor((level - 1) / C.LEVELS_PER_GARDEN);
+        return NS_Utils.clamp(index, 0, C.GARDENS_CONFIG.length - 1);
     },
-    // Progression réelle (barre + texte) : va jusqu'au bout des paliers, jusqu'à "Jardin maîtrisé"
-    calculateProgress: function(garden) {
-        let stage = this.calculateProgressStage(garden);
-        if (stage > garden.thresholds.length) return 100;
-        let currentThreshold = (stage === 1) ? 0 : garden.thresholds[stage - 2];
-        let nextThreshold = garden.thresholds[stage - 1];
-        let progress = (garden.points - currentThreshold) / (nextThreshold - currentThreshold);
-        return NS_Utils.clamp(progress * 100, 0, 100);
+
+    // Position du niveau A L'INTERIEUR de son jardin (1 à 20).
+    getLevelInGarden: function(level) {
+        const C = window.NS_CONSTANTS;
+        return ((level - 1) % C.LEVELS_PER_GARDEN) + 1;
     },
-    awardPoints: function(garden, amount) {
-        garden.points += amount;
-        let nextThreshold = garden.thresholds.find(t => t > garden.points);
-        return nextThreshold ? `Prochain palier : ${nextThreshold}` : "Jardin maîtrisé";
+
+    getCurrentGarden: function(level, gardensConfig) {
+        return gardensConfig[this.getGardenIndexForLevel(level)];
+    },
+
+    // Etape visuelle du décor (1 à 4). Le décor évolue sur les niveaux 1 à 16 du jardin
+    // (4 niveaux par étape), puis reste stable de 17 à 20 (palier de repos).
+    calculateStage: function(levelInGarden) {
+        const C = window.NS_CONSTANTS;
+        const stage = Math.ceil(Math.min(levelInGarden, 16) / 4);
+        return NS_Utils.clamp(stage, 1, C.MAX_VISUAL_STAGE);
+    },
+
+    // Progression (0 à 100%) au sein du jardin actuel, pour la barre du menu.
+    calculateProgress: function(levelInGarden) {
+        const C = window.NS_CONSTANTS;
+        return NS_Utils.clamp((levelInGarden / C.LEVELS_PER_GARDEN) * 100, 0, 100);
+    },
+
+    // Vrai si ce niveau est le dernier du jardin (20e) : déclenche l'animation de fin de jardin.
+    isLastLevelOfGarden: function(levelInGarden) {
+        const C = window.NS_CONSTANTS;
+        return levelInGarden >= C.LEVELS_PER_GARDEN;
+    },
+
+    // Vrai s'il y a un jardin suivant après celui-ci.
+    hasNextGarden: function(level, gardensConfig) {
+        return this.getGardenIndexForLevel(level) < gardensConfig.length - 1;
     }
 };
