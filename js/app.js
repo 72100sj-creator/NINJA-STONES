@@ -1,18 +1,20 @@
 (function() {
     const C = window.NS_CONSTANTS;
     const state = {
-        level: 1, currentGardenIndex: 0, moves: 0, gridSize: C.DEFAULT_GRID_SIZE,
+        level: 1, moves: 0, gridSize: C.DEFAULT_GRID_SIZE,
         totalTiles: C.DEFAULT_GRID_SIZE * C.DEFAULT_GRID_SIZE, grid: [], isPlaying: false
     };
 
-    function getCurrentGarden() { return C.GARDENS_CONFIG[state.currentGardenIndex]; }
+    // Le jardin actif se déduit toujours du niveau global (plus besoin de le sauvegarder à part).
+    function getCurrentGarden() { return NS_Garden.getCurrentGarden(state.level, C.GARDENS_CONFIG); }
 
     function startGame() {
         state.totalTiles = state.gridSize * state.gridSize;
         state.moves = 0;
         state.isPlaying = true;
         NS_UI.updateHeader(state.level);
-        NS_UI.updateGardenVisual(NS_UI.getDomElements().gardenBackdrop, getCurrentGarden(), NS_Garden.calculateStage(getCurrentGarden()));
+        let levelInGarden = NS_Garden.getLevelInGarden(state.level);
+        NS_UI.updateGardenVisual(NS_UI.getDomElements().gardenBackdrop, getCurrentGarden(), NS_Garden.calculateStage(levelInGarden));
         NS_UI.resetGameUI();
         setTimeout(() => {
             state.grid = NS_Puzzle.generateSolvedGrid(state.totalTiles);
@@ -33,24 +35,27 @@
             NS_Audio.playStoneSlide();
             if (NS_Puzzle.checkWin(state.grid)) {
                 state.isPlaying = false;
-                let currentGarden = getCurrentGarden();
-                let maxThreshold = currentGarden.thresholds[currentGarden.thresholds.length - 1];
-                let wasMastered = currentGarden.points >= maxThreshold;
-                let progressText = NS_Garden.awardPoints(currentGarden, 1);
-                let justMastered = !wasMastered && currentGarden.points >= maxThreshold;
-                if (justMastered && state.currentGardenIndex < C.GARDENS_CONFIG.length - 1) {
-                    state.currentGardenIndex++;
-                }
-                NS_UI.showWinMessage(`L'équilibre est rétabli. (${progressText})`);
                 NS_Audio.playVictoryChime();
-                NS_Save.save(state, C.GARDENS_CONFIG);
+                let levelInGarden = NS_Garden.getLevelInGarden(state.level);
+                if (NS_Garden.isLastLevelOfGarden(levelInGarden)) {
+                    // Dernier niveau du jardin : animation de fin dédiée, différente de la victoire classique
+                    let currentGarden = getCurrentGarden();
+                    let hasNext = NS_Garden.hasNextGarden(state.level, C.GARDENS_CONFIG);
+                    let nextGardenName = hasNext
+                        ? C.GARDENS_CONFIG[NS_Garden.getGardenIndexForLevel(state.level) + 1].name
+                        : null;
+                    NS_UI.showGardenComplete(currentGarden.name, nextGardenName);
+                } else {
+                    NS_UI.showWinMessage("L'équilibre est rétabli.");
+                }
+                NS_Save.save(state);
             }
         }
     }
 
     function goNextLevel() {
         state.level++;
-        NS_Save.save(state, C.GARDENS_CONFIG);
+        NS_Save.save(state);
         NS_UI.renderMenu(state, getCurrentGarden());
         NS_UI.showScreen('menu');
     }
@@ -67,7 +72,7 @@
     });
 
     window.addEventListener('load', () => {
-        NS_Save.load(state, C.GARDENS_CONFIG);
+        NS_Save.load(state);
         NS_UI.renderMenu(state, getCurrentGarden());
         NS_UI.showScreen('menu');
         NS_UI.updateMuteButton();

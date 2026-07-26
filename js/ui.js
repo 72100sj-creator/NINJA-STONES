@@ -17,6 +17,7 @@ window.NS_UI = (function() {
         dom.backBtn = document.getElementById('back-btn');
         dom.continueBtn = document.getElementById('continue-btn');
         dom.message = document.getElementById('message');
+        dom.nextGardenMessage = document.getElementById('next-garden-message');
         dom.winOverlay = document.getElementById('win-overlay');
         dom.muteBtn = document.getElementById('mute-btn');
     }
@@ -54,8 +55,9 @@ window.NS_UI = (function() {
     function renderMenu(state, gardenConfig) {
         updateHeader(state.level);
         dom.gardenName.textContent = gardenConfig.name;
-        dom.progressBar.style.width = NS_Garden.calculateProgress(gardenConfig) + '%';
-        let stage = NS_Garden.calculateStage(gardenConfig);
+        let levelInGarden = NS_Garden.getLevelInGarden(state.level);
+        dom.progressBar.style.width = NS_Garden.calculateProgress(levelInGarden) + '%';
+        let stage = NS_Garden.calculateStage(levelInGarden);
         dom.gardenStage.textContent = gardenConfig.stageNames[stage - 1];
         updateGardenVisual(dom.gardenBackdrop, gardenConfig, stage);
         tilesElements = {};
@@ -104,8 +106,19 @@ window.NS_UI = (function() {
         stone.style.transform = `translate(${x}px, ${y}px)`;
     }
 
+    // Victoire d'un niveau ordinaire (pas le dernier du jardin)
     function showWinMessage(text) {
         dom.message.textContent = text;
+        dom.nextGardenMessage.textContent = '';
+        dom.winOverlay.classList.remove('garden-final');
+        dom.winOverlay.classList.add('visible');
+    }
+
+    // Fin de jardin (20e niveau) : mise en scène dédiée, plus marquée que la victoire classique
+    function showGardenComplete(gardenName, nextGardenName) {
+        dom.message.textContent = `${gardenName} est achevé.`;
+        dom.nextGardenMessage.textContent = nextGardenName ? `${nextGardenName} s'éveille...` : 'Tous les jardins sont maîtrisés.';
+        dom.winOverlay.classList.add('garden-final');
         dom.winOverlay.classList.add('visible');
     }
 
@@ -116,8 +129,9 @@ window.NS_UI = (function() {
     }
 
     function resetGameUI() {
-        dom.winOverlay.classList.remove('visible');
+        dom.winOverlay.classList.remove('visible', 'garden-final');
         dom.message.textContent = '';
+        dom.nextGardenMessage.textContent = '';
     }
 
     cacheDomElements();
@@ -125,7 +139,8 @@ window.NS_UI = (function() {
     return {
         showScreen: showScreen, updateHeader: updateHeader, updateGardenVisual: updateGardenVisual,
         renderMenu: renderMenu, renderGameBoard: renderGameBoard, moveTile: moveTile,
-        showWinMessage: showWinMessage, resetGameUI: resetGameUI, updateMuteButton: updateMuteButton,
+        showWinMessage: showWinMessage, showGardenComplete: showGardenComplete,
+        resetGameUI: resetGameUI, updateMuteButton: updateMuteButton,
         getDomElements: function() { return dom; }
     };
 })();
