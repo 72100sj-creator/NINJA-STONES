@@ -123,6 +123,71 @@ body {
     100% { opacity: 0; transform: translate(0, -3vh) rotate(0deg); }
 }
 
+/* Jardin d'Automne : une 2e feuille tombe aussi, décalée dans le temps et l'espace (jamais synchronisée avec la 1re) */
+.falling-leaf-autumn2 { display: none; }
+.game-scene.garden-autumn .falling-leaf-autumn2 {
+    display: block; left: 62%;
+    animation: leafFall 34s ease-in infinite; animation-delay: -19s;
+}
+.falling-leaf-autumn { display: none; }
+.game-scene.garden-autumn .falling-leaf-autumn {
+    display: block; position: absolute; top: 0; width: 13px; height: 9px;
+    background: linear-gradient(135deg, #d98a3d, #b8531f);
+    border-radius: 60% 5% 60% 5%;
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    animation-name: leafFall; animation-timing-function: ease-in; animation-iteration-count: infinite;
+}
+.fla3 { left: 12%; animation-duration: 26s; animation-delay: -3s; }
+.fla4 { left: 48%; animation-duration: 31s; animation-delay: -22s; }
+.fla5 { left: 80%; animation-duration: 27s; animation-delay: -14s; }
+.fla6 { left: 20%; animation-duration: 33s; animation-delay: -8s; }
+.fla7 { left: 70%; animation-duration: 25s; animation-delay: -17s; }
+.fla8 { left: 88%; animation-duration: 29s; animation-delay: -24s; }
+
+/* Jardin d'Hiver : quelques flocons dérivent doucement vers le bas */
+.snowflake { display: none; }
+.game-scene.garden-winter .snowflake {
+    display: block; position: absolute; top: -3%; width: 6px; height: 6px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.4) 70%, rgba(255, 255, 255, 0) 100%);
+    opacity: 0;
+    animation-name: snowDrift; animation-timing-function: linear; animation-iteration-count: infinite;
+}
+.sf1 { left: 25%; animation-duration: 13s; animation-delay: -2s; }
+.sf2 { left: 55%; animation-duration: 16s; animation-delay: -7s; }
+.sf3 { left: 75%; animation-duration: 11s; animation-delay: -4s; }
+.sf4 { left: 10%; animation-duration: 14s; animation-delay: -9s; }
+.sf5 { left: 40%; animation-duration: 17s; animation-delay: -1s; }
+.sf6 { left: 65%; animation-duration: 12s; animation-delay: -6s; }
+.sf7 { left: 88%; animation-duration: 15s; animation-delay: -11s; }
+.sf8 { left: 30%; animation-duration: 18s; animation-delay: -13s; }
+@keyframes snowDrift {
+    0% { opacity: 0; transform: translate(0, 0); }
+    5% { opacity: 0.85; }
+    50% { transform: translate(14px, 38vh); }
+    95% { opacity: 0.7; }
+    100% { opacity: 0; transform: translate(-10px, 80vh); }
+}
+
+/* Jardin des Sakura : quelques pétales tombent, comme la feuille mais roses et plus légers */
+.falling-petal { display: none; }
+.game-scene.garden-sakura .falling-petal {
+    display: block; position: absolute; top: 0; width: 10px; height: 7px;
+    background: linear-gradient(135deg, #f6c9d8, #e79fb8);
+    border-radius: 60% 5% 60% 5%;
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.12);
+    opacity: 0;
+    animation-name: leafFall; animation-timing-function: ease-in; animation-iteration-count: infinite;
+}
+.fp1 { left: 28%; animation-duration: 24s; animation-delay: -6s; }
+.fp2 { left: 66%; animation-duration: 30s; animation-delay: -16s; }
+.fp3 { left: 10%; animation-duration: 27s; animation-delay: -3s; }
+.fp4 { left: 45%; animation-duration: 22s; animation-delay: -12s; }
+.fp5 { left: 82%; animation-duration: 33s; animation-delay: -20s; }
+.fp6 { left: 18%; animation-duration: 25s; animation-delay: -9s; }
+.fp7 { left: 55%; animation-duration: 29s; animation-delay: -23s; }
+.fp8 { left: 92%; animation-duration: 21s; animation-delay: -5s; }
+
 /* Le bassin : une petite onde à l'endroit de la fontaine, apparaît de temps en temps puis s'efface */
 .pond-ripples { position: absolute; left: 15%; top: 28%; width: 0; height: 0; }
 .ripple-ring {
@@ -221,6 +286,14 @@ body {
 .f2 { left: 68%; top: 58%; animation-duration: 19s; animation-delay: -9s; }
 .f3 { left: 35%; top: 63%; animation-duration: 14s; animation-delay: -5s; }
 .f4 { left: 78%; top: 40%; animation-duration: 21s; animation-delay: -13s; }
+
+/* Nuit : 2 lucioles supplémentaires, cachées ailleurs */
+.firefly-night { display: none; }
+.game-scene.garden-night .firefly-night { display: block; }
+.f5 { left: 45%; top: 50%; animation-duration: 17s; animation-delay: -4s; }
+.f6 { left: 58%; top: 35%; animation-duration: 20s; animation-delay: -10s; }
+.f7 { left: 15%; top: 55%; animation-duration: 18s; animation-delay: -7s; }
+.f8 { left: 85%; top: 62%; animation-duration: 15s; animation-delay: -12s; }
 
 @keyframes fireflyDrift {
     0%   { opacity: 0; transform: translate(0, 0); }
