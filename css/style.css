@@ -138,26 +138,29 @@ body {
     background: linear-gradient(90deg, #5a7a6e, #3f5c50);
     border-radius: 2px;
     opacity: 0;
-    animation: dragonflyCross 50s linear infinite; animation-delay: -8s;
+    animation: dragonflyCross 50s ease-in-out infinite; animation-delay: -8s;
 }
 .dragonfly-wing {
     position: absolute; top: -4px; width: 11px; height: 5px;
     background: rgba(225, 240, 235, 0.5); border-radius: 50%;
     animation: dragonflyFlutter 0.16s ease-in-out infinite alternate;
 }
-.dw-left { left: -8px; transform-origin: right center; }
-.dw-right { left: 3px; transform-origin: left center; }
+.dw-left { left: -8px; transform-origin: right center; animation-duration: 0.15s; }
+.dw-right { left: 3px; transform-origin: left center; animation-duration: 0.18s; }
 @keyframes dragonflyFlutter {
     0% { transform: scaleY(1) rotate(0deg); }
     100% { transform: scaleY(0.35) rotate(10deg); }
 }
 @keyframes dragonflyCross {
-    0%, 80% { opacity: 0; transform: translate(0, 0); }
-    82% { opacity: 0.8; }
-    88% { transform: translate(55vw, -4vh); }
-    94% { transform: translate(105vw, 3vh); opacity: 0.8; }
-    98% { opacity: 0; }
-    100% { opacity: 0; transform: translate(0, 0); }
+    0%, 78% { opacity: 0; transform: translate(0, 0) rotate(0deg); }
+    80% { opacity: 0.85; }
+    84% { transform: translate(22vw, -9vh) rotate(-8deg); }
+    87% { transform: translate(38vw, -2vh) rotate(3deg); }
+    90% { transform: translate(55vw, 4vh) rotate(9deg); }
+    93% { transform: translate(72vw, -6vh) rotate(-6deg); }
+    96% { transform: translate(90vw, 2vh) rotate(5deg); opacity: 0.8; }
+    99% { opacity: 0; transform: translate(104vw, -3vh) rotate(0deg); }
+    100% { opacity: 0; transform: translate(0, 0) rotate(0deg); }
 }
 
 /* Reflets scintillants : de brefs éclats de lumière à la surface de l'eau, jamais synchronisés */
