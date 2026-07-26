@@ -1,5 +1,5 @@
 // Service Worker basique pour rendre l'application PWA fonctionnelle
-const CACHE_NAME = 'ninja-stones-v12';
+const CACHE_NAME = 'ninja-stones-v13';
 const urlsToCache = [
   './',
   './index.html',
@@ -30,10 +30,10 @@ const urlsToCache = [
   './assets/images/stone-texture-3.jpg',
   './assets/images/stone-texture-4.jpg',
   './assets/images/stone-texture-5.jpg',
-  './assets/images/icon-512.png',
-  './assets/images/icon-192.png',
-  './assets/images/icon-180.png',
-  './assets/images/icon-32.png'
+  './assets/images/icon-512.png?v=2',
+  './assets/images/icon-192.png?v=2',
+  './assets/images/icon-180.png?v=2',
+  './assets/images/icon-32.png?v=2'
 ];
 
 self.addEventListener('install', event => {
