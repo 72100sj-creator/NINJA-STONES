@@ -377,6 +377,20 @@ body {
 }
 @keyframes breathe { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3%); } }
 
+/* Léger balancement de tête, rare et indépendant de la respiration - pivote près de la base
+   pour donner l'impression que c'est la tête qui penche plutôt que tout le corps */
+.character-tilt {
+    display: inline-block; width: 100%; transform-origin: 50% 88%;
+    animation: characterTilt 26s ease-in-out infinite;
+}
+@keyframes characterTilt {
+    0%, 88% { transform: rotate(0deg); }
+    91% { transform: rotate(2.2deg); }
+    95% { transform: rotate(-1deg); }
+    98% { transform: rotate(0.4deg); }
+    100% { transform: rotate(0deg); }
+}
+
 /* Grille de pierres : dans le cadre, transparente */
 .board {
     position: relative; width: 84%; aspect-ratio: 1 / 1;
