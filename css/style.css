@@ -280,6 +280,25 @@ body {
     color: #f0e6d2; font-size: 1.05rem; line-height: 1.5; padding: 0 12%;
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
 }
+/* Message annonçant le jardin suivant : uniquement à la fin d'un jardin (20e niveau) */
+.next-garden-message {
+    position: relative; font-size: 0.85rem; font-style: italic; font-weight: 300;
+    color: #f0e6d2; opacity: 0.85; margin-top: -2%;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+}
+.next-garden-message:empty { display: none; }
+
+/* Fin de jardin (20e niveau) : mise en scène un peu plus marquée qu'une victoire ordinaire,
+   toujours sans excès - une lueur plus chaude et plus large, c'est tout. */
+.win-overlay.garden-final {
+    background: rgba(35, 28, 20, 0.68);
+}
+.win-overlay.garden-final::before {
+    width: 78%;
+    background: radial-gradient(circle, rgba(250, 210, 150, 0.35) 0%, rgba(250, 210, 150, 0) 70%);
+    animation-duration: 4.5s;
+}
+.win-overlay.garden-final .message { color: #f7dfae; font-size: 1.15rem; }
 
 .btn-group { display: flex; gap: 15px; height: 44px; }
 .btn { background: transparent; color: #3f5c35; border: 1px solid #d4c5a9; padding: 10px 24px; border-radius: 30px; font-size: 1rem; letter-spacing: 1px; cursor: pointer; transition: all 0.2s ease; }
@@ -292,6 +311,17 @@ body {
 .message.visible { opacity: 1; }
 
 /* Grille de repères pour le développement (RFC-001) - vide et invisible par défaut */
+/* Bouton silence : discret, toujours accessible, sur le menu comme en jeu (Sprint 6) */
+.mute-btn {
+    position: absolute; top: 2%; right: 3%; z-index: 20;
+    width: 38px; height: 38px; border-radius: 50%;
+    background: rgba(40, 48, 38, 0.75); border: 1px solid rgba(240, 230, 210, 0.3);
+    color: #f0e6d2; font-size: 1.05rem; line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: background 0.2s ease, transform 0.15s ease;
+}
+.mute-btn:active { transform: scale(0.9); background: rgba(40, 48, 38, 0.95); }
+
 .scene-debug-grid { position: absolute; inset: 0; pointer-events: none; z-index: 50; display: none; }
 .scene-debug-grid.active { display: block; }
 .scene-debug-grid svg { width: 100%; height: 100%; }
