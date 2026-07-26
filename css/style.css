@@ -132,6 +132,33 @@ body {
     opacity: 0; animation: rippleExpand 6.4s ease-out infinite;
 }
 .ripple-ring.r2 { animation-delay: 0.6s; animation-duration: 7.1s; }
+/* Libellule de passage : traverse l'écran très lentement, environ une fois toutes les 50s, jamais plus d'une à la fois */
+.dragonfly {
+    position: absolute; top: 45%; left: -4%; width: 16px; height: 3px;
+    background: linear-gradient(90deg, #5a7a6e, #3f5c50);
+    border-radius: 2px;
+    opacity: 0;
+    animation: dragonflyCross 50s linear infinite; animation-delay: -8s;
+}
+.dragonfly-wing {
+    position: absolute; top: -4px; width: 11px; height: 5px;
+    background: rgba(225, 240, 235, 0.5); border-radius: 50%;
+    animation: dragonflyFlutter 0.16s ease-in-out infinite alternate;
+}
+.dw-left { left: -8px; transform-origin: right center; }
+.dw-right { left: 3px; transform-origin: left center; }
+@keyframes dragonflyFlutter {
+    0% { transform: scaleY(1) rotate(0deg); }
+    100% { transform: scaleY(0.35) rotate(10deg); }
+}
+@keyframes dragonflyCross {
+    0%, 80% { opacity: 0; transform: translate(0, 0); }
+    82% { opacity: 0.8; }
+    88% { transform: translate(55vw, -4vh); }
+    94% { transform: translate(105vw, 3vh); opacity: 0.8; }
+    98% { opacity: 0; }
+    100% { opacity: 0; transform: translate(0, 0); }
+}
 
 /* Reflets scintillants : de brefs éclats de lumière à la surface de l'eau, jamais synchronisés */
 .pond-sparkle {
