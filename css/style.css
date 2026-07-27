@@ -982,6 +982,29 @@ body {
     100% { opacity: 0; transform: translate(0, 0) rotate(0deg); }
 }
 
+/* La branche du côté gauche : symétrique, à un autre rythme et un peu plus bas */
+.game-scene.garden-sakura.anim-extra2 .sakura-branch-left {
+    right: auto; left: 1%; top: 21%;
+    background: linear-gradient(to right, #6b4a3a, #8d6650 60%, rgba(141, 102, 80, 0));
+    transform-origin: left center;
+    animation-name: branchBendLeft; animation-duration: 37s; animation-delay: -16s;
+}
+@keyframes branchBendLeft {
+    0%, 56% { transform: rotate(0deg); }
+    63% { transform: rotate(-7deg); }
+    70% { transform: rotate(3deg); }
+    77% { transform: rotate(-2deg); }
+    84% { transform: rotate(0deg); }
+    100% { transform: rotate(0deg); }
+}
+.game-scene.garden-sakura.anim-extra2 .sakura-branch-left .branch-petal {
+    animation-duration: 37s;
+}
+.sakura-branch-left .bp1 { animation-delay: -0.3s; }
+.sakura-branch-left .bp2 { animation-delay: -0.9s; }
+.sakura-branch-left .bp3 { animation-delay: -1.5s; }
+.sakura-branch-left .bp4 { animation-delay: -2.1s; }
+
 /* 3 (niv. 15) — un pétale flotte à la surface du bassin */
 .pond-petal { display: none; }
 .game-scene.garden-sakura.anim-extra3 .pond-petal {
