@@ -754,8 +754,8 @@ body {
 .game-scene.garden-autumn.anim-extra3 .sun-ray {
     display: block; position: absolute; top: -40%; left: 0;
     width: 34%; height: 180%;
-    background: linear-gradient(to right, rgba(255, 220, 150, 0) 0%, rgba(255, 226, 160, 0.20) 45%,
-                rgba(255, 232, 175, 0.26) 55%, rgba(255, 220, 150, 0) 100%);
+    background: linear-gradient(to right, rgba(255, 220, 150, 0) 0%, rgba(255, 228, 165, 0.38) 42%,
+                rgba(255, 240, 195, 0.50) 55%, rgba(255, 220, 150, 0) 100%);
     transform-origin: center;
     opacity: 0;
     animation: sunRaySweep 54s ease-in-out infinite; animation-delay: -8s;
@@ -771,10 +771,10 @@ body {
 /* 4 (niv. 17) — une brume matinale passe lentement */
 .morning-mist { display: none; }
 .game-scene.garden-autumn.anim-extra4 .morning-mist {
-    display: block; position: absolute; left: -30%; top: 40%;
-    width: 90%; height: 26%;
-    background: radial-gradient(ellipse at center, rgba(255, 250, 240, 0.34) 0%,
-                rgba(255, 248, 235, 0.18) 45%, rgba(255, 248, 235, 0) 75%);
+    display: block; position: absolute; left: -30%; top: 38%;
+    width: 100%; height: 32%;
+    background: radial-gradient(ellipse at center, rgba(255, 252, 246, 0.58) 0%,
+                rgba(255, 250, 240, 0.34) 45%, rgba(255, 248, 235, 0) 78%);
     opacity: 0;
     animation: mistDrift 68s linear infinite; animation-delay: -22s;
 }
