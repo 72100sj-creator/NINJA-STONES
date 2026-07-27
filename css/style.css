@@ -6,7 +6,17 @@
     --scene-ratio: 0.5625; /* 9:16, ratio exact de la photo du jardin */
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+/* Aucune sélection de texte ni menu contextuel : Safari iOS exige les variantes -webkit-,
+   sans quoi un appui long sur une pierre ouvre "Copier / Chercher / Traduire" et casse le jeu. */
+* {
+    margin: 0; padding: 0; box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
 
 body {
     background-color: var(--bg-color);
