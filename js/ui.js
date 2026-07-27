@@ -9,6 +9,7 @@ window.NS_UI = (function() {
         dom.levelNameDisplay = document.getElementById('level-name-display');
         dom.gardenName = document.getElementById('garden-name');
         dom.gardenStage = document.getElementById('garden-stage');
+        dom.gardenTrail = document.getElementById('garden-trail');
         dom.progressBar = document.getElementById('progress-bar');
         dom.board = document.getElementById('board');
         dom.gardenBackdrop = document.getElementById('garden-backdrop');
@@ -56,6 +57,21 @@ window.NS_UI = (function() {
         dom.gameScene.classList.toggle('next-garden-hint', approaching);
     }
 
+    // Frise des jardins : montre le chemin parcouru et ce qui reste à découvrir
+    function renderGardenTrail(level) {
+        const C = window.NS_CONSTANTS;
+        const currentIndex = NS_Garden.getGardenIndexForLevel(level);
+        dom.gardenTrail.innerHTML = '';
+        C.GARDENS_CONFIG.forEach(function(g, i) {
+            const dot = document.createElement('span');
+            dot.className = 'trail-dot trail-' + g.id;
+            if (i < currentIndex) dot.classList.add('visited');
+            else if (i === currentIndex) dot.classList.add('current');
+            else dot.classList.add('locked');
+            dom.gardenTrail.appendChild(dot);
+        });
+    }
+
     function renderMenu(state, gardenConfig) {
         updateHeader(state.level);
         dom.gardenName.textContent = gardenConfig.name;
@@ -64,6 +80,7 @@ window.NS_UI = (function() {
         let stage = NS_Garden.calculateStage(levelInGarden);
         dom.gardenStage.textContent = gardenConfig.stageNames[stage - 1];
         updateGardenVisual(dom.gardenBackdrop, gardenConfig, stage, levelInGarden);
+        renderGardenTrail(state.level);
         tilesElements = {};
     }
 
