@@ -59,6 +59,10 @@ window.NS_UI = (function() {
         NS_Garden.getAllAnimationClasses().forEach(c => dom.gameScene.classList.remove(c));
         NS_Garden.getUnlockedAnimationClasses(lig, gardenConfig).forEach(c => dom.gameScene.classList.add(c));
 
+        // RFC-002 : les pierres s'accordent à la palette du jardin. Le filtre est posé sur le
+        // conteneur (qui ne contient que les pierres), ce qui préserve leurs variations individuelles.
+        if (dom.board) dom.board.style.filter = NS_Garden.getStoneFilter(gardenConfig);
+
         // À partir du niveau 17 sur 20, un signe avant-coureur du jardin suivant apparaît discrètement
         const approaching = lig >= 17;
         dom.gameScene.classList.toggle('next-garden-hint', approaching);

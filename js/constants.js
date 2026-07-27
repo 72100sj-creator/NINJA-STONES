@@ -80,7 +80,7 @@ window.NS_CONSTANTS = {
         { id: 'autumn', name: "Jardin d'Automne",
           stageNames: ['Feuilles naissantes', 'Feuilles dorées', 'Feuilles ardentes', 'Jardin embrasé'],
           backgroundImage: 'assets/images/garden-autumn-stage-1.jpg',
-          stones: { hueRotate: -38, saturate: 0.95, brightness: 1.04 } },
+          stones: { hueRotate: -100, saturate: 0.85, brightness: 1.06 } },
         { id: 'winter', name: "Jardin d'Hiver",
           stageNames: ['Premier givre', 'Jardin gelé', 'Silence blanc', 'Jardin immaculé'],
           backgroundImage: 'assets/images/garden-winter-stage-1.jpg',
@@ -112,6 +112,6 @@ window.NS_CONSTANTS = {
           },
           // Les lucioles font partie de l'identité du jardin de nuit : elles arrivent plus tôt
           animationUnlocks: { lantern: 1, bamboo: 4, pond: 7, ambient: 9, signature: 12 },
-          stones: { hueRotate: 55, saturate: 0.6, brightness: 0.8 } }
+          stones: { hueRotate: 95, saturate: 0.6, brightness: 0.8 } }
     ]
 };
