@@ -595,3 +595,91 @@ body {
 /* Vie ambiante : lucioles et libellule */
 .game-scene:not(.anim-ambient) .firefly,
 .game-scene:not(.anim-ambient) .dragonfly { display: none !important; }
+
+/* ===== Animations rares du Jardin du Bambou =====
+   Chacune est invisible partout ailleurs, et n'apparaît qu'à partir de son niveau d'éveil.
+   Cycles volontairement très longs : ce sont des évènements rares, pas des décorations. */
+
+/* 1 (niv. 9) — l'ombre d'une carpe koï traverse lentement le bassin */
+.koi-shadow { display: none; }
+.game-scene.garden-bamboo.anim-extra1 .koi-shadow {
+    display: block; position: absolute; left: 15%; top: 28%;
+    width: 13px; height: 5px; margin: -2.5px 0 0 -6.5px;
+    background: radial-gradient(ellipse, rgba(20, 35, 30, 0.5) 0%, rgba(20, 35, 30, 0) 78%);
+    filter: blur(1px); opacity: 0;
+    animation: koiDrift 42s ease-in-out infinite; animation-delay: -6s;
+}
+@keyframes koiDrift {
+    0%, 6% { opacity: 0; transform: translate(-8px, 3px) rotate(-8deg); }
+    14% { opacity: 0.75; }
+    38% { transform: translate(7px, -3px) rotate(6deg); }
+    58% { transform: translate(-4px, 4px) rotate(-10deg); }
+    74% { opacity: 0.6; transform: translate(6px, 1px) rotate(4deg); }
+    84% { opacity: 0; transform: translate(9px, 3px) rotate(0deg); }
+    100% { opacity: 0; transform: translate(-8px, 3px) rotate(-8deg); }
+}
+
+/* 2 (niv. 11) — une pousse de bambou grandit imperceptiblement */
+.bamboo-shoot { display: none; }
+.game-scene.garden-bamboo.anim-extra2 .bamboo-shoot {
+    display: block; position: absolute; left: 17%; top: 62%;
+    width: 5px; height: 9%;
+    background: linear-gradient(to right, #3f5c35, #6f8f52 45%, #3f5c35);
+    border-radius: 50% 50% 2px 2px;
+    transform-origin: bottom center; transform: scaleY(0.15);
+    opacity: 0;
+    animation: shootGrow 58s ease-out infinite;
+}
+@keyframes shootGrow {
+    0% { opacity: 0; transform: scaleY(0.15); }
+    8% { opacity: 0.9; }
+    70% { transform: scaleY(1); }
+    88% { opacity: 0.9; transform: scaleY(1); }
+    97% { opacity: 0; transform: scaleY(1); }
+    100% { opacity: 0; transform: scaleY(0.15); }
+}
+
+/* 3 (niv. 15) — une goutte de rosée glisse d'une feuille et tombe */
+.dew-drop { display: none; }
+.game-scene.garden-bamboo.anim-extra3 .dew-drop {
+    display: block; position: absolute; left: 11%; top: 6%;
+    width: 4px; height: 5px; border-radius: 50% 50% 60% 60%;
+    background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.95) 0%, rgba(205, 230, 235, 0.6) 60%, rgba(205, 230, 235, 0.1) 100%);
+    opacity: 0;
+    animation: dewFall 36s ease-in infinite; animation-delay: -14s;
+}
+@keyframes dewFall {
+    0%, 60% { opacity: 0; transform: translateY(0) scale(0.5); }
+    66% { opacity: 0.9; transform: translateY(0) scale(1); }        /* la goutte se forme */
+    72% { opacity: 0.9; transform: translateY(1px) scale(1.15); }   /* elle s'alourdit */
+    80% { opacity: 0.85; transform: translateY(9vh) scale(0.9); }   /* elle tombe */
+    84% { opacity: 0; transform: translateY(13vh) scale(0.7); }
+    100% { opacity: 0; transform: translateY(0) scale(0.5); }
+}
+
+/* 4 (niv. 17) — un oiseau passe très haut, minuscule silhouette */
+.high-bird { display: none; }
+.game-scene.garden-bamboo.anim-extra4 .high-bird {
+    display: block; position: absolute; left: -6%; top: 11%;
+    width: 9px; height: 4px; opacity: 0;
+    animation: birdCross 74s linear infinite; animation-delay: -20s;
+}
+.bird-wing {
+    position: absolute; top: 0; width: 5px; height: 2px;
+    background: rgba(45, 55, 45, 0.55); border-radius: 60% 60% 0 0;
+    animation: birdFlap 0.55s ease-in-out infinite alternate;
+}
+.bw-l { left: 0; transform-origin: right center; }
+.bw-r { right: 0; transform-origin: left center; animation-duration: 0.6s; }
+@keyframes birdFlap {
+    0% { transform: rotate(-14deg) scaleY(1); }
+    100% { transform: rotate(10deg) scaleY(0.6); }
+}
+@keyframes birdCross {
+    0%, 72% { opacity: 0; transform: translate(0, 0); }
+    75% { opacity: 0.55; }
+    82% { transform: translate(38vw, -2vh); }
+    90% { transform: translate(78vw, 1vh); opacity: 0.5; }
+    96% { opacity: 0; transform: translate(112vw, -1vh); }
+    100% { opacity: 0; transform: translate(0, 0); }
+}
