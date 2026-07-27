@@ -188,6 +188,38 @@ body {
 .fp7 { left: 55%; animation-duration: 29s; animation-delay: -23s; }
 .fp8 { left: 92%; animation-duration: 21s; animation-delay: -5s; }
 
+/* Indice du jardin suivant : à partir du niveau 17 sur 20, un seul élément du prochain jardin
+   se glisse discrètement dans le décor actuel - crée l'anticipation sans rien dévoiler. */
+.next-hint { display: none; }
+.game-scene.next-garden-hint .next-hint {
+    display: block; position: absolute; top: 0; left: 50%; width: 12px; height: 8px;
+    opacity: 0;
+    animation: leafFall 38s ease-in infinite; animation-delay: -11s;
+}
+/* Bambou -> Automne : une feuille orangée annonce l'automne */
+.game-scene.garden-bamboo.next-garden-hint .next-hint {
+    background: linear-gradient(135deg, #d98a3d, #b8531f); border-radius: 60% 5% 60% 5%;
+}
+/* Automne -> Hiver : un flocon annonce l'hiver */
+.game-scene.garden-autumn.next-garden-hint .next-hint {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.4) 70%, rgba(255, 255, 255, 0) 100%);
+}
+/* Hiver -> Sakura : un pétale rose annonce la floraison */
+.game-scene.garden-winter.next-garden-hint .next-hint {
+    width: 10px; height: 7px; border-radius: 60% 5% 60% 5%;
+    background: linear-gradient(135deg, #f6c9d8, #e79fb8);
+}
+/* Sakura -> Nuit : une luciole annonce la nuit */
+.game-scene.garden-sakura.next-garden-hint .next-hint {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 224, 160, 0.95) 0%, rgba(255, 200, 120, 0.5) 55%, rgba(255, 200, 120, 0) 80%);
+    animation-name: fireflyDrift; animation-duration: 18s;
+    top: 55%; left: 40%;
+}
+/* Nuit : dernier jardin, aucun indice */
+.game-scene.garden-night.next-garden-hint .next-hint { display: none; }
+
 /* Le bassin : une petite onde à l'endroit de la fontaine, apparaît de temps en temps puis s'efface */
 .pond-ripples { position: absolute; left: 15%; top: 28%; width: 0; height: 0; }
 .ripple-ring {
