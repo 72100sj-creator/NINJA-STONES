@@ -1044,3 +1044,94 @@ body {
     95% { opacity: 0; transform: translate(168vw, 6vh); }
     100% { opacity: 0; transform: translate(0, 0); }
 }
+
+/* ===== Animations rares du Jardin de Nuit =====
+   Le fond sombre rend les éléments lumineux naturellement lisibles :
+   pas besoin de forcer les opacités comme sur les jardins clairs. */
+
+/* 1 (niv. 9) — une étoile filante, rare */
+.shooting-star { display: none; }
+.game-scene.garden-night.anim-extra1 .shooting-star {
+    display: block; position: absolute; left: 4%; top: 16%;
+    width: 62px; height: 2px;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(215, 235, 255, 0.55) 55%,
+                rgba(255, 255, 255, 0.95) 92%, rgba(255, 255, 255, 1) 100%);
+    border-radius: 2px;
+    box-shadow: 0 0 7px 1px rgba(220, 240, 255, 0.75);
+    transform: rotate(19deg);
+    opacity: 0;
+    animation: shootingStar 52s linear infinite; animation-delay: -14s;
+}
+@keyframes shootingStar {
+    0%, 85% { opacity: 0; transform: rotate(19deg) translate(0, 0); }
+    86% { opacity: 1; }
+    89% { transform: rotate(19deg) translate(44vw, 0); }
+    91.5% { opacity: 0.85; transform: rotate(19deg) translate(84vw, 0); }
+    93% { opacity: 0; transform: rotate(19deg) translate(104vw, 0); }
+    100% { opacity: 0; transform: rotate(19deg) translate(0, 0); }
+}
+
+/* 2 (niv. 11) — les étoiles scintillent : blanc froid et immobile,
+   pour ne jamais être confondues avec les lucioles, ambrées et mouvantes */
+.star-field { display: none; }
+.game-scene.garden-night.anim-extra2 .star-field { display: block; position: absolute; inset: 0; }
+.star {
+    position: absolute; width: 4px; height: 4px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(220, 235, 255, 0.7) 45%, rgba(220, 235, 255, 0) 80%);
+    box-shadow: 0 0 5px 1px rgba(230, 242, 255, 0.75);
+    opacity: 0;
+    animation-name: starTwinkle; animation-timing-function: ease-in-out; animation-iteration-count: infinite;
+}
+.st1  { left: 3%;  top: 16%; animation-duration: 6s;  animation-delay: -0.5s; }
+.st2  { left: 7%;  top: 27%; animation-duration: 8s;  animation-delay: -3s; }
+.st3  { left: 4%;  top: 55%; animation-duration: 7s;  animation-delay: -5s; }
+.st4  { left: 8%;  top: 84%; animation-duration: 9s;  animation-delay: -1.5s; }
+.st5  { left: 26%; top: 20%; animation-duration: 7.5s; animation-delay: -4s; }
+.st6  { left: 62%; top: 24%; animation-duration: 6.5s; animation-delay: -2s; }
+.st7  { right: 5%; top: 18%; animation-duration: 8.5s; animation-delay: -6s; }
+.st8  { right: 3%; top: 48%; animation-duration: 7.2s; animation-delay: -3.5s; }
+.st9  { right: 7%; top: 88%; animation-duration: 9.5s; animation-delay: -0.8s; }
+.st10 { left: 44%; top: 92%; animation-duration: 6.8s; animation-delay: -5.5s; }
+@keyframes starTwinkle {
+    0%, 70% { opacity: 0.18; transform: scale(0.7); }
+    85% { opacity: 1; transform: scale(1.25); }
+    100% { opacity: 0.18; transform: scale(0.7); }
+}
+
+/* 3 (niv. 15) — le reflet de la lune ondule dans le bassin */
+.moon-reflection { display: none; }
+.game-scene.garden-night.anim-extra3 .moon-reflection {
+    display: block; position: absolute; left: 15%; top: 28%;
+    width: 24px; height: 13px; margin: -6.5px 0 0 -12px;
+    background: radial-gradient(ellipse at center, rgba(255, 255, 245, 0.85) 0%,
+                rgba(225, 238, 255, 0.45) 45%, rgba(210, 230, 255, 0) 80%);
+    border-radius: 50%;
+    animation: moonRipple 9s ease-in-out infinite;
+}
+@keyframes moonRipple {
+    0%, 100% { transform: scale(1, 1) translateY(0); opacity: 0.75; }
+    28% { transform: scale(1.18, 0.72) translateY(1px); opacity: 1; }
+    54% { transform: scale(0.9, 1.15) translateY(-1px); opacity: 0.85; }
+    78% { transform: scale(1.1, 0.85) translateY(1px); opacity: 0.95; }
+}
+
+/* 4 (niv. 17) — une luciole solitaire s'approche puis s'éloigne */
+.lone-firefly { display: none; }
+.game-scene.garden-night.anim-extra4 .lone-firefly {
+    display: block; position: absolute; left: 30%; top: 88%;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 240, 190, 1) 0%, rgba(255, 210, 120, 0.7) 50%, rgba(255, 205, 110, 0) 80%);
+    box-shadow: 0 0 8px 2px rgba(255, 220, 140, 0.65);
+    opacity: 0;
+    animation: loneFirefly 40s ease-in-out infinite; animation-delay: -9s;
+}
+@keyframes loneFirefly {
+    0%, 34% { opacity: 0; transform: translate(0, 0) scale(0.5); }
+    40% { opacity: 0.6; transform: translate(14px, -2vh) scale(0.7); }
+    52% { opacity: 1; transform: translate(38px, 1vh) scale(1.5); }   /* elle s'approche */
+    62% { opacity: 1; transform: translate(24px, -2vh) scale(1.8); }
+    74% { opacity: 0.85; transform: translate(52px, 2vh) scale(1.2); }
+    86% { opacity: 0.45; transform: translate(78px, -1vh) scale(0.7); } /* elle s'éloigne */
+    94% { opacity: 0; transform: translate(96px, 1vh) scale(0.45); }
+    100% { opacity: 0; transform: translate(0, 0) scale(0.5); }
+}
