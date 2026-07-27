@@ -256,7 +256,7 @@ body {
 /* La lanterne : une lueur douce qui respire en continu, jamais de clignotement brusque */
 /* Halo au sol : la lumière de la lanterne éclaire le sable autour d'elle */
 .lantern-ground-glow {
-    position: absolute; left: 88%; top: 38%; width: 26%; height: 13%; margin: -6.5% 0 0 -13%;
+    position: absolute; left: 88%; top: 34%; width: 26%; height: 13%; margin: -6.5% 0 0 -13%;
     background: radial-gradient(ellipse, rgba(255, 200, 120, 0.85) 0%, rgba(255, 180, 90, 0.4) 45%, rgba(255, 180, 90, 0) 78%);
     filter: blur(1.5px);
     animation: lanternBreathe 5s infinite;
@@ -341,7 +341,7 @@ body {
 /* Sur l'écran de jeu uniquement : zone plus haute pour que le cadre en pierre démarre
    plus bas et ne recouvre plus la fontaine et la lanterne */
 #screen-game .screen-top { height: 22%; padding: 0 5%; }
-#screen-menu .screen-top { height: 18%; }
+#screen-menu .screen-top { height: 26%; }
 
 .garden-info { width: 80%; max-width: 300px; text-align: center; }
 .garden-name { font-size: 0.8rem; letter-spacing: 1px; color: #33422b; margin-bottom: 6px; text-transform: uppercase; font-weight: 600; text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4); }
@@ -380,7 +380,7 @@ body {
 /* Léger balancement de tête, rare et indépendant de la respiration - pivote près de la base
    pour donner l'impression que c'est la tête qui penche plutôt que tout le corps */
 .character-tilt {
-    display: inline-block; width: 100%; transform-origin: 50% 88%;
+    display: flex; justify-content: center; width: 100%; transform-origin: 50% 88%;
     animation: characterTilt 26s ease-in-out infinite;
 }
 @keyframes characterTilt {
