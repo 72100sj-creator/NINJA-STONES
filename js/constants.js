@@ -22,10 +22,14 @@ window.NS_CONSTANTS = {
         // 'lantern' à 1 = le souffle minimal conservé dès le premier niveau.
         animationUnlocks: {
             lantern: 1,     // respiration de la lanterne + halo au sol
-            bamboo: 4,      // balancement des bambous
-            pond: 7,        // ondes et reflets du bassin
-            signature: 10,  // animation propre au jardin (feuilles, neige, pétales...)
-            ambient: 13     // lucioles et libellule
+            bamboo: 3,      // balancement des bambous
+            pond: 5,        // ondes et reflets du bassin
+            signature: 7,   // animation propre au jardin (feuilles, neige, pétales...)
+            extra1: 9,      // 1re animation rare, propre au jardin
+            extra2: 11,     // 2e animation rare
+            ambient: 13,    // lucioles et libellule
+            extra3: 15,     // 3e animation rare
+            extra4: 17      // 4e animation rare, la dernière avant le réveil du jardin
         },
         // Harmonisation des pierres avec la palette du jardin (aucun nouvel asset nécessaire :
         // les 5 textures existantes sont simplement réaccordées).
@@ -111,7 +115,7 @@ window.NS_CONSTANTS = {
               end:   { saturate: 1,    brightness: 1,    contrast: 1 }
           },
           // Les lucioles font partie de l'identité du jardin de nuit : elles arrivent plus tôt
-          animationUnlocks: { lantern: 1, bamboo: 4, pond: 7, ambient: 9, signature: 12 },
+          animationUnlocks: { lantern: 1, bamboo: 3, pond: 5, signature: 7, extra1: 9, ambient: 10, extra2: 11, extra3: 15, extra4: 17 },
           stones: { hueRotate: 95, saturate: 0.6, brightness: 0.8 } }
     ]
 };
