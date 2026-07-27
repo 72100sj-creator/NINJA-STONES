@@ -76,21 +76,11 @@ window.NS_CONSTANTS = {
           stageNames: ['Jardin naissant', 'Jardin en éveil', 'Jardin fleurissant', 'Jardin épanoui'],
           backgroundImage: 'assets/images/garden-bamboo-stage-1.jpg',
           // Le bambou est la référence : pierres non retouchées, restauration standard
-          stones: { hueRotate: 0, saturate: 1, brightness: 1 },
-          stageTints: [
-              'linear-gradient(to bottom, rgba(194, 178, 128, 0.15), rgba(143, 168, 110, 0.45))',
-              'linear-gradient(to bottom, rgba(168, 184, 122, 0.35), rgba(95, 122, 66, 0.55))',
-              'linear-gradient(135deg, rgba(74, 103, 65, 0.55), rgba(122, 155, 104, 0.55))'
-          ] },
+          stones: { hueRotate: 0, saturate: 1, brightness: 1 } },
         { id: 'autumn', name: "Jardin d'Automne",
           stageNames: ['Feuilles naissantes', 'Feuilles dorées', 'Feuilles ardentes', 'Jardin embrasé'],
           backgroundImage: 'assets/images/garden-autumn-stage-1.jpg',
-          stones: { hueRotate: -38, saturate: 0.95, brightness: 1.04 },
-          stageTints: [
-              'linear-gradient(to bottom, rgba(200, 150, 90, 0.15), rgba(190, 110, 60, 0.4))',
-              'linear-gradient(to bottom, rgba(180, 100, 50, 0.35), rgba(140, 60, 30, 0.5))',
-              'linear-gradient(135deg, rgba(120, 50, 20, 0.55), rgba(170, 80, 30, 0.5))'
-          ] },
+          stones: { hueRotate: -38, saturate: 0.95, brightness: 1.04 } },
         { id: 'winter', name: "Jardin d'Hiver",
           stageNames: ['Premier givre', 'Jardin gelé', 'Silence blanc', 'Jardin immaculé'],
           backgroundImage: 'assets/images/garden-winter-stage-1.jpg',
@@ -100,12 +90,7 @@ window.NS_CONSTANTS = {
               start: { saturate: 0.40, brightness: 0.86, contrast: 0.94 },
               end:   { saturate: 1,    brightness: 1,    contrast: 1 }
           },
-          stones: { hueRotate: 78, saturate: 0.5, brightness: 1.16 },
-          stageTints: [
-              'linear-gradient(to bottom, rgba(210, 225, 240, 0.15), rgba(180, 205, 230, 0.35))',
-              'linear-gradient(to bottom, rgba(190, 210, 235, 0.3), rgba(150, 180, 215, 0.5))',
-              'linear-gradient(135deg, rgba(130, 160, 200, 0.5), rgba(205, 222, 240, 0.4))'
-          ] },
+          stones: { hueRotate: 78, saturate: 0.5, brightness: 1.16 } },
         { id: 'sakura', name: 'Jardin des Sakura',
           stageNames: ['Bourgeons timides', 'Sakura en fleur', 'Pluie de pétales', 'Jardin en floraison'],
           backgroundImage: 'assets/images/garden-sakura-stage-1.jpg',
@@ -115,12 +100,7 @@ window.NS_CONSTANTS = {
               start: { saturate: 0.22, brightness: 0.84, contrast: 0.92 },
               end:   { saturate: 1,    brightness: 1,    contrast: 1 }
           },
-          stones: { hueRotate: 218, saturate: 0.78, brightness: 1.1 },
-          stageTints: [
-              'linear-gradient(to bottom, rgba(250, 210, 220, 0.15), rgba(240, 180, 200, 0.35))',
-              'linear-gradient(to bottom, rgba(245, 190, 205, 0.3), rgba(230, 150, 180, 0.5))',
-              'linear-gradient(135deg, rgba(220, 130, 160, 0.5), rgba(250, 205, 220, 0.4))'
-          ] },
+          stones: { hueRotate: 218, saturate: 0.78, brightness: 1.1 } },
         { id: 'night', name: 'Jardin de Nuit',
           stageNames: ['Crépuscule', 'Lueurs naissantes', 'Nuit étoilée', 'Jardin illuminé'],
           backgroundImage: 'assets/images/garden-night-stage-1.jpg',
@@ -132,11 +112,6 @@ window.NS_CONSTANTS = {
           },
           // Les lucioles font partie de l'identité du jardin de nuit : elles arrivent plus tôt
           animationUnlocks: { lantern: 1, bamboo: 4, pond: 7, ambient: 9, signature: 12 },
-          stones: { hueRotate: 55, saturate: 0.6, brightness: 0.8 },
-          stageTints: [
-              'linear-gradient(to bottom, rgba(30, 35, 70, 0.2), rgba(20, 25, 55, 0.4))',
-              'linear-gradient(to bottom, rgba(25, 30, 60, 0.35), rgba(15, 18, 45, 0.55))',
-              'linear-gradient(135deg, rgba(45, 32, 75, 0.55), rgba(85, 62, 115, 0.45))'
-          ] }
+          stones: { hueRotate: 55, saturate: 0.6, brightness: 0.8 } }
     ]
 };
