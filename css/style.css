@@ -373,13 +373,31 @@ body {
 /* Sur l'écran de jeu uniquement : zone plus haute pour que le cadre en pierre démarre
    plus bas et ne recouvre plus la fontaine et la lanterne */
 #screen-game .screen-top { height: 22%; padding: 0 5%; }
-#screen-menu .screen-top { height: 26%; }
+#screen-menu .screen-top { height: 30%; }
 
 .garden-info { width: 80%; max-width: 300px; text-align: center; }
 .garden-name { font-size: 0.8rem; letter-spacing: 1px; color: #33422b; margin-bottom: 6px; text-transform: uppercase; font-weight: 600; text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4); }
 .progress-container { width: 100%; height: 6px; background-color: rgba(0, 0, 0, 0.2); border-radius: 3px; overflow: hidden; margin: 0 auto; }
 .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, #8fa86e, #4a6741); border-radius: 3px; transition: width 0.8s ease; }
 .garden-stage { font-size: 0.7rem; letter-spacing: 0.5px; color: #33422b; opacity: 0.85; margin-top: 5px; font-style: italic; text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4); }
+
+/* Frise des jardins : le chemin parcouru (en couleur), le jardin actuel (mis en avant),
+   et ceux qui restent à découvrir (en silhouette sombre) */
+.garden-trail { display: flex; justify-content: center; gap: 7px; margin-top: 8px; }
+.trail-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.trail-bamboo { background: #6f8f52; }
+.trail-autumn { background: #c8752f; }
+.trail-winter { background: #cfe0ef; }
+.trail-sakura { background: #eda3bf; }
+.trail-night  { background: #4b4a86; }
+
+.trail-dot.visited { opacity: 0.75; }
+.trail-dot.current { transform: scale(1.5); box-shadow: 0 0 6px 1px rgba(255, 245, 220, 0.75), 0 1px 2px rgba(0, 0, 0, 0.4); }
+.trail-dot.locked  { background: rgba(20, 25, 18, 0.5); opacity: 0.55; }
 
 /* Plateau officiel (Art Bible) : cadre en pierre naturelle, élément central de l'écran */
 .board-frame {
