@@ -551,3 +551,29 @@ body {
 .scene-debug-grid svg { width: 100%; height: 100%; }
 .scene-debug-grid line { stroke: rgba(255, 0, 150, 0.35); stroke-width: 0.15; }
 .scene-debug-grid text { fill: rgba(255, 0, 150, 0.8); font-size: 2px; }
+
+/* ===== RFC-002 : éveil progressif des animations =====
+   Tant qu'une famille n'est pas éveillée, elle reste au repos. Ces règles n'en modifient
+   aucune autre : elles se contentent de mettre en sommeil ce qui n'a pas encore été restauré.
+   Les seuils d'éveil sont définis par jardin dans constants.js (animationUnlocks). */
+
+/* Les bambous existent dès le début, mais ne se balancent qu'une fois éveillés */
+.game-scene:not(.anim-bamboo) .bamboo-stalk { animation: none; }
+
+/* Le bassin reste une eau immobile tant qu'il n'est pas éveillé */
+.game-scene:not(.anim-pond) .pond-ripples { display: none; }
+
+/* Lanterne : éteinte tant que le jardin dort (éveillée dès le niveau 1 par défaut) */
+.game-scene:not(.anim-lantern) .lantern-glow,
+.game-scene:not(.anim-lantern) .lantern-ground-glow { display: none; }
+
+/* Animation propre au jardin : feuilles, neige, pétales */
+.game-scene:not(.anim-signature) .falling-leaf,
+.game-scene:not(.anim-signature) .falling-leaf-autumn,
+.game-scene:not(.anim-signature) .falling-leaf-autumn2,
+.game-scene:not(.anim-signature) .snowflake,
+.game-scene:not(.anim-signature) .falling-petal { display: none !important; }
+
+/* Vie ambiante : lucioles et libellule */
+.game-scene:not(.anim-ambient) .firefly,
+.game-scene:not(.anim-ambient) .dragonfly { display: none !important; }
