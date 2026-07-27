@@ -41,7 +41,7 @@ body {
     position: absolute; inset: 0;
     background-color: #c2b280;
     background-size: 100% 100%;
-    transition: background-image 1s ease;
+    transition: background-image 1s ease, filter 1.4s ease;
 }
 
 /* Decoration Layer + Ambient Animation Layer : toutes les positions sont en % de la scène (jamais de px/vh) */
