@@ -14,7 +14,7 @@
         state.isPlaying = true;
         NS_UI.updateHeader(state.level);
         let levelInGarden = NS_Garden.getLevelInGarden(state.level);
-        NS_UI.updateGardenVisual(NS_UI.getDomElements().gardenBackdrop, getCurrentGarden(), NS_Garden.calculateStage(levelInGarden));
+        NS_UI.updateGardenVisual(NS_UI.getDomElements().gardenBackdrop, getCurrentGarden(), NS_Garden.calculateStage(levelInGarden), levelInGarden);
         NS_UI.resetGameUI();
         setTimeout(() => {
             state.grid = NS_Puzzle.generateSolvedGrid(state.totalTiles);

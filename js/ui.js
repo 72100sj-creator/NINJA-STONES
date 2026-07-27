@@ -42,7 +42,7 @@ window.NS_UI = (function() {
         dom.levelNameDisplay.textContent = NS_Levels.getLevelName(level);
     }
 
-    function updateGardenVisual(boardEl, gardenConfig, stage) {
+    function updateGardenVisual(boardEl, gardenConfig, stage, levelInGarden) {
         const img = `url('${gardenConfig.backgroundImage}')`;
         const tint = (stage >= 2 && gardenConfig.stageTints) ? gardenConfig.stageTints[stage - 2] : null;
         boardEl.style.backgroundImage = tint ? `${tint}, ${img}` : img;
@@ -50,6 +50,10 @@ window.NS_UI = (function() {
         const C = window.NS_CONSTANTS;
         C.GARDENS_CONFIG.forEach(g => dom.gameScene.classList.remove('garden-' + g.id));
         dom.gameScene.classList.add('garden-' + gardenConfig.id);
+
+        // À partir du niveau 17 sur 20, un signe avant-coureur du jardin suivant apparaît discrètement
+        const approaching = (typeof levelInGarden === 'number') && levelInGarden >= 17;
+        dom.gameScene.classList.toggle('next-garden-hint', approaching);
     }
 
     function renderMenu(state, gardenConfig) {
@@ -59,7 +63,7 @@ window.NS_UI = (function() {
         dom.progressBar.style.width = NS_Garden.calculateProgress(levelInGarden) + '%';
         let stage = NS_Garden.calculateStage(levelInGarden);
         dom.gardenStage.textContent = gardenConfig.stageNames[stage - 1];
-        updateGardenVisual(dom.gardenBackdrop, gardenConfig, stage);
+        updateGardenVisual(dom.gardenBackdrop, gardenConfig, stage, levelInGarden);
         tilesElements = {};
     }
 
