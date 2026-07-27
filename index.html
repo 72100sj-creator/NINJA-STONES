@@ -98,8 +98,10 @@
             <div class="scene-ui">
                 <header class="app-header">
                     <h1 class="title">Ninja Stones</h1>
-                    <p id="level-display" class="level-text">Niveau 1</p>
-                    <p id="level-name-display" class="level-name-text"></p>
+                    <div class="level-line">
+                        <p id="level-display" class="level-text">Niveau 1</p>
+                        <p id="level-name-display" class="level-name-text"></p>
+                    </div>
                 </header>
 
                 <div class="screens-wrapper">
@@ -107,11 +109,13 @@
                     <div id="screen-menu" class="screen active">
                         <div class="screen-top">
                             <div class="garden-info">
-                                <p id="garden-name" class="garden-name">Jardin du Bambou</p>
+                                <div class="garden-line">
+                                    <p id="garden-name" class="garden-name">Jardin du Bambou</p>
+                                    <p id="garden-stage" class="garden-stage"></p>
+                                </div>
                                 <div class="progress-container">
                                     <div id="progress-bar" class="progress-bar"></div>
                                 </div>
-                                <p id="garden-stage" class="garden-stage"></p>
                                 <div id="garden-trail" class="garden-trail" aria-hidden="true"></div>
                             </div>
 
@@ -123,7 +127,7 @@
                                 <img id="ninja-character" class="character-container" src="assets/images/ninja-character.png" alt="Le Ninja Jardinier">
                             </div>
                         </div>
-                        <p class="app-version">v1.0.20</p>
+                        <p class="app-version">v1.0.21</p>
                     </div>
 
                     <div id="screen-game" class="screen">
