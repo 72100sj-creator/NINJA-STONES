@@ -351,8 +351,12 @@ body {
 }
 
 .title { font-size: 1.7rem; font-weight: 300; letter-spacing: 4px; text-transform: uppercase; color: #f0e6d2; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8), 0 1px 3px rgba(0, 0, 0, 0.9); }
+/* RFC-002 : numéro et nom du niveau réunis sur une seule ligne */
+.level-line { display: flex; align-items: baseline; justify-content: center; gap: 7px; flex-wrap: wrap; }
+.level-name-text:not(:empty)::before { content: '·'; margin-right: 7px; opacity: 0.55; }
+
 .level-text { font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; color: #f0e6d2; opacity: 0.9; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8), 0 1px 3px rgba(0, 0, 0, 0.9); }
-.level-name-text { font-size: 0.7rem; font-style: italic; color: #d7ecc4; opacity: 0.8; margin-top: 2px; text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8); }
+.level-name-text { font-size: 0.7rem; font-style: italic; color: #d7ecc4; opacity: 0.8; text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8); }
 
 .screens-wrapper { flex-grow: 1; position: relative; width: 100%; }
 
@@ -373,13 +377,16 @@ body {
 /* Sur l'écran de jeu uniquement : zone plus haute pour que le cadre en pierre démarre
    plus bas et ne recouvre plus la fontaine et la lanterne */
 #screen-game .screen-top { height: 22%; padding: 0 5%; }
-#screen-menu .screen-top { height: 30%; }
+#screen-menu .screen-top { height: 22%; }
 
 .garden-info { width: 80%; max-width: 300px; text-align: center; }
-.garden-name { font-size: 0.8rem; letter-spacing: 1px; color: #33422b; margin-bottom: 6px; text-transform: uppercase; font-weight: 600; text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4); }
+/* RFC-002 : nom du jardin et étape réunis sur une seule ligne, au-dessus de la barre */
+.garden-line { display: flex; align-items: baseline; justify-content: center; gap: 7px; flex-wrap: wrap; margin-bottom: 8px; }
+.garden-stage:not(:empty)::before { content: '·'; margin-right: 7px; opacity: 0.6; }
+.garden-name { font-size: 0.78rem; letter-spacing: 1px; color: #33422b; text-transform: uppercase; font-weight: 600; text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4); }
 .progress-container { width: 100%; height: 6px; background-color: rgba(0, 0, 0, 0.2); border-radius: 3px; overflow: hidden; margin: 0 auto; }
 .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, #8fa86e, #4a6741); border-radius: 3px; transition: width 0.8s ease; }
-.garden-stage { font-size: 0.7rem; letter-spacing: 0.5px; color: #33422b; opacity: 0.85; margin-top: 5px; font-style: italic; text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4); }
+.garden-stage { font-size: 0.68rem; letter-spacing: 0.5px; color: #33422b; opacity: 0.85; font-style: italic; text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4); }
 
 /* Frise des jardins : le chemin parcouru (en couleur), le jardin actuel (mis en avant),
    et ceux qui restent à découvrir (en silhouette sombre) */
