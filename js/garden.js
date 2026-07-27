@@ -51,5 +51,80 @@ window.NS_Garden = {
         else if (levelInGarden <= 14) group = C.WIN_MESSAGES.middle;
         else group = C.WIN_MESSAGES.late;
         return group[(levelInGarden - 1) % group.length];
+    },
+
+    // ===== RFC-002 : lecture de la configuration =====
+    // Un jardin peut ne définir qu'une partie de ses réglages : le reste vient des valeurs
+    // par défaut. C'est ce qui permet d'ajouter un jardin sans tout redéclarer.
+    getSetting: function(garden, blockName) {
+        const C = window.NS_CONSTANTS;
+        const defaults = (C.GARDEN_DEFAULTS && C.GARDEN_DEFAULTS[blockName]) || {};
+        const own = (garden && garden[blockName]) || {};
+        const merged = {};
+        Object.keys(defaults).forEach(function(k) { merged[k] = defaults[k]; });
+        Object.keys(own).forEach(function(k) { merged[k] = own[k]; });
+        return merged;
+    },
+
+    // Avancée de la restauration, de 0 (jardin endormi) à 1 (jardin pleinement restauré).
+    getRestorationRatio: function(levelInGarden, garden) {
+        const r = this.getSetting(garden, 'restoration');
+        const from = r.fromLevel || 1;
+        const to = r.toLevel || 10;
+        if (to <= from) return 1;
+        return NS_Utils.clamp((levelInGarden - from) / (to - from), 0, 1);
+    },
+
+    // Filtre CSS correspondant à l'état de restauration du jardin à ce niveau.
+    // Ne change qu'au changement de niveau : aucun coût image par image.
+    getRestorationFilter: function(levelInGarden, garden) {
+        const r = this.getSetting(garden, 'restoration');
+        const start = r.start || {};
+        const end = r.end || {};
+        const t = this.getRestorationRatio(levelInGarden, garden);
+        function mix(key, fallback) {
+            const a = (typeof start[key] === 'number') ? start[key] : fallback;
+            const b = (typeof end[key] === 'number') ? end[key] : fallback;
+            return (a + (b - a) * t).toFixed(3);
+        }
+        return 'saturate(' + mix('saturate', 1) + ') brightness(' + mix('brightness', 1) +
+               ') contrast(' + mix('contrast', 1) + ')';
+    },
+
+    // Une famille d'animations est-elle éveillée à ce niveau ?
+    isAnimationUnlocked: function(key, levelInGarden, garden) {
+        const unlocks = this.getSetting(garden, 'animationUnlocks');
+        const threshold = (typeof unlocks[key] === 'number') ? unlocks[key] : 1;
+        return levelInGarden >= threshold;
+    },
+
+    // Liste des classes à poser sur la scène pour activer les familles éveillées.
+    getUnlockedAnimationClasses: function(levelInGarden, garden) {
+        const unlocks = this.getSetting(garden, 'animationUnlocks');
+        const self = this;
+        return Object.keys(unlocks).filter(function(key) {
+            return self.isAnimationUnlocked(key, levelInGarden, garden);
+        }).map(function(key) { return 'anim-' + key; });
+    },
+
+    // Toutes les classes de familles possibles (pour pouvoir les retirer proprement).
+    getAllAnimationClasses: function() {
+        const C = window.NS_CONSTANTS;
+        const defaults = (C.GARDEN_DEFAULTS && C.GARDEN_DEFAULTS.animationUnlocks) || {};
+        const keys = {};
+        Object.keys(defaults).forEach(function(k) { keys[k] = true; });
+        C.GARDENS_CONFIG.forEach(function(g) {
+            Object.keys(g.animationUnlocks || {}).forEach(function(k) { keys[k] = true; });
+        });
+        return Object.keys(keys).map(function(k) { return 'anim-' + k; });
+    },
+
+    // Filtre CSS harmonisant les pierres avec la palette du jardin.
+    getStoneFilter: function(garden) {
+        const s = this.getSetting(garden, 'stones');
+        const hue = (typeof s.hueRotate === 'number') ? s.hueRotate : 0;
+        const sat = (typeof s.saturate === 'number') ? s.saturate : 1;
+        const bri = (typeof s.brightness === 'number') ? s.brightness : 1;
+        return 'hue-rotate(' + hue + 'deg) saturate(' + sat + ') brightness(' + bri + ')';
     }
 };
