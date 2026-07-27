@@ -40,5 +40,16 @@ window.NS_Garden = {
     // Vrai s'il y a un jardin suivant après celui-ci.
     hasNextGarden: function(level, gardensConfig) {
         return this.getGardenIndexForLevel(level) < gardensConfig.length - 1;
+    },
+
+    // Choisit un message de victoire adapté à l'avancée dans le jardin, sans jamais répéter
+    // deux fois de suite le même sur des niveaux consécutifs (le message dépend du niveau).
+    getWinMessage: function(levelInGarden) {
+        const C = window.NS_CONSTANTS;
+        let group;
+        if (levelInGarden <= 7) group = C.WIN_MESSAGES.early;
+        else if (levelInGarden <= 14) group = C.WIN_MESSAGES.middle;
+        else group = C.WIN_MESSAGES.late;
+        return group[(levelInGarden - 1) % group.length];
     }
 };

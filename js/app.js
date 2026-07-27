@@ -46,7 +46,7 @@
                         : null;
                     NS_UI.showGardenComplete(currentGarden.name, nextGardenName);
                 } else {
-                    NS_UI.showWinMessage("L'équilibre est rétabli.");
+                    NS_UI.showWinMessage(NS_Garden.getWinMessage(levelInGarden));
                 }
                 NS_Save.save(state);
             }

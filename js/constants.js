@@ -8,6 +8,32 @@ window.NS_CONSTANTS = {
     LEVELS_PER_GARDEN: 20, // chaque jardin dure 20 niveaux (Sprint "5 jardins")
     DEBUG_SCENE: false, // Grille de repères pour le développement (RFC-001) - ne jamais activer en production
 
+    // Messages de victoire, choisis selon l'avancée dans le jardin (début / milieu / approche de la fin).
+    // Le message du 20e niveau est géré à part (fin de jardin).
+    WIN_MESSAGES: {
+        early: [
+            "L'équilibre est rétabli.",
+            "Une pierre trouve sa place.",
+            "Le sable retrouve son calme.",
+            "Le jardin respire un peu mieux.",
+            "Rien ne presse. Tout arrive."
+        ],
+        middle: [
+            "La patience porte ses fruits.",
+            "Le jardin s'éveille doucement.",
+            "Chaque pierre a sa juste place.",
+            "Le silence s'installe.",
+            "L'harmonie gagne du terrain."
+        ],
+        late: [
+            "Le jardin est presque apaisé.",
+            "L'ordre ancien refait surface.",
+            "Plus qu'un souffle avant la sérénité.",
+            "Le jardin reconnaît ta main.",
+            "La dernière pierre approche."
+        ]
+    },
+
     // NOUVEAU : La palette officielle de l'Art Bible
     PALETTE: {
         STONE: {
