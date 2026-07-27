@@ -55,6 +55,10 @@ window.NS_UI = (function() {
         C.GARDENS_CONFIG.forEach(g => dom.gameScene.classList.remove('garden-' + g.id));
         dom.gameScene.classList.add('garden-' + gardenConfig.id);
 
+        // RFC-002 : chaque famille d'animations s'éveille au seuil défini pour ce jardin
+        NS_Garden.getAllAnimationClasses().forEach(c => dom.gameScene.classList.remove(c));
+        NS_Garden.getUnlockedAnimationClasses(lig, gardenConfig).forEach(c => dom.gameScene.classList.add(c));
+
         // À partir du niveau 17 sur 20, un signe avant-coureur du jardin suivant apparaît discrètement
         const approaching = lig >= 17;
         dom.gameScene.classList.toggle('next-garden-hint', approaching);
