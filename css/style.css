@@ -787,3 +787,100 @@ body {
     95% { opacity: 0; transform: translate(165vw, -9vh); }
     100% { opacity: 0; transform: translate(0, 0); }
 }
+
+/* ===== Animations rares du Jardin d'Hiver =====
+   Placées d'emblée dans les zones libres : bandes 13-35% et 80-100% en hauteur,
+   et bords 0-10% / 90-100% en largeur, que le plateau ne masque jamais. */
+
+/* 1 (niv. 9) — des éclats de givre scintillent sur les bords */
+.frost-sparkles { display: none; }
+.game-scene.garden-winter.anim-extra1 .frost-sparkles { display: block; position: absolute; inset: 0; }
+.frost {
+    position: absolute; width: 5px; height: 5px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(225, 245, 255, 0.75) 45%, rgba(225, 245, 255, 0) 80%);
+    box-shadow: 0 0 5px 1px rgba(235, 250, 255, 0.8);
+    opacity: 0;
+    animation-name: frostTwinkle; animation-timing-function: ease-in-out; animation-iteration-count: infinite;
+}
+.fr1 { left: 3%;  top: 17%; animation-duration: 7s;  animation-delay: -1s; }
+.fr2 { left: 6%;  top: 44%; animation-duration: 9s;  animation-delay: -4s; }
+.fr3 { left: 2%;  top: 68%; animation-duration: 8s;  animation-delay: -6s; }
+.fr4 { left: 5%;  top: 90%; animation-duration: 10s; animation-delay: -2s; }
+.fr5 { right: 4%; top: 22%; animation-duration: 8.5s; animation-delay: -5s; }
+.fr6 { right: 2%; top: 51%; animation-duration: 7.5s; animation-delay: -3s; }
+.fr7 { right: 6%; top: 74%; animation-duration: 11s; animation-delay: -8s; }
+.fr8 { right: 3%; top: 94%; animation-duration: 9.5s; animation-delay: -7s; }
+@keyframes frostTwinkle {
+    0%, 82% { opacity: 0; transform: scale(0.5); }
+    88% { opacity: 1; transform: scale(1.4); }
+    94% { opacity: 0; transform: scale(0.7); }
+    100% { opacity: 0; transform: scale(0.5); }
+}
+
+/* 2 (niv. 11) — un souffle de neige poudreuse porté par le vent */
+.snow-gust { display: none; }
+.game-scene.garden-winter.anim-extra2 .snow-gust { display: block; position: absolute; inset: 0; }
+.powder {
+    position: absolute; left: -5%; width: 4px; height: 4px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%, rgba(240, 250, 255, 0.5) 60%, rgba(240, 250, 255, 0) 100%);
+    opacity: 0;
+    animation: powderBlow 26s ease-in-out infinite;
+}
+.p1 { top: 18%; animation-delay: -0.6s; }
+.p2 { top: 22%; animation-delay: -1.2s; width: 3px; height: 3px; }
+.p3 { top: 27%; animation-delay: -0.2s; }
+.p4 { top: 32%; animation-delay: -1.7s; width: 5px; height: 5px; }
+.p5 { top: 83%; animation-delay: -0.9s; }
+.p6 { top: 87%; animation-delay: -1.5s; width: 3px; height: 3px; }
+.p7 { top: 91%; animation-delay: -0.4s; }
+.p8 { top: 96%; animation-delay: -2.1s; width: 5px; height: 5px; }
+@keyframes powderBlow {
+    0%, 76% { opacity: 0; transform: translate(0, 0); }
+    79% { opacity: 0.95; }
+    85% { transform: translate(48vw, -3vh); }
+    91% { transform: translate(94vw, -6vh); opacity: 0.85; }
+    96% { opacity: 0; transform: translate(122vw, -8vh); }
+    100% { opacity: 0; transform: translate(0, 0); }
+}
+
+/* 3 (niv. 15) — un glaçon fond goutte à goutte */
+.icicle { display: none; }
+.game-scene.garden-winter.anim-extra3 .icicle {
+    display: block; position: absolute; left: 7%; top: 15%;
+    width: 6px; height: 17px;
+    background: linear-gradient(to bottom, rgba(230, 248, 255, 0.9) 0%, rgba(200, 232, 245, 0.75) 55%, rgba(255, 255, 255, 0.35) 100%);
+    border-radius: 40% 40% 50% 50% / 15% 15% 90% 90%;
+    box-shadow: 0 0 5px rgba(220, 245, 255, 0.6);
+}
+/* La goutte qui se forme à sa pointe, puis tombe */
+.game-scene.garden-winter.anim-extra3 .icicle::after {
+    content: ''; position: absolute; left: 1px; top: 15px;
+    width: 5px; height: 6px; border-radius: 50% 50% 60% 60%;
+    background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 1) 0%, rgba(220, 245, 255, 0.85) 55%, rgba(200, 235, 250, 0.4) 100%);
+    box-shadow: 0 0 5px 1px rgba(230, 250, 255, 0.7);
+    opacity: 0;
+    animation: icicleDrip 19s ease-in infinite; animation-delay: -5s;
+}
+@keyframes icicleDrip {
+    0%, 52% { opacity: 0; transform: translateY(0) scale(0.4); }
+    62% { opacity: 0.95; transform: translateY(0) scale(1); }
+    70% { opacity: 0.95; transform: translateY(2px) scale(1.15); }
+    82% { opacity: 0.9; transform: translateY(11vh) scale(0.85); }
+    88% { opacity: 0; transform: translateY(15vh) scale(0.6); }
+    100% { opacity: 0; transform: translateY(0) scale(0.4); }
+}
+
+/* 4 (niv. 17) — un halo lunaire froid pulse très lentement.
+   Posé sur les bords de la scène (jamais masqués par le plateau), comme une lumière
+   froide qui borde le jardin. */
+.moon-halo { display: none; }
+.game-scene.garden-winter.anim-extra4 .moon-halo {
+    display: block; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 45%, rgba(190, 220, 245, 0) 42%,
+                rgba(195, 222, 248, 0.16) 68%, rgba(205, 230, 250, 0.42) 100%);
+    animation: moonHalo 15s ease-in-out infinite;
+}
+@keyframes moonHalo {
+    0%, 100% { opacity: 0.45; }
+    50% { opacity: 1; }
+}
