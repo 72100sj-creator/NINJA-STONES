@@ -710,14 +710,15 @@ body {
     border-radius: 60% 5% 60% 5%;
     box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
     opacity: 0;
-    animation: gustSweep 46s ease-in-out infinite;
+    animation: gustSweep 24s ease-in-out infinite;
 }
-.g1 { top: 32%; animation-delay: -1.0s; }
-.g2 { top: 38%; animation-delay: -0.4s; width: 10px; height: 7px; }
-.g3 { top: 46%; animation-delay: -1.6s; }
-.g4 { top: 76%; animation-delay: -0.7s; width: 13px; height: 9px; }
-.g5 { top: 83%; animation-delay: -2.0s; }
-.g6 { top: 89%; animation-delay: -1.3s; width: 11px; height: 7px; }
+/* Placées uniquement dans les zones libres : au-dessus (13-35%) et au-dessous (80-100%) du plateau */
+.g1 { top: 19%; animation-delay: -1.0s; }
+.g2 { top: 24%; animation-delay: -0.4s; width: 10px; height: 7px; }
+.g3 { top: 30%; animation-delay: -1.6s; }
+.g4 { top: 83%; animation-delay: -0.7s; width: 13px; height: 9px; }
+.g5 { top: 88%; animation-delay: -2.0s; }
+.g6 { top: 94%; animation-delay: -1.3s; width: 11px; height: 7px; }
 @keyframes gustSweep {
     0%, 74% { opacity: 0; transform: translate(0, 0) rotate(0deg); }
     77% { opacity: 0.95; }
@@ -771,10 +772,10 @@ body {
 /* 4 (niv. 17) — une brume matinale passe lentement */
 .morning-mist { display: none; }
 .game-scene.garden-autumn.anim-extra4 .morning-mist {
-    display: block; position: absolute; left: -30%; top: 38%;
-    width: 100%; height: 32%;
-    background: radial-gradient(ellipse at center, rgba(255, 252, 246, 0.58) 0%,
-                rgba(255, 250, 240, 0.34) 45%, rgba(255, 248, 235, 0) 78%);
+    display: block; position: absolute; left: -30%; top: 76%;
+    width: 100%; height: 26%;
+    background: radial-gradient(ellipse at center, rgba(255, 252, 246, 0.72) 0%,
+                rgba(255, 250, 240, 0.42) 45%, rgba(255, 248, 235, 0) 78%);
     opacity: 0;
     animation: mistDrift 68s linear infinite; animation-delay: -22s;
 }
