@@ -445,6 +445,7 @@ body {
 .board {
     position: relative; width: 84%; aspect-ratio: 1 / 1;
     padding: var(--gap); flex-shrink: 0;
+    transition: filter 0.9s ease;
 }
 
 .stone {
