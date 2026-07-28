@@ -191,7 +191,7 @@
                                 <img id="ninja-character" class="character-container" src="assets/images/ninja-character.png" alt="Le Ninja Jardinier">
                             </div>
                         </div>
-                        <p class="app-version">v1.0.36</p>
+                        <p class="app-version">v1.0.37</p>
                     </div>
 
                     <div id="screen-game" class="screen">
@@ -216,6 +216,12 @@
             </div>
 
             <!-- Bouton silence : visible sur le menu comme en jeu, état mémorisé (Sprint 6) -->
+            <!-- Séquence de réveil du jardin : couche transparente qui laisse voir le jardin
+                 et permet d'abréger la séquence d'une simple touche -->
+            <div class="awakening-layer" id="awakening-layer">
+                <p class="awakening-hint">Toucher pour continuer</p>
+            </div>
+
             <button id="mute-btn" class="mute-btn" aria-label="Couper ou activer le son">🔊</button>
 
             <!-- Grille de repères pour le développement (RFC-001, debugScene). Vide par défaut, remplie par JS si activée. -->
