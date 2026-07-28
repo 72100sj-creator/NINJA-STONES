@@ -1076,9 +1076,9 @@ body {
 .star-field { display: none; }
 .game-scene.garden-night.anim-extra2 .star-field { display: block; position: absolute; inset: 0; }
 .star {
-    position: absolute; width: 4px; height: 4px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(220, 235, 255, 0.7) 45%, rgba(220, 235, 255, 0) 80%);
-    box-shadow: 0 0 5px 1px rgba(230, 242, 255, 0.75);
+    position: absolute; width: 6px; height: 6px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(235, 245, 255, 0.9) 40%, rgba(220, 235, 255, 0) 82%);
+    box-shadow: 0 0 9px 2px rgba(235, 246, 255, 0.95), 0 0 16px 4px rgba(200, 225, 255, 0.5);
     opacity: 0;
     animation-name: starTwinkle; animation-timing-function: ease-in-out; animation-iteration-count: infinite;
 }
@@ -1092,10 +1092,16 @@ body {
 .st8  { right: 3%; top: 48%; animation-duration: 7.2s; animation-delay: -3.5s; }
 .st9  { right: 7%; top: 88%; animation-duration: 9.5s; animation-delay: -0.8s; }
 .st10 { left: 44%; top: 92%; animation-duration: 6.8s; animation-delay: -5.5s; }
+.st11 { left: 2%;  top: 38%; animation-duration: 7.6s; animation-delay: -2.4s; }
+.st12 { left: 6%;  top: 70%; animation-duration: 9.2s; animation-delay: -6.8s; }
+.st13 { left: 18%; top: 31%; animation-duration: 6.2s; animation-delay: -4.6s; }
+.st14 { right: 2%; top: 33%; animation-duration: 8.8s; animation-delay: -1.2s; }
+.st15 { right: 6%; top: 63%; animation-duration: 7.1s; animation-delay: -5.9s; }
+.st16 { left: 72%; top: 88%; animation-duration: 9.8s; animation-delay: -3.2s; }
 @keyframes starTwinkle {
-    0%, 70% { opacity: 0.18; transform: scale(0.7); }
-    85% { opacity: 1; transform: scale(1.25); }
-    100% { opacity: 0.18; transform: scale(0.7); }
+    0%, 68% { opacity: 0.38; transform: scale(0.75); }
+    84% { opacity: 1; transform: scale(1.4); }
+    100% { opacity: 0.38; transform: scale(0.75); }
 }
 
 /* 3 (niv. 15) — le reflet de la lune ondule dans le bassin */
@@ -1119,9 +1125,9 @@ body {
 .lone-firefly { display: none; }
 .game-scene.garden-night.anim-extra4 .lone-firefly {
     display: block; position: absolute; left: 30%; top: 88%;
-    width: 6px; height: 6px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(255, 240, 190, 1) 0%, rgba(255, 210, 120, 0.7) 50%, rgba(255, 205, 110, 0) 80%);
-    box-shadow: 0 0 8px 2px rgba(255, 220, 140, 0.65);
+    width: 9px; height: 9px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 245, 205, 1) 0%, rgba(255, 212, 125, 0.78) 50%, rgba(255, 205, 110, 0) 82%);
+    box-shadow: 0 0 12px 3px rgba(255, 222, 145, 0.7);
     opacity: 0;
     animation: loneFirefly 40s ease-in-out infinite; animation-delay: -9s;
 }
