@@ -170,7 +170,7 @@ window.NS_UI = (function() {
         clearAwakeningTimers();
         dom.awakeningLayer.classList.remove('visible');
         dom.awakeningLayer.onclick = null;
-        dom.gameScene.classList.remove('awakening');
+        dom.gameScene.classList.remove('awakening', 'awakening-fast');
         // État final : jardin pleinement restauré, toutes ses animations éveillées
         dom.gardenBackdrop.style.transition = '';
         if (typeof onFinish === 'function') onFinish();
@@ -180,7 +180,9 @@ window.NS_UI = (function() {
         const DURATION = 10000;
         clearAwakeningTimers();
 
-        dom.gameScene.classList.add('awakening');
+        // 'awakening-fast' accélère tous les cycles : sans cela, les animations les plus rares
+        // (jusqu'à 74s de cycle) n'auraient aucune chance d'apparaître en 10 secondes.
+        dom.gameScene.classList.add('awakening', 'awakening-fast');
         dom.awakeningLayer.classList.add('visible');
 
         // 1. Le jardin retourne à son état endormi, toutes animations éteintes
@@ -200,11 +202,15 @@ window.NS_UI = (function() {
         ordre.forEach(function(cle, i) {
             awakeningTimers.push(setTimeout(function() {
                 dom.gameScene.classList.add('anim-' + cle);
-            }, 900 + i * pas));
+            }, 700 + i * pas));
         });
 
-        // 4. Fin de la séquence (ou plus tôt si le joueur touche l'écran)
-        awakeningTimers.push(setTimeout(function() { finishAwakening(onFinish); }, DURATION));
+        // 4. Après 10s, le jardin retrouve son rythme paisible et attend, sans rien afficher.
+        //    Le message n'apparaîtra qu'au moment où le joueur touchera l'écran.
+        awakeningTimers.push(setTimeout(function() {
+            dom.gameScene.classList.remove('awakening-fast');
+        }, DURATION));
+
         dom.awakeningLayer.onclick = function() { finishAwakening(onFinish); };
     }
 
@@ -219,7 +225,7 @@ window.NS_UI = (function() {
         clearAwakeningTimers();
         dom.awakeningLayer.classList.remove('visible');
         dom.awakeningLayer.onclick = null;
-        dom.gameScene.classList.remove('awakening');
+        dom.gameScene.classList.remove('awakening', 'awakening-fast');
         dom.gardenBackdrop.style.transition = '';
 
         dom.winOverlay.classList.remove('visible', 'garden-final');
