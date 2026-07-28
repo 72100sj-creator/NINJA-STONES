@@ -158,8 +158,50 @@ window.NS_UI = (function() {
 
     // ===== Séquence de réveil du jardin (fin d'un jardin) =====
     // Le puzzle s'efface, le jardin retourne à son état endormi, puis rejoue toute sa
-    // renaissance en une dizaine de secondes. Abrégeable d'une simple touche.
+    // renaissance. Abrégeable d'une simple touche.
     let awakeningTimers = [];
+    let awakeningPrimed = [];
+
+    // Chaque animation passe l'essentiel de son cycle à attendre, immobile, puis exécute son
+    // mouvement. Cette table indique à quel endroit du cycle ce mouvement commence.
+    // On y avance chaque animation au début du réveil : elles se déclenchent donc toutes
+    // presque aussitôt, mais se jouent à leur vitesse naturelle.
+    const DEBUT_DU_MOUVEMENT = {
+        // Familles de base
+        'bamboo-stalk': 0.58, 'lantern-glow': 0, 'lantern-ground-glow': 0,
+        'ripple-ring': 0, 'pond-sparkle': 0.88, 'firefly': 0, 'dragonfly': 0.66,
+        'falling-leaf': 0, 'falling-leaf-autumn': 0, 'falling-leaf-autumn2': 0,
+        'falling-petal': 0, 'snowflake': 0, 'next-hint': 0,
+        // Bambou
+        'koi-shadow': 0, 'bamboo-shoot': 0, 'dew-drop': 0.52, 'high-bird': 0.66,
+        // Automne
+        'gust-leaf': 0.74, 'ground-swirl': 0.55, 'sun-ray': 0.62, 'morning-mist': 0.48,
+        // Hiver
+        'frost': 0.82, 'powder': 0.76, 'moon-halo': 0,
+        // Sakura
+        'sp-petal': 0.60, 'sakura-branch': 0.56, 'branch-petal': 0.62,
+        'pond-petal': 0, 'petal-haze': 0.44,
+        // Nuit
+        'shooting-star': 0.85, 'star': 0.68, 'moon-reflection': 0, 'lone-firefly': 0.34
+    };
+
+    function amorcerAnimations() {
+        awakeningPrimed = [];
+        Object.keys(DEBUT_DU_MOUVEMENT).forEach(function(classe) {
+            const debut = DEBUT_DU_MOUVEMENT[classe];
+            Array.prototype.forEach.call(document.querySelectorAll('.' + classe), function(el) {
+                const duree = parseFloat(getComputedStyle(el).animationDuration);
+                if (!duree) return;   // animation inactive dans ce jardin : rien à faire
+                el.style.animationDelay = (-(debut * duree)).toFixed(2) + 's';
+                awakeningPrimed.push(el);
+            });
+        });
+    }
+
+    function rendreAnimationsNormales() {
+        awakeningPrimed.forEach(function(el) { el.style.animationDelay = ''; });
+        awakeningPrimed = [];
+    }
 
     function clearAwakeningTimers() {
         awakeningTimers.forEach(function(t) { clearTimeout(t); });
@@ -168,9 +210,10 @@ window.NS_UI = (function() {
 
     function finishAwakening(onFinish) {
         clearAwakeningTimers();
+        rendreAnimationsNormales();
         dom.awakeningLayer.classList.remove('visible');
         dom.awakeningLayer.onclick = null;
-        dom.gameScene.classList.remove('awakening', 'awakening-fast');
+        dom.gameScene.classList.remove('awakening');
         // État final : jardin pleinement restauré, toutes ses animations éveillées
         dom.gardenBackdrop.style.transition = '';
         if (typeof onFinish === 'function') onFinish();
@@ -180,9 +223,7 @@ window.NS_UI = (function() {
         const DURATION = 10000;
         clearAwakeningTimers();
 
-        // 'awakening-fast' accélère tous les cycles : sans cela, les animations les plus rares
-        // (jusqu'à 74s de cycle) n'auraient aucune chance d'apparaître en 10 secondes.
-        dom.gameScene.classList.add('awakening', 'awakening-fast');
+        dom.gameScene.classList.add('awakening');
         dom.awakeningLayer.classList.add('visible');
 
         // 1. Le jardin retourne à son état endormi, toutes animations éteintes
@@ -191,11 +232,15 @@ window.NS_UI = (function() {
         dom.gardenBackdrop.style.filter = NS_Garden.getRestorationFilter(1, gardenConfig);
         void dom.gardenBackdrop.offsetWidth; // force la prise en compte de l'état de départ
 
-        // 2. Puis il renaît en continu sur toute la durée de la séquence
+        // 2. Chaque animation est avancée au début de son mouvement : toutes se déclencheront
+        //    dès leur réveil, sans que leur vitesse soit modifiée.
+        amorcerAnimations();
+
+        // 3. Puis le jardin renaît en continu sur toute la durée de la séquence
         dom.gardenBackdrop.style.transition = 'filter ' + (DURATION / 1000) + 's linear';
         dom.gardenBackdrop.style.filter = NS_Garden.getRestorationFilter(9999, gardenConfig);
 
-        // 3. Ses animations réapparaissent une à une, dans l'ordre où le joueur les a découvertes
+        // 4. Ses animations réapparaissent une à une, dans l'ordre où le joueur les a découvertes
         const unlocks = NS_Garden.getSetting(gardenConfig, 'animationUnlocks');
         const ordre = Object.keys(unlocks).sort(function(a, b) { return unlocks[a] - unlocks[b]; });
         const pas = (DURATION - 2000) / Math.max(ordre.length, 1);
@@ -205,12 +250,8 @@ window.NS_UI = (function() {
             }, 700 + i * pas));
         });
 
-        // 4. Après 10s, le jardin retrouve son rythme paisible et attend, sans rien afficher.
-        //    Le message n'apparaîtra qu'au moment où le joueur touchera l'écran.
-        awakeningTimers.push(setTimeout(function() {
-            dom.gameScene.classList.remove('awakening-fast');
-        }, DURATION));
-
+        // 5. Aucune fin automatique : le jardin reste vivant tant que le joueur ne touche pas
+        //    l'écran. Le message n'apparaît qu'à ce moment-là.
         dom.awakeningLayer.onclick = function() { finishAwakening(onFinish); };
     }
 
@@ -223,9 +264,10 @@ window.NS_UI = (function() {
     function resetGameUI() {
         // Sécurité : si une séquence de réveil était en cours, on la referme proprement
         clearAwakeningTimers();
+        rendreAnimationsNormales();
         dom.awakeningLayer.classList.remove('visible');
         dom.awakeningLayer.onclick = null;
-        dom.gameScene.classList.remove('awakening', 'awakening-fast');
+        dom.gameScene.classList.remove('awakening');
         dom.gardenBackdrop.style.transition = '';
 
         dom.winOverlay.classList.remove('visible', 'garden-final');
