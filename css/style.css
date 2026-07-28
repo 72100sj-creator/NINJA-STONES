@@ -1135,3 +1135,32 @@ body {
     94% { opacity: 0; transform: translate(96px, 1vh) scale(0.45); }
     100% { opacity: 0; transform: translate(0, 0) scale(0.5); }
 }
+
+/* ===== Séquence de réveil du jardin =====
+   Pendant la séquence, tout le jeu s'efface : il ne reste que le jardin qui renaît. */
+.game-scene.awakening .scene-ui {
+    opacity: 0; pointer-events: none;
+    transition: opacity 1.3s ease;
+}
+.awakening-layer {
+    position: absolute; inset: 0; z-index: 30;
+    display: none; pointer-events: none;
+}
+.awakening-layer.visible {
+    display: flex; align-items: flex-end; justify-content: center;
+    padding-bottom: 7%;
+    pointer-events: auto;   /* capte la touche qui abrège la séquence */
+    cursor: pointer;
+}
+/* L'invitation n'apparaît qu'après quelques secondes, pour ne pas distraire d'emblée */
+.awakening-hint {
+    font-size: 0.72rem; font-style: italic; letter-spacing: 0.5px;
+    color: #f0e6d2; opacity: 0;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.85), 0 1px 3px rgba(0, 0, 0, 0.9);
+    animation: awakeningHint 10s ease forwards;
+}
+@keyframes awakeningHint {
+    0%, 22% { opacity: 0; }
+    36% { opacity: 0.7; }
+    100% { opacity: 0.7; }
+}
