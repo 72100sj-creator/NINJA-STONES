@@ -21,6 +21,7 @@ window.NS_UI = (function() {
         dom.nextGardenMessage = document.getElementById('next-garden-message');
         dom.winOverlay = document.getElementById('win-overlay');
         dom.muteBtn = document.getElementById('mute-btn');
+        dom.awakeningLayer = document.getElementById('awakening-layer');
     }
 
     function showScreen(name) {
@@ -155,6 +156,58 @@ window.NS_UI = (function() {
         dom.winOverlay.classList.add('visible');
     }
 
+    // ===== Séquence de réveil du jardin (fin d'un jardin) =====
+    // Le puzzle s'efface, le jardin retourne à son état endormi, puis rejoue toute sa
+    // renaissance en une dizaine de secondes. Abrégeable d'une simple touche.
+    let awakeningTimers = [];
+
+    function clearAwakeningTimers() {
+        awakeningTimers.forEach(function(t) { clearTimeout(t); });
+        awakeningTimers = [];
+    }
+
+    function finishAwakening(onFinish) {
+        clearAwakeningTimers();
+        dom.awakeningLayer.classList.remove('visible');
+        dom.awakeningLayer.onclick = null;
+        dom.gameScene.classList.remove('awakening');
+        // État final : jardin pleinement restauré, toutes ses animations éveillées
+        dom.gardenBackdrop.style.transition = '';
+        if (typeof onFinish === 'function') onFinish();
+    }
+
+    function playGardenAwakening(gardenConfig, onFinish) {
+        const DURATION = 10000;
+        clearAwakeningTimers();
+
+        dom.gameScene.classList.add('awakening');
+        dom.awakeningLayer.classList.add('visible');
+
+        // 1. Le jardin retourne à son état endormi, toutes animations éteintes
+        NS_Garden.getAllAnimationClasses().forEach(function(c) { dom.gameScene.classList.remove(c); });
+        dom.gardenBackdrop.style.transition = 'none';
+        dom.gardenBackdrop.style.filter = NS_Garden.getRestorationFilter(1, gardenConfig);
+        void dom.gardenBackdrop.offsetWidth; // force la prise en compte de l'état de départ
+
+        // 2. Puis il renaît en continu sur toute la durée de la séquence
+        dom.gardenBackdrop.style.transition = 'filter ' + (DURATION / 1000) + 's linear';
+        dom.gardenBackdrop.style.filter = NS_Garden.getRestorationFilter(9999, gardenConfig);
+
+        // 3. Ses animations réapparaissent une à une, dans l'ordre où le joueur les a découvertes
+        const unlocks = NS_Garden.getSetting(gardenConfig, 'animationUnlocks');
+        const ordre = Object.keys(unlocks).sort(function(a, b) { return unlocks[a] - unlocks[b]; });
+        const pas = (DURATION - 2000) / Math.max(ordre.length, 1);
+        ordre.forEach(function(cle, i) {
+            awakeningTimers.push(setTimeout(function() {
+                dom.gameScene.classList.add('anim-' + cle);
+            }, 900 + i * pas));
+        });
+
+        // 4. Fin de la séquence (ou plus tôt si le joueur touche l'écran)
+        awakeningTimers.push(setTimeout(function() { finishAwakening(onFinish); }, DURATION));
+        dom.awakeningLayer.onclick = function() { finishAwakening(onFinish); };
+    }
+
     function updateMuteButton() {
         const muted = NS_Audio.isMuted();
         dom.muteBtn.textContent = muted ? '🔇' : '🔊';
@@ -162,6 +215,13 @@ window.NS_UI = (function() {
     }
 
     function resetGameUI() {
+        // Sécurité : si une séquence de réveil était en cours, on la referme proprement
+        clearAwakeningTimers();
+        dom.awakeningLayer.classList.remove('visible');
+        dom.awakeningLayer.onclick = null;
+        dom.gameScene.classList.remove('awakening');
+        dom.gardenBackdrop.style.transition = '';
+
         dom.winOverlay.classList.remove('visible', 'garden-final');
         dom.message.textContent = '';
         dom.nextGardenMessage.textContent = '';
@@ -173,6 +233,7 @@ window.NS_UI = (function() {
         showScreen: showScreen, updateHeader: updateHeader, updateGardenVisual: updateGardenVisual,
         renderMenu: renderMenu, renderGameBoard: renderGameBoard, moveTile: moveTile,
         showWinMessage: showWinMessage, showGardenComplete: showGardenComplete,
+        playGardenAwakening: playGardenAwakening,
         resetGameUI: resetGameUI, updateMuteButton: updateMuteButton,
         getDomElements: function() { return dom; }
     };

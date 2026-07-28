@@ -38,13 +38,16 @@
                 NS_Audio.playVictoryChime();
                 let levelInGarden = NS_Garden.getLevelInGarden(state.level);
                 if (NS_Garden.isLastLevelOfGarden(levelInGarden)) {
-                    // Dernier niveau du jardin : animation de fin dédiée, différente de la victoire classique
+                    // Dernier niveau du jardin : la séquence de réveil rejoue toute sa renaissance,
+                    // puis seulement ensuite le message de fin apparaît.
                     let currentGarden = getCurrentGarden();
                     let hasNext = NS_Garden.hasNextGarden(state.level, C.GARDENS_CONFIG);
                     let nextGardenName = hasNext
                         ? C.GARDENS_CONFIG[NS_Garden.getGardenIndexForLevel(state.level) + 1].name
                         : null;
-                    NS_UI.showGardenComplete(currentGarden.name, nextGardenName);
+                    NS_UI.playGardenAwakening(currentGarden, function() {
+                        NS_UI.showGardenComplete(currentGarden.name, nextGardenName);
+                    });
                 } else {
                     NS_UI.showWinMessage(NS_Garden.getWinMessage(levelInGarden));
                 }
