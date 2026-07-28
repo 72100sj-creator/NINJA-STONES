@@ -1171,58 +1171,6 @@ body {
     100% { opacity: 0.7; }
 }
 
-/* ===== Séquence de réveil : accélération des cycles =====
-   Les animations rares ont des cycles allant jusqu'à 74 secondes : sans accélération,
-   la plupart n'apparaîtraient jamais pendant les 10 secondes de la séquence.
-   Ces durées ne s'appliquent QUE pendant le réveil ; ensuite le jardin retrouve son calme.
-   Le battement d'ailes de l'oiseau est volontairement exclu : il a son propre rythme rapide. */
-
-/* Familles de base */
-.game-scene.awakening-fast .bamboo-stalk { animation-duration: 3s !important; }
-.game-scene.awakening-fast .lantern-glow,
-.game-scene.awakening-fast .lantern-ground-glow { animation-duration: 2.4s !important; }
-.game-scene.awakening-fast .ripple-ring { animation-duration: 2.6s !important; }
-.game-scene.awakening-fast .pond-sparkle { animation-duration: 2s !important; }
-.game-scene.awakening-fast .firefly { animation-duration: 4s !important; }
-.game-scene.awakening-fast .dragonfly { animation-duration: 4.5s !important; }
-
-/* Animations signature de chaque jardin */
-.game-scene.awakening-fast .falling-leaf,
-.game-scene.awakening-fast .falling-leaf-autumn,
-.game-scene.awakening-fast .falling-leaf-autumn2,
-.game-scene.awakening-fast .falling-petal,
-.game-scene.awakening-fast .snowflake { animation-duration: 4s !important; }
-
-/* Bambou */
-.game-scene.awakening-fast .koi-shadow { animation-duration: 4.5s !important; }
-.game-scene.awakening-fast .bamboo-shoot { animation-duration: 5s !important; }
-.game-scene.awakening-fast .dew-drop { animation-duration: 3.5s !important; }
-.game-scene.awakening-fast .high-bird { animation-duration: 4.5s !important; }
-
-/* Automne */
-.game-scene.awakening-fast .gust-leaf { animation-duration: 3.5s !important; }
-.game-scene.awakening-fast .ground-swirl { animation-duration: 4s !important; }
-.game-scene.awakening-fast .sun-ray { animation-duration: 5s !important; }
-.game-scene.awakening-fast .morning-mist { animation-duration: 5.5s !important; }
-
-/* Hiver */
-.game-scene.awakening-fast .frost { animation-duration: 2.2s !important; }
-.game-scene.awakening-fast .powder { animation-duration: 3.5s !important; }
-.game-scene.awakening-fast .icicle::after { animation-duration: 3.5s !important; }
-.game-scene.awakening-fast .moon-halo { animation-duration: 3s !important; }
-
-/* Sakura */
-.game-scene.awakening-fast .sp-petal { animation-duration: 4.5s !important; }
-.game-scene.awakening-fast .sakura-branch,
-.game-scene.awakening-fast .branch-petal { animation-duration: 4.5s !important; }
-.game-scene.awakening-fast .pond-petal { animation-duration: 4s !important; }
-.game-scene.awakening-fast .petal-haze { animation-duration: 5.5s !important; }
-
-/* Nuit */
-.game-scene.awakening-fast .shooting-star { animation-duration: 3.5s !important; }
-.game-scene.awakening-fast .star { animation-duration: 1.8s !important; }
-.game-scene.awakening-fast .moon-reflection { animation-duration: 2.6s !important; }
-.game-scene.awakening-fast .lone-firefly { animation-duration: 4.5s !important; }
-
-/* L'indice du jardin suivant apparaît aussi pendant le réveil : une promesse de la suite */
-.game-scene.awakening-fast .next-hint { animation-duration: 5s !important; }
+/* Le glaçon est un pseudo-élément : sa mise en route ne peut pas être pilotée en JS,
+   on l'avance donc directement ici (52% de son cycle de 19s). */
+.game-scene.awakening .icicle::after { animation-delay: -9.9s !important; }
