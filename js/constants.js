@@ -126,7 +126,7 @@ window.NS_CONSTANTS = {
               start: { saturate: 0.32, brightness: 0.84, contrast: 0.93 },
               end:   { saturate: 1,    brightness: 1,    contrast: 1 }
           },
-          stones: { hueRotate: 42, saturate: 0.72, brightness: 0.95 } },
+          stones: { hueRotate: 85, saturate: 0.8, brightness: 1.0 } },
         { id: 'embers', name: 'Jardin des Braises',
           stageNames: ['Cendres froides', 'Premières lueurs', 'Braises ardentes', 'Jardin incandescent'],
           backgroundImage: 'assets/images/garden-embers-stage-1.jpg',
