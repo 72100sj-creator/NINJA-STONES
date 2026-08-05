@@ -579,7 +579,23 @@ body {
    pour donner l'impression que c'est la tête qui penche plutôt que tout le corps */
 .character-tilt {
     display: flex; justify-content: center; width: 100%; transform-origin: 50% 88%;
+    position: relative;
     animation: characterTilt 26s ease-in-out infinite;
+}
+/* Seconde expression, superposée exactement : elle apparaît en fondu de temps en temps,
+   comme un visage qui passe du sourire à la concentration paisible.
+   Les deux images ont un cadrage identique, donc aucun décalage n'est possible. */
+.character-calm {
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    opacity: 0;
+    animation: characterExpression 34s ease-in-out infinite;
+}
+@keyframes characterExpression {
+    0%, 34% { opacity: 0; }
+    42% { opacity: 1; }   /* le visage s'apaise... */
+    62% { opacity: 1; }
+    70% { opacity: 0; }   /* ...puis le sourire revient */
+    100% { opacity: 0; }
 }
 @keyframes characterTilt {
     0%, 88% { transform: rotate(0deg); }
