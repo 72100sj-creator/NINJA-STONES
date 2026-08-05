@@ -243,23 +243,57 @@ body {
 }
 .ripple-ring.r2 { animation-delay: 0.6s; animation-duration: 7.1s; }
 /* Libellule de passage : traverse l'écran très lentement, environ une fois toutes les 50s, jamais plus d'une à la fois */
+/* Petit dragon oriental : corps serpentin, tête, ailes membraneuses et queue effilée.
+   Il conserve la trajectoire ondulante de l'ancienne libellule, mais bat des ailes plus
+   lentement - un dragon plane, il ne vibre pas. */
 .dragonfly {
-    position: absolute; top: 45%; left: -4%; width: 16px; height: 3px;
-    background: linear-gradient(90deg, #5a7a6e, #3f5c50);
-    border-radius: 2px;
+    position: absolute; top: 45%; left: -4%; width: 22px; height: 5px;
+    background: linear-gradient(90deg, #2f5a48 0%, #47836a 45%, #5b9c80 70%, #3f7057 100%);
+    border-radius: 60% 40% 45% 55% / 60% 60% 40% 40%;
+    box-shadow: 0 0 5px rgba(120, 200, 170, 0.35);
     opacity: 0;
     animation: dragonflyCross 50s ease-in-out infinite; animation-delay: -8s;
 }
-.dragonfly-wing {
-    position: absolute; top: -4px; width: 11px; height: 5px;
-    background: rgba(225, 240, 235, 0.5); border-radius: 50%;
-    animation: dragonflyFlutter 0.16s ease-in-out infinite alternate;
+/* Tête, légèrement plus haute et plus claire que le corps */
+.dragon-head {
+    position: absolute; right: -6px; top: -2px;
+    width: 9px; height: 7px;
+    background: linear-gradient(120deg, #62a688, #3d7159);
+    border-radius: 55% 70% 45% 40%;
+    box-shadow: 0 0 4px rgba(140, 215, 180, 0.4);
 }
-.dw-left { left: -8px; transform-origin: right center; animation-duration: 0.15s; }
-.dw-right { left: 3px; transform-origin: left center; animation-duration: 0.18s; }
+/* Petites cornes */
+.dragon-head::after {
+    content: ''; position: absolute; left: 1px; top: -3px;
+    width: 5px; height: 3px;
+    border-top: 1.5px solid rgba(180, 230, 200, 0.75);
+    border-radius: 60% 60% 0 0;
+}
+/* Queue effilée, qui ondule doucement */
+.dragon-tail {
+    position: absolute; left: -13px; top: 1px;
+    width: 15px; height: 3px;
+    background: linear-gradient(to left, rgba(63, 112, 87, 0.95), rgba(47, 90, 72, 0));
+    border-radius: 50% 0 0 50%;
+    transform-origin: right center;
+    animation: dragonTail 1.6s ease-in-out infinite alternate;
+}
+@keyframes dragonTail {
+    0% { transform: rotate(-9deg) scaleX(1); }
+    100% { transform: rotate(11deg) scaleX(0.92); }
+}
+/* Ailes membraneuses, battement plus lent et plus ample qu'une libellule */
+.dragonfly-wing {
+    position: absolute; top: -7px; width: 13px; height: 9px;
+    background: linear-gradient(160deg, rgba(190, 235, 215, 0.6), rgba(120, 190, 165, 0.35));
+    border-radius: 70% 25% 60% 20%;
+    animation: dragonflyFlutter 0.42s ease-in-out infinite alternate;
+}
+.dw-left { left: -6px; transform-origin: right bottom; animation-duration: 0.42s; }
+.dw-right { left: 6px; transform-origin: left bottom; animation-duration: 0.47s; }
 @keyframes dragonflyFlutter {
-    0% { transform: scaleY(1) rotate(0deg); }
-    100% { transform: scaleY(0.35) rotate(10deg); }
+    0% { transform: scaleY(1) rotate(-14deg); }
+    100% { transform: scaleY(0.45) rotate(16deg); }
 }
 @keyframes dragonflyCross {
     0%, 78% { opacity: 0; transform: translate(0, 0) rotate(0deg); }
