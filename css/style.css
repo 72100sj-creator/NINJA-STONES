@@ -244,119 +244,158 @@ body {
 .ripple-ring.r2 { animation-delay: 0.6s; animation-duration: 7.1s; }
 /* Libellule de passage : traverse l'écran très lentement, environ une fois toutes les 50s, jamais plus d'une à la fois */
 /* ===== Le dragon =====
-   Grand, lent, et rare : il doit surprendre. Corps serpentin écaillé, crinière, pattes
-   griffues, moustaches et longue queue - un dragon oriental vu de dessus. */
+   Immense, lent et rare : un véritable évènement. Corps serpentin écaillé, crête dorsale,
+   crinière, pattes griffues, moustaches, aileron caudal et halo de brume. */
 .dragonfly {
-    position: absolute; top: 45%; left: -12%; width: 62px; height: 13px;
+    position: absolute; top: 45%; left: -16%; width: 92px; height: 18px;
     background:
         /* écailles le long du dos */
         repeating-linear-gradient(105deg,
-            rgba(255, 255, 255, 0.14) 0 3px, rgba(0, 0, 0, 0.10) 3px 6px),
-        linear-gradient(90deg, #23453a 0%, #35624f 22%, #4a8a6d 48%, #63ab86 68%, #4a8a6d 84%, #2c5344 100%);
+            rgba(255, 255, 255, 0.15) 0 3px, rgba(0, 0, 0, 0.11) 3px 7px),
+        linear-gradient(90deg, #1d3d33 0%, #305a49 20%, #47846a 45%, #6cb68e 66%, #47846a 84%, #26483c 100%);
     border-radius: 55% 45% 50% 50% / 65% 65% 35% 35%;
-    box-shadow: 0 0 14px rgba(120, 215, 175, 0.45), inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 20px rgba(120, 215, 175, 0.5), inset 0 -3px 6px rgba(0, 0, 0, 0.32);
     opacity: 0;
-    animation: dragonflyCross 78s ease-in-out infinite; animation-delay: -14s;
+    animation: dragonflyCross 105s ease-in-out infinite; animation-delay: -18s;
 }
 
-/* Tête, plus large et plus claire, légèrement relevée */
+/* Halo de brume qui l'accompagne : renforce l'impression de présence */
+.dragon-aura {
+    position: absolute; left: -46px; top: -34px;
+    width: 190px; height: 88px;
+    background: radial-gradient(ellipse at center, rgba(150, 235, 200, 0.16) 0%,
+                rgba(120, 210, 175, 0.07) 45%, rgba(120, 210, 175, 0) 75%);
+    animation: dragonAura 4.2s ease-in-out infinite alternate;
+}
+@keyframes dragonAura {
+    0% { opacity: 0.55; transform: scale(0.94); }
+    100% { opacity: 1; transform: scale(1.08); }
+}
+
+/* Tête, large et relevée */
 .dragon-head {
-    position: absolute; right: -17px; top: -5px;
-    width: 25px; height: 20px;
-    background: linear-gradient(125deg, #74c39d 0%, #4d8f70 55%, #35664f 100%);
+    position: absolute; right: -24px; top: -7px;
+    width: 35px; height: 28px;
+    background: linear-gradient(125deg, #82d3ab 0%, #529877 55%, #2f5f49 100%);
     border-radius: 58% 72% 42% 38%;
-    box-shadow: 0 0 9px rgba(150, 235, 195, 0.5), inset -2px -2px 4px rgba(0, 0, 0, 0.28);
+    box-shadow: 0 0 13px rgba(150, 235, 195, 0.55), inset -3px -3px 6px rgba(0, 0, 0, 0.3);
 }
 /* Cornes ramifiées */
 .dragon-head::before {
-    content: ''; position: absolute; left: 3px; top: -8px;
-    width: 14px; height: 9px;
-    border-top: 2px solid rgba(205, 245, 220, 0.85);
-    border-left: 2px solid rgba(205, 245, 220, 0.7);
+    content: ''; position: absolute; left: 4px; top: -12px;
+    width: 21px; height: 14px;
+    border-top: 2.5px solid rgba(210, 250, 225, 0.9);
+    border-left: 2.5px solid rgba(210, 250, 225, 0.72);
     border-radius: 70% 60% 0 0;
 }
-/* Moustaches flottantes, caractéristiques du dragon oriental */
+/* Moustaches flottantes, signature du dragon oriental */
 .dragon-head::after {
-    content: ''; position: absolute; right: -13px; top: 7px;
-    width: 17px; height: 8px;
-    border-top: 1.5px solid rgba(190, 240, 215, 0.65);
-    border-bottom: 1.5px solid rgba(190, 240, 215, 0.45);
+    content: ''; position: absolute; right: -20px; top: 10px;
+    width: 26px; height: 12px;
+    border-top: 2px solid rgba(195, 245, 220, 0.7);
+    border-bottom: 2px solid rgba(195, 245, 220, 0.48);
     border-radius: 0 60% 60% 0;
-    animation: dragonWhisker 2.1s ease-in-out infinite alternate;
+    animation: dragonWhisker 2.6s ease-in-out infinite alternate;
 }
 @keyframes dragonWhisker {
-    0% { transform: rotate(-7deg) scaleX(0.9); }
-    100% { transform: rotate(9deg) scaleX(1.05); }
+    0% { transform: rotate(-8deg) scaleX(0.88); }
+    100% { transform: rotate(10deg) scaleX(1.08); }
 }
 
-/* Crinière le long de la nuque */
+/* Crinière sur la nuque */
 .dragon-mane {
-    position: absolute; right: 8px; top: -7px;
-    width: 22px; height: 10px;
-    background: linear-gradient(100deg, rgba(180, 240, 205, 0.6), rgba(90, 175, 140, 0.15));
+    position: absolute; right: 12px; top: -11px;
+    width: 32px; height: 15px;
+    background: linear-gradient(100deg, rgba(190, 245, 215, 0.62), rgba(90, 175, 140, 0.14));
     border-radius: 60% 40% 30% 70%;
-    filter: blur(0.6px);
-    animation: dragonMane 1.9s ease-in-out infinite alternate;
+    filter: blur(0.8px);
+    animation: dragonMane 2.3s ease-in-out infinite alternate;
 }
 @keyframes dragonMane {
-    0% { transform: rotate(-5deg) scaleY(0.9); }
-    100% { transform: rotate(6deg) scaleY(1.1); }
+    0% { transform: rotate(-6deg) scaleY(0.88); }
+    100% { transform: rotate(7deg) scaleY(1.14); }
 }
 
-/* Pattes griffues, repliées sous le corps */
+/* Crête dorsale dentelée, le long de l'échine */
+.dragon-crest {
+    position: absolute; left: 16px; top: -9px;
+    width: 58px; height: 11px;
+    background:
+        repeating-linear-gradient(115deg,
+            rgba(180, 245, 210, 0.55) 0 2px, transparent 2px 9px);
+    border-radius: 40% 60% 0 0;
+    animation: dragonCrest 3.1s ease-in-out infinite alternate;
+}
+@keyframes dragonCrest {
+    0% { transform: scaleY(0.85) rotate(-2deg); opacity: 0.7; }
+    100% { transform: scaleY(1.15) rotate(2deg); opacity: 1; }
+}
+
+/* Pattes griffues repliées sous le corps */
 .dragon-leg {
-    position: absolute; top: 9px;
-    width: 13px; height: 6px;
-    background: linear-gradient(120deg, #4a8a6d, #2b5343);
+    position: absolute; top: 13px;
+    width: 19px; height: 9px;
+    background: linear-gradient(120deg, #4a8a6d, #244639);
     border-radius: 50% 60% 40% 30%;
-    box-shadow: inset -1px -1px 2px rgba(0, 0, 0, 0.3);
-    animation: dragonLeg 2.4s ease-in-out infinite alternate;
+    box-shadow: inset -1px -2px 3px rgba(0, 0, 0, 0.32);
+    animation: dragonLeg 3.2s ease-in-out infinite alternate;
 }
-.dl-front { right: 14px; }
-.dl-back { left: 16px; animation-duration: 2.8s; }
+.dl-front { right: 22px; }
+.dl-back { left: 24px; animation-duration: 3.8s; }
 @keyframes dragonLeg {
-    0% { transform: rotate(-8deg); }
-    100% { transform: rotate(10deg); }
+    0% { transform: rotate(-9deg); }
+    100% { transform: rotate(12deg); }
 }
 
-/* Longue queue effilée, qui ondule */
+/* Longue queue effilée */
 .dragon-tail {
-    position: absolute; left: -44px; top: 4px;
-    width: 48px; height: 7px;
-    background: linear-gradient(to left, rgba(44, 83, 68, 0.95) 0%, rgba(58, 105, 84, 0.7) 45%, rgba(35, 69, 58, 0) 100%);
+    position: absolute; left: -70px; top: 6px;
+    width: 76px; height: 10px;
+    background: linear-gradient(to left, rgba(38, 72, 60, 0.95) 0%, rgba(58, 105, 84, 0.7) 45%, rgba(29, 61, 51, 0) 100%);
     border-radius: 50% 0 0 60%;
     transform-origin: right center;
-    animation: dragonTail 2.6s ease-in-out infinite alternate;
+    animation: dragonTail 3.4s ease-in-out infinite alternate;
 }
 @keyframes dragonTail {
-    0% { transform: rotate(-13deg) scaleX(1); }
-    100% { transform: rotate(15deg) scaleX(0.9); }
+    0% { transform: rotate(-15deg) scaleX(1); }
+    100% { transform: rotate(17deg) scaleX(0.88); }
+}
+/* Aileron au bout de la queue */
+.dragon-tailfin {
+    position: absolute; left: -84px; top: 2px;
+    width: 22px; height: 18px;
+    background: linear-gradient(130deg, rgba(175, 240, 210, 0.5), rgba(80, 155, 125, 0.2));
+    border-radius: 80% 10% 70% 15%;
+    filter: blur(0.4px);
+    transform-origin: right center;
+    animation: dragonTail 3.4s ease-in-out infinite alternate;
 }
 
-/* Grandes ailes membraneuses, battement lent et ample */
+/* Grandes ailes membraneuses nervurées */
 .dragonfly-wing {
-    position: absolute; top: -22px; width: 40px; height: 27px;
+    position: absolute; top: -34px; width: 60px; height: 40px;
     background:
-        repeating-linear-gradient(72deg, rgba(255, 255, 255, 0.16) 0 1px, transparent 1px 8px),
-        linear-gradient(160deg, rgba(200, 245, 225, 0.62), rgba(105, 180, 150, 0.3));
+        repeating-linear-gradient(72deg, rgba(255, 255, 255, 0.18) 0 1px, transparent 1px 10px),
+        linear-gradient(160deg, rgba(205, 248, 228, 0.65), rgba(100, 180, 150, 0.3));
     border-radius: 78% 20% 62% 16%;
-    box-shadow: 0 0 8px rgba(150, 230, 195, 0.25);
-    animation: dragonflyFlutter 1.15s ease-in-out infinite alternate;
+    box-shadow: 0 0 12px rgba(150, 230, 195, 0.3);
+    animation: dragonflyFlutter 1.7s ease-in-out infinite alternate;
 }
-.dw-left { left: -14px; transform-origin: right bottom; animation-duration: 1.15s; }
-.dw-right { left: 20px; transform-origin: left bottom; animation-duration: 1.28s; }
+.dw-left { left: -22px; transform-origin: right bottom; animation-duration: 1.7s; }
+.dw-right { left: 30px; transform-origin: left bottom; animation-duration: 1.9s; }
 @keyframes dragonflyFlutter {
-    0% { transform: scaleY(1) rotate(-19deg); }
-    100% { transform: scaleY(0.4) rotate(22deg); }
+    0% { transform: scaleY(1) rotate(-21deg); }
+    100% { transform: scaleY(0.38) rotate(24deg); }
 }
 @keyframes dragonflyCross {
-    0%, 74% { opacity: 0; transform: translate(0, 0) rotate(0deg); }
-    77% { opacity: 0.92; }
-    82% { transform: translate(26vw, -7vh) rotate(-7deg); }
-    87% { transform: translate(48vw, 3vh) rotate(5deg); }
-    91% { transform: translate(70vw, -5vh) rotate(-6deg); }
-    95% { transform: translate(92vw, 2vh) rotate(4deg); opacity: 0.88; }
-    98% { opacity: 0; transform: translate(118vw, -3vh) rotate(0deg); }
+    0%, 76% { opacity: 0; transform: translate(0, 0) rotate(0deg); }
+    78.5% { opacity: 0.94; }
+    83% { transform: translate(22vw, -8vh) rotate(-8deg); }
+    87% { transform: translate(42vw, 4vh) rotate(6deg); }
+    91% { transform: translate(62vw, -6vh) rotate(-7deg); }
+    95% { transform: translate(84vw, 3vh) rotate(5deg); }
+    98% { transform: translate(106vw, -4vh) rotate(-3deg); opacity: 0.9; }
+    99.5% { opacity: 0; transform: translate(124vw, -2vh) rotate(0deg); }
     100% { opacity: 0; transform: translate(0, 0) rotate(0deg); }
 }
 
