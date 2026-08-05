@@ -1208,7 +1208,7 @@ body {
 /* 2 (niv. 11) — un nénuphar dérive lentement à la surface */
 .lily-pad { display: none; }
 .game-scene.garden-water.anim-extra2 .lily-pad {
-    display: block; position: absolute; left: 46%; top: 89%;
+    display: block; position: absolute; left: 48%; top: 28%;
     width: 22px; height: 19px; border-radius: 50%;
     background: radial-gradient(circle at 42% 38%, #6fa86b 0%, #4e8352 62%, #3c6a42 100%);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
