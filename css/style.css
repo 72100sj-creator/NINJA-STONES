@@ -1282,3 +1282,98 @@ body {
     96% { opacity: 0; transform: translateY(140vh); }
     100% { opacity: 0; transform: translateY(0); }
 }
+
+/* ===== Animations rares du Jardin des Braises =====
+   Positions mesurées sur l'image : cendre au centre (40-70%) en haut,
+   végétation sombre et pierres volcaniques sur les bords. */
+
+/* 1 (niv. 9) — des braises s'élèvent depuis les bords, portées par la chaleur */
+.rising-embers { display: none; }
+.game-scene.garden-embers.anim-extra1 .rising-embers { display: block; position: absolute; inset: 0; }
+.ember {
+    position: absolute; width: 4px; height: 4px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 235, 190, 1) 0%, rgba(255, 140, 40, 0.85) 45%, rgba(220, 70, 20, 0) 82%);
+    box-shadow: 0 0 7px 1.5px rgba(255, 150, 60, 0.7);
+    opacity: 0;
+    animation-name: emberRise; animation-timing-function: ease-out; animation-iteration-count: infinite;
+}
+.em1  { left: 5%;  top: 32%; animation-duration: 14s;  animation-delay: -1s; }
+.em2  { left: 9%;  top: 88%; animation-duration: 17s;  animation-delay: -6s; }
+.em3  { left: 3%;  top: 62%; animation-duration: 12s;  animation-delay: -3s; }
+.em4  { right: 6%; top: 30%; animation-duration: 16s;  animation-delay: -9s; }
+.em5  { right: 3%; top: 70%; animation-duration: 13s;  animation-delay: -4s; }
+.em6  { right: 8%; top: 92%; animation-duration: 18s;  animation-delay: -12s; }
+.em7  { left: 14%; top: 95%; animation-duration: 15s;  animation-delay: -7s; }
+.em8  { right: 14%; top: 90%; animation-duration: 11s; animation-delay: -2s; }
+.em9  { left: 7%;  top: 20%; animation-duration: 19s;  animation-delay: -14s; }
+.em10 { right: 5%; top: 18%; animation-duration: 13.5s; animation-delay: -10s; }
+@keyframes emberRise {
+    0%, 46% { opacity: 0; transform: translate(0, 0) scale(0.7); }
+    52% { opacity: 0.95; transform: translate(3px, -3vh) scale(1); }
+    68% { opacity: 0.9;  transform: translate(-5px, -14vh) scale(0.9); }
+    82% { opacity: 0.6;  transform: translate(6px, -24vh) scale(0.75); }
+    92% { opacity: 0;    transform: translate(-2px, -33vh) scale(0.5); }
+    100% { opacity: 0; transform: translate(0, 0) scale(0.7); }
+}
+
+/* 2 (niv. 11) — des charbons rougeoient puis s'assoupissent, au sol */
+.coal-glows { display: none; }
+.game-scene.garden-embers.anim-extra2 .coal-glows { display: block; position: absolute; inset: 0; }
+.coal {
+    position: absolute; width: 16px; height: 9px; border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(255, 170, 70, 0.85) 0%, rgba(230, 90, 25, 0.45) 45%, rgba(200, 60, 15, 0) 78%);
+    filter: blur(1px);
+    animation-name: coalGlow; animation-timing-function: ease-in-out; animation-iteration-count: infinite;
+}
+.cg1 { left: 12%; top: 90%; animation-duration: 7s;   animation-delay: -1s; }
+.cg2 { left: 26%; top: 95%; animation-duration: 9s;   animation-delay: -4s; }
+.cg3 { right: 15%; top: 92%; animation-duration: 8s;  animation-delay: -2.5s; }
+.cg4 { right: 27%; top: 87%; animation-duration: 10s; animation-delay: -6s; }
+.cg5 { left: 6%;  top: 24%; animation-duration: 8.5s; animation-delay: -3.5s; }
+.cg6 { right: 7%; top: 26%; animation-duration: 7.5s; animation-delay: -5.5s; }
+@keyframes coalGlow {
+    0%, 100% { opacity: 0.22; transform: scale(0.85); }
+    50% { opacity: 0.9; transform: scale(1.15); }
+}
+
+/* 3 (niv. 15) — des cendres retombent doucement */
+.ash-fall { display: none; }
+.game-scene.garden-embers.anim-extra3 .ash-fall { display: block; position: absolute; inset: 0; }
+.ash {
+    position: absolute; top: -3%; width: 4px; height: 4px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(225, 215, 205, 0.85) 0%, rgba(180, 168, 158, 0.4) 60%, rgba(160, 150, 140, 0) 100%);
+    opacity: 0;
+    animation-name: ashFall; animation-timing-function: linear; animation-iteration-count: infinite;
+}
+.as1 { left: 44%; animation-duration: 17s; animation-delay: -2s; }
+.as2 { left: 56%; animation-duration: 21s; animation-delay: -8s; }
+.as3 { left: 49%; animation-duration: 15s; animation-delay: -5s; }
+.as4 { left: 62%; animation-duration: 19s; animation-delay: -12s; }
+.as5 { left: 38%; animation-duration: 23s; animation-delay: -16s; }
+.as6 { left: 53%; animation-duration: 18s; animation-delay: -10s; }
+@keyframes ashFall {
+    0% { opacity: 0; transform: translate(0, 0); }
+    6% { opacity: 0.8; }
+    45% { transform: translate(11px, 40vh); }
+    92% { opacity: 0.65; }
+    100% { opacity: 0; transform: translate(-8px, 92vh); }
+}
+
+/* 4 (niv. 17) — une fumerolle s'élève lentement du sol */
+.smoke-wisp { display: none; }
+.game-scene.garden-embers.anim-extra4 .smoke-wisp {
+    display: block; position: absolute; left: 32%; top: 82%;
+    width: 36%; height: 26%;
+    background: radial-gradient(ellipse at center, rgba(230, 210, 195, 0.34) 0%,
+                rgba(200, 180, 168, 0.18) 42%, rgba(180, 165, 155, 0) 74%);
+    opacity: 0;
+    animation: smokeRise 44s ease-out infinite; animation-delay: -16s;
+}
+@keyframes smokeRise {
+    0%, 50% { opacity: 0; transform: translate(0, 0) scale(0.55); }
+    58% { opacity: 0.9; transform: translate(2vw, -8vh) scale(0.75); }
+    74% { opacity: 0.75; transform: translate(-3vw, -28vh) scale(1.05); }
+    88% { opacity: 0.4; transform: translate(4vw, -48vh) scale(1.35); }
+    96% { opacity: 0; transform: translate(1vw, -62vh) scale(1.6); }
+    100% { opacity: 0; transform: translate(0, 0) scale(0.55); }
+}
