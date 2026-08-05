@@ -568,11 +568,16 @@ body {
     filter: blur(2px); z-index: 0;
 }
 
-.character-container {
-    width: 58%; aspect-ratio: 552 / 638; object-fit: contain;
-    position: relative; z-index: 1;
-    filter: drop-shadow(3px 10px 8px rgba(30, 22, 10, 0.4)) saturate(0.94) brightness(1.02);
+/* La respiration est portée par ce conteneur commun aux deux expressions : elles ne peuvent
+   donc jamais se désynchroniser. Les images elles-mêmes ne gèrent plus que leur opacité. */
+.character-breath {
+    position: relative; width: 58%; aspect-ratio: 552 / 638;
     animation: breathe 4s ease-in-out infinite;
+}
+.character-container {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%; object-fit: contain;
+    filter: drop-shadow(3px 10px 8px rgba(30, 22, 10, 0.4)) saturate(0.94) brightness(1.02);
 }
 @keyframes breathe { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3%); } }
 
@@ -587,7 +592,6 @@ body {
    comme un visage qui passe du sourire à la concentration paisible.
    Les deux images ont un cadrage identique, donc aucun décalage n'est possible. */
 .character-calm {
-    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
     opacity: 0;
     animation: characterExpression 34s ease-in-out infinite;
 }
