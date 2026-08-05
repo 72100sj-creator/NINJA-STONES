@@ -116,6 +116,26 @@ window.NS_CONSTANTS = {
           },
           // Les lucioles font partie de l'identité du jardin de nuit : elles arrivent plus tôt
           animationUnlocks: { lantern: 1, bamboo: 3, pond: 5, signature: 7, extra1: 9, ambient: 10, extra2: 11, extra3: 15, extra4: 17 },
-          stones: { hueRotate: 95, saturate: 0.6, brightness: 0.8 } }
+          stones: { hueRotate: 95, saturate: 0.6, brightness: 0.8 } },
+        { id: 'water', name: "Jardin de l'Eau",
+          stageNames: ['Eau dormante', 'Premiers remous', 'Courants vifs', 'Jardin limpide'],
+          backgroundImage: 'assets/images/garden-water-stage-1.jpg',
+          // Déjà vert et sombre : on le désature modérément pour ne pas le rendre gris
+          restoration: {
+              fromLevel: 1, toLevel: 10,
+              start: { saturate: 0.32, brightness: 0.84, contrast: 0.93 },
+              end:   { saturate: 1,    brightness: 1,    contrast: 1 }
+          },
+          stones: { hueRotate: 42, saturate: 0.72, brightness: 0.95 } },
+        { id: 'embers', name: 'Jardin des Braises',
+          stageNames: ['Cendres froides', 'Premières lueurs', 'Braises ardentes', 'Jardin incandescent'],
+          backgroundImage: 'assets/images/garden-embers-stage-1.jpg',
+          // Le contraste de renaissance le plus fort du jeu : des cendres éteintes aux braises vives
+          restoration: {
+              fromLevel: 1, toLevel: 10,
+              start: { saturate: 0.15, brightness: 0.72, contrast: 0.90 },
+              end:   { saturate: 1,    brightness: 1,    contrast: 1 }
+          },
+          stones: { hueRotate: -118, saturate: 1.05, brightness: 0.92 } }
     ]
 };

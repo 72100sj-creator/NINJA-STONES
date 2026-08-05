@@ -8,9 +8,19 @@ window.NS_Garden = {
     },
 
     // Position du niveau A L'INTERIEUR de son jardin (1 à 20).
+    // Passé le dernier jardin, on reste sur son dernier niveau plutôt que de tout recommencer
+    // à zéro : le jardin final demeure achevé et vivant.
     getLevelInGarden: function(level) {
         const C = window.NS_CONSTANTS;
+        const dernierNiveau = C.GARDENS_CONFIG.length * C.LEVELS_PER_GARDEN;
+        if (level >= dernierNiveau) return C.LEVELS_PER_GARDEN;
         return ((level - 1) % C.LEVELS_PER_GARDEN) + 1;
+    },
+
+    // Vrai si le joueur a terminé l'ensemble des jardins.
+    isJourneyComplete: function(level) {
+        const C = window.NS_CONSTANTS;
+        return level >= C.GARDENS_CONFIG.length * C.LEVELS_PER_GARDEN;
     },
 
     getCurrentGarden: function(level, gardensConfig) {

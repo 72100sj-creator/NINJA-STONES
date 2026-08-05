@@ -57,8 +57,12 @@
     }
 
     function goNextLevel() {
-        state.level++;
-        NS_Save.save(state);
+        // Une fois tous les jardins traversés, le niveau n'augmente plus :
+        // le joueur peut rejouer le dernier jardin, achevé et pleinement vivant.
+        if (!NS_Garden.isJourneyComplete(state.level)) {
+            state.level++;
+            NS_Save.save(state);
+        }
         NS_UI.renderMenu(state, getCurrentGarden());
         NS_UI.showScreen('menu');
     }
