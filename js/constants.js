@@ -136,6 +136,18 @@ window.NS_CONSTANTS = {
               start: { saturate: 0.15, brightness: 0.72, contrast: 0.90 },
               end:   { saturate: 1,    brightness: 1,    contrast: 1 }
           },
-          stones: { hueRotate: -118, saturate: 1.05, brightness: 0.92 } }
+          stones: { hueRotate: -118, saturate: 1.05, brightness: 0.92 } },
+        { id: 'eternal', name: 'Jardin Éternel',
+          stageNames: ['Toutes les saisons', 'Toutes les saisons', 'Toutes les saisons', 'Toutes les saisons'],
+          backgroundImage: 'assets/images/garden-eternal-stage-1.jpg',
+          // Le seul jardin qui ne s'endort jamais : le voyage est achevé, tout y est déjà vivant.
+          restoration: {
+              fromLevel: 1, toLevel: 1,
+              start: { saturate: 1, brightness: 1, contrast: 1 },
+              end:   { saturate: 1, brightness: 1, contrast: 1 }
+          },
+          // Toutes les familles d'animations sont éveillées dès le premier niveau : le bouquet final.
+          animationUnlocks: { lantern: 1, bamboo: 1, pond: 1, signature: 1, extra1: 1, extra2: 1, ambient: 1, extra3: 1, extra4: 1 },
+          stones: { hueRotate: 0, saturate: 1, brightness: 1 } }
     ]
 };
