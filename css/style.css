@@ -118,6 +118,9 @@ body {
     animation: leafFall 28s ease-in infinite;
     animation-delay: -9s;
 }
+/* La feuille verte de base n'a de sens que dans le Bambou (et en version chaude dans l'Automne) :
+   ailleurs, chaque jardin a sa propre animation signature (neige, pétales, cendres...). */
+.game-scene:not(.garden-bamboo):not(.garden-autumn) .falling-leaf { display: none !important; }
 /* Jardin d'Automne : la feuille prend une teinte chaude plutôt que verte */
 .game-scene.garden-autumn .falling-leaf { background: linear-gradient(135deg, #d98a3d, #b8531f); }
 @keyframes leafFall {
@@ -1321,8 +1324,9 @@ body {
 .game-scene.garden-embers.anim-extra2 .coal-glows { display: block; position: absolute; inset: 0; }
 .coal {
     position: absolute; width: 16px; height: 9px; border-radius: 50%;
-    background: radial-gradient(ellipse, rgba(255, 170, 70, 0.85) 0%, rgba(230, 90, 25, 0.45) 45%, rgba(200, 60, 15, 0) 78%);
-    filter: blur(1px);
+    background: radial-gradient(ellipse, rgba(255, 205, 120, 1) 0%, rgba(255, 110, 30, 0.75) 40%, rgba(215, 55, 10, 0) 80%);
+    box-shadow: 0 0 12px 3px rgba(255, 120, 40, 0.5);
+    filter: blur(0.8px);
     animation-name: coalGlow; animation-timing-function: ease-in-out; animation-iteration-count: infinite;
 }
 .cg1 { left: 12%; top: 90%; animation-duration: 7s;   animation-delay: -1s; }
@@ -1330,10 +1334,16 @@ body {
 .cg3 { right: 15%; top: 92%; animation-duration: 8s;  animation-delay: -2.5s; }
 .cg4 { right: 27%; top: 87%; animation-duration: 10s; animation-delay: -6s; }
 .cg5 { left: 6%;  top: 24%; animation-duration: 8.5s; animation-delay: -3.5s; }
-.cg6 { right: 7%; top: 26%; animation-duration: 7.5s; animation-delay: -5.5s; }
+.cg6  { right: 7%;  top: 26%; animation-duration: 7.5s; animation-delay: -5.5s; }
+.cg7  { left: 4%;   top: 46%; animation-duration: 9.5s;  animation-delay: -2s; }
+.cg8  { right: 5%;  top: 52%; animation-duration: 8.2s;  animation-delay: -7s; }
+.cg9  { left: 19%;  top: 84%; animation-duration: 7.8s;  animation-delay: -4.5s; }
+.cg10 { right: 21%; top: 96%; animation-duration: 10.5s; animation-delay: -1.5s; }
+.cg11 { left: 9%;   top: 68%; animation-duration: 8.8s;  animation-delay: -6.5s; }
+.cg12 { right: 10%; top: 74%; animation-duration: 7.2s;  animation-delay: -3s; }
 @keyframes coalGlow {
-    0%, 100% { opacity: 0.22; transform: scale(0.85); }
-    50% { opacity: 0.9; transform: scale(1.15); }
+    0%, 100% { opacity: 0.4; transform: scale(0.85); }
+    50% { opacity: 1; transform: scale(1.25); }
 }
 
 /* 3 (niv. 15) — des cendres retombent doucement */
@@ -1364,8 +1374,8 @@ body {
 .game-scene.garden-embers.anim-extra4 .smoke-wisp {
     display: block; position: absolute; left: 32%; top: 82%;
     width: 36%; height: 26%;
-    background: radial-gradient(ellipse at center, rgba(230, 210, 195, 0.34) 0%,
-                rgba(200, 180, 168, 0.18) 42%, rgba(180, 165, 155, 0) 74%);
+    background: radial-gradient(ellipse at center, rgba(245, 232, 220, 0.62) 0%,
+                rgba(215, 198, 185, 0.34) 42%, rgba(190, 175, 165, 0) 76%);
     opacity: 0;
     animation: smokeRise 44s ease-out infinite; animation-delay: -16s;
 }
@@ -1377,3 +1387,61 @@ body {
     96% { opacity: 0; transform: translate(1vw, -62vh) scale(1.6); }
     100% { opacity: 0; transform: translate(0, 0) scale(0.55); }
 }
+
+/* ===== Teinte des bambous propre à chaque jardin =====
+   Le vert du Bambou reste la référence ; l'Hiver a déjà son traitement givré plus haut. */
+
+/* Automne : feuillage roussi */
+.game-scene.garden-autumn .bamboo-stalk {
+    background-image:
+        linear-gradient(to right, #4a3a1e 0%, #6b5528 12%, #9a7c34 38%, #b89a45 50%, #9a7c34 62%, #6b5528 88%, #4a3a1e 100%),
+        repeating-linear-gradient(to bottom, transparent 0, transparent 13.5%,
+            rgba(255, 235, 190, 0.28) 13.5%, rgba(255, 235, 190, 0.28) 14.1%,
+            rgba(0, 0, 0, 0.34) 14.1%, rgba(0, 0, 0, 0.34) 15%, transparent 15%, transparent 15.6%);
+}
+.game-scene.garden-autumn .bamboo-leaf { background: linear-gradient(120deg, #b98a3c, #8a5f24); }
+.game-scene.garden-autumn .bamboo-stalk::after { background: linear-gradient(120deg, #a87a30, #7d541f); }
+
+/* Sakura : vert tendre, teinté de rose */
+.game-scene.garden-sakura .bamboo-stalk {
+    background-image:
+        linear-gradient(to right, #4a5c3a 0%, #6f8a58 12%, #9fb87e 38%, #c3d3a4 50%, #9fb87e 62%, #6f8a58 88%, #4a5c3a 100%),
+        repeating-linear-gradient(to bottom, transparent 0, transparent 13.5%,
+            rgba(255, 235, 242, 0.35) 13.5%, rgba(255, 235, 242, 0.35) 14.1%,
+            rgba(0, 0, 0, 0.26) 14.1%, rgba(0, 0, 0, 0.26) 15%, transparent 15%, transparent 15.6%);
+}
+.game-scene.garden-sakura .bamboo-leaf { background: linear-gradient(120deg, #a8c184, #7d9a5e); }
+.game-scene.garden-sakura .bamboo-stalk::after { background: linear-gradient(120deg, #9db878, #6f8c52); }
+
+/* Nuit : vert très sombre, à peine éclairé */
+.game-scene.garden-night .bamboo-stalk {
+    background-image:
+        linear-gradient(to right, #16221c 0%, #23342a 12%, #3a5244 38%, #4e6a58 50%, #3a5244 62%, #23342a 88%, #16221c 100%),
+        repeating-linear-gradient(to bottom, transparent 0, transparent 13.5%,
+            rgba(180, 205, 235, 0.22) 13.5%, rgba(180, 205, 235, 0.22) 14.1%,
+            rgba(0, 0, 0, 0.45) 14.1%, rgba(0, 0, 0, 0.45) 15%, transparent 15%, transparent 15.6%);
+}
+.game-scene.garden-night .bamboo-leaf { background: linear-gradient(120deg, #3d5648, #253a30); }
+.game-scene.garden-night .bamboo-stalk::after { background: linear-gradient(120deg, #365040, #1f322a); }
+
+/* Eau : vert profond et humide, presque turquoise */
+.game-scene.garden-water .bamboo-stalk {
+    background-image:
+        linear-gradient(to right, #1e4038 0%, #2d5c50 12%, #468d78 38%, #5aa88f 50%, #468d78 62%, #2d5c50 88%, #1e4038 100%),
+        repeating-linear-gradient(to bottom, transparent 0, transparent 13.5%,
+            rgba(220, 250, 245, 0.32) 13.5%, rgba(220, 250, 245, 0.32) 14.1%,
+            rgba(0, 0, 0, 0.32) 14.1%, rgba(0, 0, 0, 0.32) 15%, transparent 15%, transparent 15.6%);
+}
+.game-scene.garden-water .bamboo-leaf { background: linear-gradient(120deg, #4e9a82, #2f6a58); }
+.game-scene.garden-water .bamboo-stalk::after { background: linear-gradient(120deg, #458d76, #2a5e4e); }
+
+/* Braises : bambou calciné, brun sombre veiné de rouge */
+.game-scene.garden-embers .bamboo-stalk {
+    background-image:
+        linear-gradient(to right, #241612 0%, #3a241a 12%, #5e3a24 38%, #7a4c2c 50%, #5e3a24 62%, #3a241a 88%, #241612 100%),
+        repeating-linear-gradient(to bottom, transparent 0, transparent 13.5%,
+            rgba(255, 140, 60, 0.4) 13.5%, rgba(255, 140, 60, 0.4) 14.1%,
+            rgba(0, 0, 0, 0.5) 14.1%, rgba(0, 0, 0, 0.5) 15%, transparent 15%, transparent 15.6%);
+}
+.game-scene.garden-embers .bamboo-leaf { background: linear-gradient(120deg, #7d4a26, #4e2c18); }
+.game-scene.garden-embers .bamboo-stalk::after { background: linear-gradient(120deg, #6e4020, #452614); }
