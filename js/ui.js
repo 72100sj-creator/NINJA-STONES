@@ -184,7 +184,9 @@ window.NS_UI = (function() {
         // Nuit
         'shooting-star': 0.85, 'star': 0.68, 'moon-reflection': 0, 'lone-firefly': 0.34,
         // Eau
-        'wr': 0, 'lily-pad': 0, 'glint': 0.72, 'water-stream': 0.52
+        'wr': 0, 'lily-pad': 0, 'glint': 0.72, 'water-stream': 0.52,
+        // Braises
+        'ember': 0.46, 'coal': 0, 'ash': 0, 'smoke-wisp': 0.50
     };
 
     function amorcerAnimations() {
