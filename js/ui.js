@@ -182,7 +182,9 @@ window.NS_UI = (function() {
         'sp-petal': 0.60, 'sakura-branch': 0.56, 'branch-petal': 0.62,
         'pond-petal': 0, 'petal-haze': 0.44,
         // Nuit
-        'shooting-star': 0.85, 'star': 0.68, 'moon-reflection': 0, 'lone-firefly': 0.34
+        'shooting-star': 0.85, 'star': 0.68, 'moon-reflection': 0, 'lone-firefly': 0.34,
+        // Eau
+        'wr': 0, 'lily-pad': 0, 'glint': 0.72, 'water-stream': 0.52
     };
 
     function amorcerAnimations() {
