@@ -542,6 +542,7 @@ body {
 .trail-night  { background: #4b4a86; }
 .trail-water  { background: #3f8a7d; }
 .trail-embers { background: #b4462a; }
+.trail-eternal { background: linear-gradient(135deg, #6f8f52 0%, #eda3bf 30%, #c8752f 55%, #cfe0ef 78%, #4b4a86 100%); }
 
 .trail-dot.visited { opacity: 0.75; }
 .trail-dot.current { transform: scale(1.5); box-shadow: 0 0 6px 1px rgba(255, 245, 220, 0.75), 0 1px 2px rgba(0, 0, 0, 0.4); }
@@ -1587,3 +1588,48 @@ body {
 }
 .game-scene.garden-embers .bamboo-leaf { background: linear-gradient(120deg, #7d4a26, #4e2c18); }
 .game-scene.garden-embers .bamboo-stalk::after { background: linear-gradient(120deg, #6e4020, #452614); }
+
+/* ===== Jardin Éternel : le bouquet final =====
+   Toutes les animations des sept jardins y cohabitent. Chacune est normalement réservée
+   à son jardin d'origine : on lève ici cette restriction, une fois pour toutes. */
+.game-scene.garden-eternal .falling-leaf,
+.game-scene.garden-eternal .falling-leaf-autumn,
+.game-scene.garden-eternal .falling-leaf-autumn2,
+.game-scene.garden-eternal .snowflake,
+.game-scene.garden-eternal .falling-petal,
+.game-scene.garden-eternal .firefly-night,
+.game-scene.garden-eternal .koi-shadow,
+.game-scene.garden-eternal .bamboo-shoot,
+.game-scene.garden-eternal .dew-drop,
+.game-scene.garden-eternal .high-bird,
+.game-scene.garden-eternal .autumn-gust,
+.game-scene.garden-eternal .ground-swirl,
+.game-scene.garden-eternal .sun-ray,
+.game-scene.garden-eternal .morning-mist,
+.game-scene.garden-eternal .frost-sparkles,
+.game-scene.garden-eternal .snow-gust,
+.game-scene.garden-eternal .icicle,
+.game-scene.garden-eternal .moon-halo,
+.game-scene.garden-eternal .petal-spiral,
+.game-scene.garden-eternal .sakura-branch,
+.game-scene.garden-eternal .pond-petal,
+.game-scene.garden-eternal .petal-haze,
+.game-scene.garden-eternal .shooting-star,
+.game-scene.garden-eternal .star-field,
+.game-scene.garden-eternal .moon-reflection,
+.game-scene.garden-eternal .lone-firefly,
+.game-scene.garden-eternal .water-ripples,
+.game-scene.garden-eternal .lily-pad,
+.game-scene.garden-eternal .water-glints,
+.game-scene.garden-eternal .water-stream,
+.game-scene.garden-eternal .rising-embers,
+.game-scene.garden-eternal .coal-glows,
+.game-scene.garden-eternal .ash-fall,
+.game-scene.garden-eternal .smoke-wisp { display: block !important; }
+
+/* Le halo lunaire est plus discret ici : il assombrirait trop un jardin déjà foisonnant */
+.game-scene.garden-eternal .moon-halo { opacity: 0.35; }
+/* La brume et le rayon sont adoucis pour ne pas noyer les autres animations */
+.game-scene.garden-eternal .morning-mist,
+.game-scene.garden-eternal .petal-haze,
+.game-scene.garden-eternal .smoke-wisp { opacity: 0.7; }
