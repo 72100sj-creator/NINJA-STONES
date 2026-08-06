@@ -5,7 +5,7 @@ Le joueur ne débloque pas des récompenses : **il restaure un jardin**.
 
 > *« Une seule pierre à la fois. »*
 
-**Version actuelle : v1.0.55** — le numéro s'affiche en bas de l'écran d'accueil.
+**Version actuelle : v1.1.1** — le numéro s'affiche en bas de l'écran d'accueil.
 
 ---
 
@@ -16,6 +16,8 @@ Un taquin 4×4 classique, habillé d'un univers **Zen Miniature** : jardins japo
 - **8 jardins**, **160 niveaux** (20 par jardin)
 - Chaque jardin **s'éveille progressivement** au fil des niveaux : les couleurs reviennent, les animations apparaissent une à une
 - Une **séquence de réveil** contemplative clôt chaque jardin
+- Un **grand final** une fois le voyage achevé, rejouable à volonté
+- Les jardins traversés sont **revisitables** à tout moment depuis le menu
 - Fonctionne **hors connexion**, installable sur l'écran d'accueil
 
 ---
@@ -52,6 +54,23 @@ niv 9   animation rare 1            niv 20  → séquence de réveil
 En parallèle, le décor passe d'un état **endormi** (délavé, assombri) à **pleinement vivant**, en continu du niveau 1 au 10.
 
 **La séquence de réveil** (niveau 20) : le puzzle s'efface, le jardin retourne à son état endormi puis rejoue toute sa renaissance, animations comprises. Elle ne se termine pas seule — le jardin reste vivant jusqu'à ce que le joueur touche l'écran.
+
+---
+
+## Le grand final
+
+Au niveau 160, le voyage s'achève par une séquence contemplative d'environ deux minutes :
+
+1. Les **huit jardins défilent** un par un (15 s chacun), pleinement restaurés, toutes animations actives, leur nom apparaissant en bas comme un générique
+2. Le **Jardin Éternel** clôt le défilé
+3. Le **Ninja Jardinier apparaît et salue**, accompagné d'un carillon de sept notes
+4. Le message final s'affiche — et le jardin reste vivant indéfiniment
+
+Le final est **rejouable** depuis le bouton « Revoir le voyage », qui apparaît sur le menu une fois le niveau 160 atteint.
+
+## Revisiter les jardins
+
+La **frise de progression du menu est cliquable** : chaque pastille de jardin déjà atteint y ramène. Le jeu mémorise séparément le niveau courant et le niveau le plus loin jamais atteint (`ninjaStonesMaxLevel`) — revenir au premier jardin ne referme donc jamais les suivants.
 
 ---
 
@@ -125,6 +144,8 @@ localStorage.setItem('ninjaStonesLevel', '85')
 
 **Afficher la grille de repères** — utile pour positionner un élément dans un nouveau jardin : passer `DEBUG_SCENE` à `true` dans `constants.js`. Une grille en pourcentages s'affiche sur la scène.
 
+**Le dragon et la libellule** — la libellule traverse tous les jardins ; le dragon, bien plus grand et plus lent, est réservé au Jardin des Braises et au Jardin Éternel. Pour des raisons historiques, la classe CSS du dragon s'appelle encore `.dragonfly` et celle de la libellule `.damselfly`.
+
 **Zones libres de l'écran** — le plateau de jeu masque la bande 35-80% en hauteur. Les animations doivent être placées dans les zones dégagées : 13-35% et 80-100% en hauteur, ou les bords 0-10% et 90-100% en largeur.
 
 **Après une mise à jour d'image** conservant le même nom de fichier, incrémenter `CACHE_NAME` dans `service-worker.js`.
@@ -149,6 +170,7 @@ Aucune donnée collectée, aucun compte, aucun serveur, aucune publicité, aucun
 | Sprint 7 | Icône, PWA, mentions légales, captures App Store |
 | RFC-002 | Progression vivante : restauration, éveil des animations, identité par jardin |
 | — | 5 jardins supplémentaires, 28 animations rares, séquence de réveil, dragon, mode hors-ligne |
+| v1.1.0 | Grand final, jardins revisitables, expressions du personnage |
 
 ---
 
