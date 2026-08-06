@@ -1,7 +1,7 @@
 (function() {
     const C = window.NS_CONSTANTS;
     const state = {
-        level: 1, moves: 0, gridSize: C.DEFAULT_GRID_SIZE,
+        level: 1, maxLevel: 1, moves: 0, gridSize: C.DEFAULT_GRID_SIZE,
         totalTiles: C.DEFAULT_GRID_SIZE * C.DEFAULT_GRID_SIZE, grid: [], isPlaying: false
     };
 
@@ -76,6 +76,14 @@
     NS_UI.getDomElements().playBtn.addEventListener('click', () => { NS_UI.showScreen('game'); startGame(); });
     NS_UI.getDomElements().backBtn.addEventListener('click', () => { NS_UI.renderMenu(state, getCurrentGarden()); NS_UI.showScreen('menu'); });
     NS_UI.getDomElements().continueBtn.addEventListener('click', goNextLevel);
+    // Revisiter un jardin déjà atteint : on repart à son premier niveau,
+    // sans jamais réduire la progression réelle (maxLevel est conservé).
+    NS_UI.setGardenSelectHandler(function(gardenIndex) {
+        state.level = gardenIndex * C.LEVELS_PER_GARDEN + 1;
+        NS_Save.save(state);
+        NS_UI.renderMenu(state, getCurrentGarden());
+    });
+
     NS_UI.getDomElements().finaleBtn.addEventListener('click', () => {
         NS_UI.playFinale(function() {
             NS_UI.renderMenu(state, getCurrentGarden());

@@ -75,16 +75,31 @@ window.NS_UI = (function() {
     }
 
     // Frise des jardins : montre le chemin parcouru et ce qui reste à découvrir
-    function renderGardenTrail(level) {
+    // La frise est cliquable : tout jardin déjà atteint peut être revisité.
+    // On se base sur le niveau le plus loin jamais atteint, jamais sur le niveau courant,
+    // pour qu'un retour en arrière ne referme aucun jardin.
+    let onGardenSelect = null;
+    function setGardenSelectHandler(fn) { onGardenSelect = fn; }
+
+    function renderGardenTrail(level, maxLevel) {
         const C = window.NS_CONSTANTS;
         const currentIndex = NS_Garden.getGardenIndexForLevel(level);
+        const maxIndex = NS_Garden.getGardenIndexForLevel(maxLevel || level);
         dom.gardenTrail.innerHTML = '';
         C.GARDENS_CONFIG.forEach(function(g, i) {
             const dot = document.createElement('span');
             dot.className = 'trail-dot trail-' + g.id;
-            if (i < currentIndex) dot.classList.add('visited');
-            else if (i === currentIndex) dot.classList.add('current');
+            if (i === currentIndex) dot.classList.add('current');
+            else if (i <= maxIndex) dot.classList.add('visited');
             else dot.classList.add('locked');
+
+            if (i <= maxIndex) {
+                dot.classList.add('selectable');
+                dot.title = g.name;
+                dot.addEventListener('click', function() {
+                    if (onGardenSelect) onGardenSelect(i);
+                });
+            }
             dom.gardenTrail.appendChild(dot);
         });
     }
@@ -97,9 +112,9 @@ window.NS_UI = (function() {
         let stage = NS_Garden.calculateStage(levelInGarden);
         dom.gardenStage.textContent = gardenConfig.stageNames[stage - 1];
         updateGardenVisual(dom.gardenBackdrop, gardenConfig, stage, levelInGarden);
-        renderGardenTrail(state.level);
+        renderGardenTrail(state.level, state.maxLevel);
         // Le final devient rejouable une fois le voyage achevé
-        dom.finaleBtn.classList.toggle('hidden', !NS_Garden.isJourneyComplete(state.level));
+        dom.finaleBtn.classList.toggle('hidden', !NS_Garden.isJourneyComplete(state.maxLevel || state.level));
         tilesElements = {};
     }
 
@@ -176,7 +191,7 @@ window.NS_UI = (function() {
     const DEBUT_DU_MOUVEMENT = {
         // Familles de base
         'bamboo-stalk': 0.58, 'lantern-glow': 0, 'lantern-ground-glow': 0,
-        'ripple-ring': 0, 'pond-sparkle': 0.88, 'firefly': 0, 'dragonfly': 0.66,
+        'ripple-ring': 0, 'pond-sparkle': 0.88, 'firefly': 0, 'dragonfly': 0.74, 'damselfly': 0.78,
         'falling-leaf': 0, 'falling-leaf-autumn': 0, 'falling-leaf-autumn2': 0,
         'falling-petal': 0, 'snowflake': 0, 'next-hint': 0,
         // Bambou
@@ -364,6 +379,7 @@ window.NS_UI = (function() {
         renderMenu: renderMenu, renderGameBoard: renderGameBoard, moveTile: moveTile,
         showWinMessage: showWinMessage, showGardenComplete: showGardenComplete,
         playGardenAwakening: playGardenAwakening, playFinale: playFinale,
+        setGardenSelectHandler: setGardenSelectHandler,
         resetGameUI: resetGameUI, updateMuteButton: updateMuteButton,
         getDomElements: function() { return dom; }
     };
