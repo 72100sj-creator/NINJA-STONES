@@ -37,7 +37,13 @@
                 state.isPlaying = false;
                 NS_Audio.playVictoryChime();
                 let levelInGarden = NS_Garden.getLevelInGarden(state.level);
-                if (NS_Garden.isLastLevelOfGarden(levelInGarden)) {
+                if (NS_Garden.isJourneyComplete(state.level)) {
+                    // Tout dernier niveau du jeu : le grand final, où les huit jardins défilent.
+                    NS_UI.playFinale(function() {
+                        NS_UI.renderMenu(state, getCurrentGarden());
+                        NS_UI.showScreen('menu');
+                    });
+                } else if (NS_Garden.isLastLevelOfGarden(levelInGarden)) {
                     // Dernier niveau du jardin : la séquence de réveil rejoue toute sa renaissance,
                     // puis seulement ensuite le message de fin apparaît.
                     let currentGarden = getCurrentGarden();
@@ -70,6 +76,12 @@
     NS_UI.getDomElements().playBtn.addEventListener('click', () => { NS_UI.showScreen('game'); startGame(); });
     NS_UI.getDomElements().backBtn.addEventListener('click', () => { NS_UI.renderMenu(state, getCurrentGarden()); NS_UI.showScreen('menu'); });
     NS_UI.getDomElements().continueBtn.addEventListener('click', goNextLevel);
+    NS_UI.getDomElements().finaleBtn.addEventListener('click', () => {
+        NS_UI.playFinale(function() {
+            NS_UI.renderMenu(state, getCurrentGarden());
+            NS_UI.showScreen('menu');
+        });
+    });
     NS_UI.getDomElements().muteBtn.addEventListener('click', () => { NS_Audio.toggleMuted(); NS_UI.updateMuteButton(); });
 
     window.addEventListener('resize', () => {

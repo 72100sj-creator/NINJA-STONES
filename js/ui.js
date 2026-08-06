@@ -15,6 +15,7 @@ window.NS_UI = (function() {
         dom.gardenBackdrop = document.getElementById('garden-backdrop');
         dom.gameScene = document.getElementById('game-scene');
         dom.playBtn = document.getElementById('play-btn');
+        dom.finaleBtn = document.getElementById('finale-btn');
         dom.backBtn = document.getElementById('back-btn');
         dom.continueBtn = document.getElementById('continue-btn');
         dom.message = document.getElementById('message');
@@ -22,6 +23,10 @@ window.NS_UI = (function() {
         dom.winOverlay = document.getElementById('win-overlay');
         dom.muteBtn = document.getElementById('mute-btn');
         dom.awakeningLayer = document.getElementById('awakening-layer');
+        dom.finaleLayer = document.getElementById('finale-layer');
+        dom.finaleGardenName = document.getElementById('finale-garden-name');
+        dom.finaleMessage = document.getElementById('finale-message');
+        dom.finaleHint = document.querySelector('.finale-hint');
     }
 
     function showScreen(name) {
@@ -93,6 +98,8 @@ window.NS_UI = (function() {
         dom.gardenStage.textContent = gardenConfig.stageNames[stage - 1];
         updateGardenVisual(dom.gardenBackdrop, gardenConfig, stage, levelInGarden);
         renderGardenTrail(state.level);
+        // Le final devient rejouable une fois le voyage achevé
+        dom.finaleBtn.classList.toggle('hidden', !NS_Garden.isJourneyComplete(state.level));
         tilesElements = {};
     }
 
@@ -259,6 +266,72 @@ window.NS_UI = (function() {
         dom.awakeningLayer.onclick = function() { finishAwakening(onFinish); };
     }
 
+    // ===== Grand final =====
+    // Les huit jardins défilent un par un, toutes animations éveillées, puis le Ninja salue.
+    // Comme la séquence de réveil, elle ne se termine jamais d'elle-même : le dernier jardin
+    // reste vivant tant que le joueur ne touche pas l'écran.
+    let finaleTimers = [];
+
+    function clearFinaleTimers() {
+        finaleTimers.forEach(function(t) { clearTimeout(t); });
+        finaleTimers = [];
+    }
+
+    function stopFinale(onFinish) {
+        clearFinaleTimers();
+        rendreAnimationsNormales();
+        dom.finaleLayer.classList.remove('visible');
+        dom.finaleMessage.classList.remove('visible');
+        dom.finaleHint.classList.remove('visible');
+        dom.finaleLayer.onclick = null;
+        dom.gameScene.classList.remove('awakening');
+        dom.gardenBackdrop.style.transition = '';
+        if (typeof onFinish === 'function') onFinish();
+    }
+
+    function playFinale(onFinish) {
+        const C = window.NS_CONSTANTS;
+        const PAR_JARDIN = 15000;
+        const jardins = C.GARDENS_CONFIG;
+        clearFinaleTimers();
+
+        dom.gameScene.classList.add('awakening');   // efface le puzzle et l'interface
+        dom.finaleLayer.classList.add('visible');
+        dom.finaleMessage.classList.remove('visible');
+        dom.finaleHint.classList.remove('visible');
+        dom.gardenBackdrop.style.transition = 'background-image 1.6s ease, filter 1.6s ease';
+
+        function montrerJardin(i) {
+            const g = jardins[i];
+            // Chaque jardin apparaît pleinement restauré, toutes ses animations éveillées
+            updateGardenVisual(dom.gardenBackdrop, g, 4, 20);
+            NS_Garden.getAllAnimationClasses().forEach(function(c) { dom.gameScene.classList.add(c); });
+            amorcerAnimations();
+            dom.finaleGardenName.textContent = g.name;
+            dom.finaleGardenName.classList.remove('show');
+            void dom.finaleGardenName.offsetWidth;
+            dom.finaleGardenName.classList.add('show');
+        }
+
+        jardins.forEach(function(g, i) {
+            finaleTimers.push(setTimeout(function() { montrerJardin(i); }, i * PAR_JARDIN));
+        });
+
+        // Une fois tous les jardins traversés : le message et le salut du Ninja
+        const finDefile = jardins.length * PAR_JARDIN;
+        finaleTimers.push(setTimeout(function() {
+            dom.finaleGardenName.classList.remove('show');
+            dom.finaleMessage.classList.add('visible');
+            NS_Audio.playFinaleChime();
+        }, finDefile));
+        finaleTimers.push(setTimeout(function() {
+            dom.finaleHint.classList.add('visible');
+        }, finDefile + 4000));
+
+        // Touchable à tout moment : on abrège et on revient au menu
+        dom.finaleLayer.onclick = function() { stopFinale(onFinish); };
+    }
+
     function updateMuteButton() {
         const muted = NS_Audio.isMuted();
         dom.muteBtn.textContent = muted ? '🔇' : '🔊';
@@ -266,8 +339,13 @@ window.NS_UI = (function() {
     }
 
     function resetGameUI() {
-        // Sécurité : si une séquence de réveil était en cours, on la referme proprement
+        // Sécurité : si une séquence de réveil ou le final était en cours, on referme proprement
         clearAwakeningTimers();
+        clearFinaleTimers();
+        dom.finaleLayer.classList.remove('visible');
+        dom.finaleMessage.classList.remove('visible');
+        dom.finaleHint.classList.remove('visible');
+        dom.finaleLayer.onclick = null;
         rendreAnimationsNormales();
         dom.awakeningLayer.classList.remove('visible');
         dom.awakeningLayer.onclick = null;
@@ -285,7 +363,7 @@ window.NS_UI = (function() {
         showScreen: showScreen, updateHeader: updateHeader, updateGardenVisual: updateGardenVisual,
         renderMenu: renderMenu, renderGameBoard: renderGameBoard, moveTile: moveTile,
         showWinMessage: showWinMessage, showGardenComplete: showGardenComplete,
-        playGardenAwakening: playGardenAwakening,
+        playGardenAwakening: playGardenAwakening, playFinale: playFinale,
         resetGameUI: resetGameUI, updateMuteButton: updateMuteButton,
         getDomElements: function() { return dom; }
     };

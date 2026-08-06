@@ -102,12 +102,60 @@ window.NS_Audio = (function() {
         });
     }
 
+    // Carillon du grand final : une phrase plus longue et plus ample que celle de victoire.
+    // Sept notes, comme les sept saisons traversées, qui s'éteignent lentement ensemble.
+    function playFinaleChime() {
+        if (muted) return;
+        const audioCtx = ensureContext();
+        if (!audioCtx) return;
+        const now = audioCtx.currentTime;
+
+        // Montée sol - do - mi - sol - la - do - mi, puis un accord tenu très doux
+        const notes = [
+            { freq: 392.00, delay: 0,    gain: 1.0 },   // sol
+            { freq: 523.25, delay: 0.42, gain: 0.94 },  // do
+            { freq: 659.25, delay: 0.84, gain: 0.88 },  // mi
+            { freq: 783.99, delay: 1.30, gain: 0.80 },  // sol aigu
+            { freq: 880.00, delay: 1.86, gain: 0.70 },  // la
+            { freq: 1046.50, delay: 2.44, gain: 0.58 }, // do aigu
+            { freq: 1318.51, delay: 3.05, gain: 0.44 }, // mi aigu
+            // accord final tenu
+            { freq: 392.00, delay: 3.75, gain: 0.85 },
+            { freq: 523.25, delay: 3.78, gain: 0.62 },
+            { freq: 783.99, delay: 3.81, gain: 0.45 }
+        ];
+        const decay = 6.5;
+
+        notes.forEach(function(note) {
+            const startTime = now + note.delay;
+            const partials = [
+                { ratio: 1,    gain: 0.10 * note.gain },
+                { ratio: 2.01, gain: 0.045 * note.gain },
+                { ratio: 3.0,  gain: 0.02 * note.gain }
+            ];
+            partials.forEach(function(p) {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(note.freq * p.ratio, startTime);
+                gain.gain.setValueAtTime(0, startTime);
+                gain.gain.linearRampToValueAtTime(p.gain, startTime + 0.12);
+                gain.gain.exponentialRampToValueAtTime(0.0001, startTime + decay);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(startTime);
+                osc.stop(startTime + decay + 0.1);
+            });
+        });
+    }
+
     loadMutePreference();
 
     return {
         isMuted: isMuted,
         toggleMuted: toggleMuted,
         playStoneSlide: playStoneSlide,
-        playVictoryChime: playVictoryChime
+        playVictoryChime: playVictoryChime,
+        playFinaleChime: playFinaleChime
     };
 })();
