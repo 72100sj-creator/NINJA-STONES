@@ -1,5 +1,5 @@
 // Service Worker basique pour rendre l'application PWA fonctionnelle
-const CACHE_NAME = 'ninja-stones-v18';
+const CACHE_NAME = 'ninja-stones-v19';
 const urlsToCache = [
   './',
   './index.html',
@@ -29,6 +29,7 @@ const urlsToCache = [
   './assets/images/ninja-character.png',
   './assets/images/ninja-character-win.png',
   './assets/images/ninja-character-calm.png',
+  './assets/images/ninja-character-wave.png',
   './assets/images/stone-texture-1.jpg',
   './assets/images/stone-texture-2.jpg',
   './assets/images/stone-texture-3.jpg',

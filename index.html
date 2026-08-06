@@ -236,6 +236,7 @@
                             </div>
 
                             <button id="play-btn" class="btn">Jouer</button>
+                            <button id="finale-btn" class="btn btn-finale hidden">Revoir le voyage</button>
                         </div>
                         <!-- Character Layer -->
                         <div class="character-stage">
@@ -246,7 +247,7 @@
                                 </div>
                             </div>
                         </div>
-                        <p class="app-version">v1.0.55</p>
+                        <p class="app-version">v1.1.0</p>
                     </div>
 
                     <div id="screen-game" class="screen">
@@ -275,6 +276,17 @@
                  et permet d'abréger la séquence d'une simple touche -->
             <div class="awakening-layer" id="awakening-layer">
                 <p class="awakening-hint">Toucher pour continuer</p>
+            </div>
+
+            <!-- Grand final : les jardins défilent un par un, puis le Ninja salue -->
+            <div class="finale-layer" id="finale-layer">
+                <p class="finale-garden-name" id="finale-garden-name"></p>
+                <div class="finale-message" id="finale-message">
+                    <img class="finale-character" src="assets/images/ninja-character-wave.png" alt="Le Ninja Jardinier vous salue">
+                    <p class="finale-title">Le voyage est accompli.</p>
+                    <p class="finale-lines">160 pierres posées. Sept saisons traversées.<br>Le jardin restera vivant, et t'attendra.</p>
+                </div>
+                <p class="finale-hint">Toucher pour revenir</p>
             </div>
 
             <button id="mute-btn" class="mute-btn" aria-label="Couper ou activer le son">🔊</button>
