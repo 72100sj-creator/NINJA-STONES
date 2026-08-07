@@ -36,6 +36,9 @@
 
             <!-- Background Layer -->
             <div class="scene-background" id="garden-backdrop"></div>
+            <!-- Seconde couche, utilisée uniquement pour le fondu croisé du grand final :
+                 background-image ne peut pas être animé en CSS, il faut donc superposer. -->
+            <div class="scene-background scene-background-alt" id="garden-backdrop-alt"></div>
 
             <!-- Decoration Layer : éléments fixes du décor (bambous, lanterne) -->
             <div class="scene-decor" aria-hidden="true">
@@ -251,7 +254,7 @@
                                 </div>
                             </div>
                         </div>
-                        <p class="app-version">v1.1.5</p>
+                        <p class="app-version">v1.1.6</p>
                         <div id="garden-trail" class="garden-trail"></div>
                     </div>
 
