@@ -297,8 +297,10 @@ window.NS_UI = (function() {
         clearFinaleTimers();
         rendreAnimationsNormales();
         // La couche de fondu est remise au repos
-        dom.gardenBackdropAlt.style.transition = 'none';
-        dom.gardenBackdropAlt.style.opacity = '0';
+        if (dom.gardenBackdropAlt) {
+            dom.gardenBackdropAlt.style.transition = 'none';
+            dom.gardenBackdropAlt.style.opacity = '0';
+        }
         dom.finaleLayer.classList.remove('visible');
         dom.finaleMessage.classList.remove('visible');
         dom.finaleHint.classList.remove('visible');
@@ -316,6 +318,14 @@ window.NS_UI = (function() {
 
         dom.gameScene.classList.add('awakening');   // efface le puzzle et l'interface
         dom.finaleLayer.classList.add('visible');
+
+        // La couche de fondu repart toujours de zéro : sans cela, un final interrompu
+        // la laisserait visible et elle masquerait le premier jardin.
+        if (dom.gardenBackdropAlt) {
+            dom.gardenBackdropAlt.style.transition = 'none';
+            dom.gardenBackdropAlt.style.opacity = '0';
+            dom.gardenBackdropAlt.style.backgroundImage = '';
+        }
         dom.finaleMessage.classList.remove('visible');
         dom.finaleHint.classList.remove('visible');
         dom.gardenBackdrop.style.transition = 'filter 1.6s ease';
@@ -329,11 +339,13 @@ window.NS_UI = (function() {
             // Sans elle, seules les animations universelles apparaîtraient.
             // On peint sur la couche superposée, puis on la révèle en douceur : background-image
             // n'étant pas animable en CSS, c'est le seul moyen d'obtenir un vrai fondu.
-            const cible = premier ? dom.gardenBackdrop : dom.gardenBackdropAlt;
+            // Si la couche de fondu n'existe pas, on peint directement : le final reste
+            // fonctionnel, simplement sans transition douce.
+            const cible = (premier || !dom.gardenBackdropAlt) ? dom.gardenBackdrop : dom.gardenBackdropAlt;
             updateGardenVisual(cible, g, 4, 20);
             NS_Garden.getAllAnimationClasses().forEach(function(c) { dom.gameScene.classList.add(c); });
 
-            if (!premier) {
+            if (!premier && dom.gardenBackdropAlt) {
                 dom.gardenBackdropAlt.style.transition = 'opacity ' + (FONDU / 1000) + 's ease';
                 void dom.gardenBackdropAlt.offsetWidth;
                 dom.gardenBackdropAlt.style.opacity = '1';
@@ -385,8 +397,10 @@ window.NS_UI = (function() {
         // Sécurité : si une séquence de réveil ou le final était en cours, on referme proprement
         clearAwakeningTimers();
         clearFinaleTimers();
-        dom.gardenBackdropAlt.style.transition = 'none';
-        dom.gardenBackdropAlt.style.opacity = '0';
+        if (dom.gardenBackdropAlt) {
+            dom.gardenBackdropAlt.style.transition = 'none';
+            dom.gardenBackdropAlt.style.opacity = '0';
+        }
         dom.finaleLayer.classList.remove('visible');
         dom.finaleMessage.classList.remove('visible');
         dom.finaleHint.classList.remove('visible');
