@@ -51,8 +51,12 @@ body {
     position: absolute; inset: 0;
     background-color: #c2b280;
     background-size: 100% 100%;
-    transition: background-image 1s ease, filter 1.4s ease;
+    transition: filter 1.4s ease;
 }
+
+/* Couche de fondu du grand final : elle se superpose au fond courant et apparaît
+   en douceur pour révéler le jardin suivant. Invisible le reste du temps. */
+.scene-background-alt { opacity: 0; }
 
 /* Decoration Layer + Ambient Animation Layer : toutes les positions sont en % de la scène (jamais de px/vh) */
 .scene-decor, .scene-ambient {
