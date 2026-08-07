@@ -13,6 +13,7 @@ window.NS_UI = (function() {
         dom.progressBar = document.getElementById('progress-bar');
         dom.board = document.getElementById('board');
         dom.gardenBackdrop = document.getElementById('garden-backdrop');
+        dom.gardenBackdropAlt = document.getElementById('garden-backdrop-alt');
         dom.gameScene = document.getElementById('game-scene');
         dom.playBtn = document.getElementById('play-btn');
         dom.finaleBtn = document.getElementById('finale-btn');
@@ -295,6 +296,9 @@ window.NS_UI = (function() {
     function stopFinale(onFinish) {
         clearFinaleTimers();
         rendreAnimationsNormales();
+        // La couche de fondu est remise au repos
+        dom.gardenBackdropAlt.style.transition = 'none';
+        dom.gardenBackdropAlt.style.opacity = '0';
         dom.finaleLayer.classList.remove('visible');
         dom.finaleMessage.classList.remove('visible');
         dom.finaleHint.classList.remove('visible');
@@ -314,15 +318,34 @@ window.NS_UI = (function() {
         dom.finaleLayer.classList.add('visible');
         dom.finaleMessage.classList.remove('visible');
         dom.finaleHint.classList.remove('visible');
-        dom.gardenBackdrop.style.transition = 'background-image 1.6s ease, filter 1.6s ease';
+        dom.gardenBackdrop.style.transition = 'filter 1.6s ease';
 
-        function montrerJardin(i) {
+        const FONDU = 3200;   // durée du passage d'un jardin au suivant
+
+        function montrerJardin(i, premier) {
             const g = jardins[i];
             // updateGardenVisual pose la classe du jardin affiché (garden-water, garden-winter...) :
             // c'est indispensable, car chaque animation est conditionnée à son jardin d'origine.
             // Sans elle, seules les animations universelles apparaîtraient.
-            updateGardenVisual(dom.gardenBackdrop, g, 4, 20);
+            // On peint sur la couche superposée, puis on la révèle en douceur : background-image
+            // n'étant pas animable en CSS, c'est le seul moyen d'obtenir un vrai fondu.
+            const cible = premier ? dom.gardenBackdrop : dom.gardenBackdropAlt;
+            updateGardenVisual(cible, g, 4, 20);
             NS_Garden.getAllAnimationClasses().forEach(function(c) { dom.gameScene.classList.add(c); });
+
+            if (!premier) {
+                dom.gardenBackdropAlt.style.transition = 'opacity ' + (FONDU / 1000) + 's ease';
+                void dom.gardenBackdropAlt.offsetWidth;
+                dom.gardenBackdropAlt.style.opacity = '1';
+                // Une fois le fondu terminé, la couche du dessous reprend le relais
+                finaleTimers.push(setTimeout(function() {
+                    dom.gardenBackdrop.style.backgroundImage = dom.gardenBackdropAlt.style.backgroundImage;
+                    dom.gardenBackdrop.style.filter = dom.gardenBackdropAlt.style.filter;
+                    dom.gardenBackdropAlt.style.transition = 'none';
+                    dom.gardenBackdropAlt.style.opacity = '0';
+                }, FONDU + 40));
+            }
+
             // Le navigateur doit d'abord recalculer les styles du nouveau jardin : sans ce délai,
             // amorcerAnimations lirait encore les durées de l'ancien et ignorerait les nouvelles
             // animations (elles resteraient invisibles pendant tout le passage du jardin).
@@ -334,7 +357,7 @@ window.NS_UI = (function() {
         }
 
         jardins.forEach(function(g, i) {
-            finaleTimers.push(setTimeout(function() { montrerJardin(i); }, i * PAR_JARDIN));
+            finaleTimers.push(setTimeout(function() { montrerJardin(i, i === 0); }, i * PAR_JARDIN));
         });
 
         // Une fois tous les jardins traversés : le message et le salut du Ninja
@@ -362,6 +385,8 @@ window.NS_UI = (function() {
         // Sécurité : si une séquence de réveil ou le final était en cours, on referme proprement
         clearAwakeningTimers();
         clearFinaleTimers();
+        dom.gardenBackdropAlt.style.transition = 'none';
+        dom.gardenBackdropAlt.style.opacity = '0';
         dom.finaleLayer.classList.remove('visible');
         dom.finaleMessage.classList.remove('visible');
         dom.finaleHint.classList.remove('visible');
