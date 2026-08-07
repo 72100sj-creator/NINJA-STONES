@@ -5,7 +5,7 @@ Le joueur ne débloque pas des récompenses : **il restaure un jardin**.
 
 > *« Une seule pierre à la fois. »*
 
-**Version actuelle : v1.1.4** — le numéro s'affiche en bas de l'écran d'accueil.
+**Version actuelle : v1.1.5** — le numéro s'affiche en bas de l'écran d'accueil.
 
 ---
 
