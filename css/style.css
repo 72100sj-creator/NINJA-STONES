@@ -56,7 +56,7 @@ body {
 
 /* Couche de fondu du grand final : elle se superpose au fond courant et apparaît
    en douceur pour révéler le jardin suivant. Invisible le reste du temps. */
-.scene-background-alt { opacity: 0; }
+.scene-background-alt { opacity: 0; background-color: transparent; }
 
 /* Decoration Layer + Ambient Animation Layer : toutes les positions sont en % de la scène (jamais de px/vh) */
 .scene-decor, .scene-ambient {
