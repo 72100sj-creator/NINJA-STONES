@@ -1347,9 +1347,13 @@ body {
 .wr1 { left: 45%; top: 22%; animation-duration: 11s; animation-delay: -1s; }
 .wr2 { left: 52%; top: 28%; animation-duration: 14s; animation-delay: -6s; }
 .wr3 { left: 41%; top: 31%; animation-duration: 9s;  animation-delay: -3s; }
-.wr4 { left: 37%; top: 86%; animation-duration: 13s; animation-delay: -8s; }
-.wr5 { left: 63%; top: 90%; animation-duration: 10s; animation-delay: -4s; }
-.wr6 { left: 50%; top: 95%; animation-duration: 12s; animation-delay: -9s; }
+/* Positions mesurées : le chemin de pierres occupe x=44-50% aux hauteurs 82-86%,
+   les ondes l'évitent. wr6 est sur l'eau libre centrale (visible sur le menu et
+   pendant le final ; masquée par le plateau au cours d'une partie). */
+.wr4 { left: 36%; top: 86%; animation-duration: 13s; animation-delay: -8s; }
+.wr5 { left: 58%; top: 83%; animation-duration: 10s; animation-delay: -4s; }
+.wr6 { left: 60%; top: 70%; animation-duration: 12s; animation-delay: -9s; }
+.wr7 { left: 66%; top: 94%; animation-duration: 15s; animation-delay: -2s; }
 @keyframes waterRipple {
     0% { opacity: 0; transform: scale(0.4); }
     6% { opacity: 0.85; }
