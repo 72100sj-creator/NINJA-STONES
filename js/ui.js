@@ -318,10 +318,15 @@ window.NS_UI = (function() {
 
         function montrerJardin(i) {
             const g = jardins[i];
-            // Chaque jardin apparaît pleinement restauré, toutes ses animations éveillées
+            // updateGardenVisual pose la classe du jardin affiché (garden-water, garden-winter...) :
+            // c'est indispensable, car chaque animation est conditionnée à son jardin d'origine.
+            // Sans elle, seules les animations universelles apparaîtraient.
             updateGardenVisual(dom.gardenBackdrop, g, 4, 20);
             NS_Garden.getAllAnimationClasses().forEach(function(c) { dom.gameScene.classList.add(c); });
-            amorcerAnimations();
+            // Le navigateur doit d'abord recalculer les styles du nouveau jardin : sans ce délai,
+            // amorcerAnimations lirait encore les durées de l'ancien et ignorerait les nouvelles
+            // animations (elles resteraient invisibles pendant tout le passage du jardin).
+            finaleTimers.push(setTimeout(amorcerAnimations, 60));
             dom.finaleGardenName.textContent = g.name;
             dom.finaleGardenName.classList.remove('show');
             void dom.finaleGardenName.offsetWidth;
