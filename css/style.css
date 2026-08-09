@@ -375,21 +375,41 @@ body {
     animation: dragonTail 3.4s ease-in-out infinite alternate;
 }
 
-/* Grandes ailes membraneuses nervurées */
+/* Grandes ailes membraneuses de dragon : bord d'attaque tendu, bord de fuite découpé
+   en festons entre les doigts. Volontairement anguleuses — les ailes ovales et nervurées
+   sont celles de la libellule, il ne faut surtout pas les confondre. */
 .dragonfly-wing {
-    position: absolute; top: -34px; width: 60px; height: 40px;
+    position: absolute; top: -36px; width: 64px; height: 44px;
     background:
-        repeating-linear-gradient(72deg, rgba(255, 255, 255, 0.18) 0 1px, transparent 1px 10px),
-        linear-gradient(160deg, rgba(205, 248, 228, 0.65), rgba(100, 180, 150, 0.3));
-    border-radius: 78% 20% 62% 16%;
-    box-shadow: 0 0 12px rgba(150, 230, 195, 0.3);
+        /* nervures des doigts, rayonnant depuis l'attache */
+        repeating-linear-gradient(58deg,
+            rgba(235, 255, 248, 0.32) 0 1.5px, transparent 1.5px 13px),
+        /* membrane : dense près du corps, translucide vers la pointe */
+        linear-gradient(145deg,
+            rgba(196, 245, 224, 0.74) 0%, rgba(140, 205, 178, 0.5) 45%,
+            rgba(96, 170, 142, 0.24) 100%);
+    box-shadow: 0 0 14px rgba(150, 230, 195, 0.3);
     animation: dragonflyFlutter 1.7s ease-in-out infinite alternate;
 }
-.dw-left { left: -22px; transform-origin: right bottom; animation-duration: 1.7s; }
-.dw-right { left: 30px; transform-origin: left bottom; animation-duration: 1.9s; }
+/* Aile droite : attache à gauche, quatre festons le long du bord de fuite */
+.dw-right {
+    left: 30px; transform-origin: left bottom; animation-duration: 1.9s;
+    clip-path: polygon(
+        2% 97%, 0% 54%, 20% 21%, 52% 3%, 90% 9%, 100% 29%,
+        77% 41%, 87% 53%, 60% 56%, 69% 73%, 42% 71%, 48% 89%, 22% 83%, 25% 99%
+    );
+}
+/* Aile gauche : le miroir exact de la droite */
+.dw-left {
+    left: -24px; transform-origin: right bottom; animation-duration: 1.7s;
+    clip-path: polygon(
+        98% 97%, 100% 54%, 80% 21%, 48% 3%, 10% 9%, 0% 29%,
+        23% 41%, 13% 53%, 40% 56%, 31% 73%, 58% 71%, 52% 89%, 78% 83%, 75% 99%
+    );
+}
 @keyframes dragonflyFlutter {
-    0% { transform: scaleY(1) rotate(-21deg); }
-    100% { transform: scaleY(0.38) rotate(24deg); }
+    0% { transform: scaleY(1) scaleX(1) rotate(-24deg); }
+    100% { transform: scaleY(0.34) scaleX(0.92) rotate(28deg); }
 }
 @keyframes dragonflyCross {
     0%, 76% { opacity: 0; transform: translate(0, 0) rotate(0deg); }
